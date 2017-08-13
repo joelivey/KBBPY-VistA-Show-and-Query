@@ -1,0 +1,152 @@
+
+/*
+*  The following is a capture of loading and running the unit tests for the 
+*  KBBPY routines and running ^KBBPYSHO to show the first page of each section 
+*  of the NEW PERSON file analysis on a Linux system.
+*/
+
+Script started on Tue 09 May 2017 05:35:47 PM EDT
+
+[softhat@softhat-VirtualBox jli]$ dos2unix KBBPY_170509.ro
+
+dos2unix: converting file KBBPY_170509.ro to Unix format ...
+
+[softhat@softhat-VirtualBox jli]$ mumps -dir
+
+GTM>S DUZ=1 D Q^DI,^%ZIS
+
+VA FILEMAN 22.2V2
+Select OPTION: 
+DEVICE: HOME//   TELNET
+
+GTM>D ^%RI
+
+Routine Input Utility - Converts RO file to *.m files.
+
+Formfeed delimited <No>? 
+
+Input device: <terminal>: /home/softhat/jli/KBBPY_170509.ro
+
+Cache for Windows^INT^KBBPY* routines and unit tests (KBBPUY*)^~Format=Cache.S~^
+RAW
+%RO on 09 May 2017   2:33 PM
+
+Output directory : /home/softhat/VistA-Instance/r/
+
+KBBPUYCV  KBBPUYDO  KBBPUYNM  KBBPUYPR  KBBPUYQR  KBBPUYRO  KBBPUYSE  KBBPUYSH  KBBPYDO1  KBBPYNM   KBBPYPRO  KBBPYQRY  KBBPYREF  KBBPYREL  KBBPYROU  KBBPYSE1  KBBPYSE2  KBBPYSET  KBBPYSH1  KBBPYSHO  
+
+Restored 3399 lines in 20 routines.
+
+GTM>d ^KBBPUYNM
+................................................................................
+........................................................................  NEW PE
+RSON......  .............  ...........
+GET1TOT2^KBBPUYDO - No Pharmacy Patient data found for tests - skipping
+.........................................
+Ran 7 Routines, 57 Entry Tags
+Checked 223 tests, with 0 failures and encountered 0 errors.
+
+GTM>
+
+GTM>D ^KBBPYSHO
+
+Press Enter NOW to run the application or wait 5 seconds to run the Unit Tests: 
+
+
+
+
+
+Select File: 200     Select From:
+         1.  NEW PERSON  (200)
+         2.  NETWORK ADDRESS  (200.005)
+         3.  SPELLING EXCEPTION DICTIONARY  (200.0089831)
+         4.  DEFINED FORMATS FOR LM  (200.0089832)
+         5.  DEFINED PHRASES FOR LM  (200.0089833)
+         6.  PHRASE  (200.00898331)
+         7.  LM LIMIT WP FIELDS TO EDIT  (200.0089834)
+         8.  UCI  (200.01)
+         9.  CPRS TAB  (200.010113)
+        10.  DIVISION  (200.02)
+
+               Enter '^' to STOP or
+               Select 1 to 10: 1
+
+                                NEW PERSON FILE
+
+B         KEY - NEW PERSON(200) - NAME .... (Free Text, 3 to 35 chars)
+
+A        ACCESS CODE .... (Free Text, 0 to 0 chars)
+         ALLOW ARA ACCESS .... (Set of Codes)
+         ALLOW VERIFYING OF OTHERS .... (Set of Codes)
+         ALLOWED TO USE SPOOLER .... (Set of Codes)
+         ALWAYS SHOW SECONDARIES .... (Set of Codes)
+         APPOINTMENT STATUS .... (Set of Codes)
+ARA      ARA VALUE .... (Free Text, 20 to 50 chars)
+         ASK DEVICE TYPE AT SIGN-ON .... (Set of Codes)
+         ASK TERMINAL TYPE AT LM ENTRY .... (Set of Codes)
+         AUTHORIZE RELEASE OF NPI .... (Set of Codes)
+         AUTHORIZED TO WRITE MED ORDERS .... (Set of Codes)
+         AUTO MENU .... (Set of Codes)
+         AUTO SIGN-ON .... (Set of Codes)
+         BADGE NUMBER .... (Numeric, 6 digits, 0 decimals places)
+         BRIGHT CHARS AT EXIT FROM LM .... (Set of Codes)
+         CAN MAKE INTO A MAIL MESSAGE .... (Set of Codes)
+               Enter '^' to STOP or <ret> to continue...^
+
+Want Related Tables Listed?  Y//
+
+
+                    TABLES RELATED TO NEW PERSON FILE (200)
+
+In the M world, these tables are subfiles to the NEW PERSON file.
+
+     <There are 27 subfile tables for the 'NEW PERSON' file>
+
+     NEW PERSON - NETWORK ADDRESS    (200.005)
+     NEW PERSON - SPELLING EXCEPTION DICTIONARY    (200.0089831)
+     NEW PERSON - DEFINED FORMATS FOR LM    (200.0089832)
+     NEW PERSON - DEFINED PHRASES FOR LM    (200.0089833)
+     NEW PERSON - LM LIMIT WP FIELDS TO EDIT    (200.0089834)
+     NEW PERSON - UCI    (200.01)
+     NEW PERSON - CPRS TAB    (200.010113)
+     NEW PERSON - DIVISION    (200.02)
+     NEW PERSON - SECONDARY MENU OPTIONS    (200.03)
+     NEW PERSON - ACCESSIBLE FILE    (200.032)
+     NEW PERSON - PERSONAL DIAGNOSES LIST    (200.0351)
+     NEW PERSON - ALIAS    (200.04)
+     NEW PERSON - EFFECTIVE DATE/TIME    (200.042)
+               Enter '^' to STOP or <ret> to continue...^
+               Enter <ret> to continue...
+
+
+                    TABLES RELATED TO NEW PERSON FILE (200)
+
+In the M world, the following tables are files and subfiles that contain links
+to the NEW PERSON file
+  (an * indicates that the link is the primary identifier (.01) for the file,
+   an *X indicates that the link is also DINUMed to the NEW PERSON file
+
+     <There are 929 related tables for the 'NEW PERSON' file>
+
+     IMPORT TEMPLATE    (.46)
+     DD AUDIT    (.6)
+     FILE    (1)
+     AUDIT    (1.1)
+     ARCHIVAL ACTIVITY    (1.11)
+     PATIENT    (2)
+     PATIENT - DISPOSITION LOG-IN DATE/TIME    (2.101)
+     PATIENT - INSURANCE TYPE    (2.312)
+     PATIENT - APPOINTMENT    (2.98)
+     FAILED ACCESS ATTEMPTS LOG    (3.05)
+               Enter '^' to STOP or <ret> to continue...^
+
+
+Select File: 
+
+GTM>D H^XUS
+
+Logged out at May 09, 2017 5:39 pm[softhat@softhat-VirtualBox jli]$ 
+[softhat@softhat-VirtualBox jli]$ exit
+exit
+
+Script done on Tue 09 May 2017 05:39:44 PM EDT

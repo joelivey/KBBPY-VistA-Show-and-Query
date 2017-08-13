@@ -1,0 +1,677 @@
+
+/*  start of added comments
+*  
+*  KBBPYSHO was originally created, in 1990, to provide views of a DHCP (now VistA)
+*  file as if it were an SQL or relational database.
+*  The user needs to press the enter key at the first prompt to actually run the
+*  analysis instead of unit tests.
+*/
+
+VISTA>D ^KBBPYSHO
+
+Press Enter NOW to run the application or wait 5 seconds to run the Unit Tests: 
+Select File: 2
+     Select From:
+         1.  PATIENT  (2)
+         2.  ENROLLMENT CLINIC  (2.001)
+         3.  ALIAS  (2.01)
+         4.  ENROLLMENT DATA  (2.011)
+         5.  RACE INFORMATION  (2.02)
+         6.  PATIENT ELIGIBILITIES  (2.0361)
+         7.  RATED DISABILITIES (VA)  (2.04)
+         8.  SERVICE CONNECTED CONDITIONS  (2.05)
+         9.  PH DATE/TIME UPDATED  (2.0534)
+        10.  ETHNICITY INFORMATION  (2.06)
+
+               Enter '^' to STOP or
+               Select 1 to 10: 1
+
+/*
+*   The display of the basic file structure shows 
+*      on the left hand margin any cross-reference on the file, 
+*      the KEY field, usually the B cross-reference, is marked and is 
+*         the first field shown, and is repeated on subsequent pages
+*      the NAME of the field is shown
+*      the type of field, and any restrictions such as size
+*/
+                                  PATIENT FILE
+
+B         KEY - PATIENT(2) - NAME .... (Free Text, 3 to 30 chars)
+
+         *AMOUNT OF MILITARY RETIREMENT .... (Numeric, 10 digits, 2 decimals places)
+         *AMOUNT OF SOCIAL SECURITY .... (Numeric, 10 digits, 2 decimals places)
+         *CLAIM FOLDER LOCATION .... (Free Text, 2 to 40 chars)
+         *CURRENT PC PRACTITIONER .... (pointer to entry in NEW PERSON file)
+         *CURRENT PC TEAM .... (pointer to entry in TEAM file)
+         *1U4N .... (Computed)
+         *2ND MOST RECENT DATE OF CARE .... (Date)
+         *2ND MOST RECENT LOCATION .... (pointer to entry in INSTITUTION file)
+         A&A AMOUNT .... (Numeric, 10 digits, 2 decimals places)
+         ABSENCE DIVISION .... (Computed)
+         ADDRESS CHANGE DT/TM .... (Date)
+         ADDRESS CHANGE SITE .... (pointer to entry in INSTITUTION file)
+         ADDRESS CHANGE SOURCE .... (Set of Codes)
+         ADDRESS CHANGE USER .... (pointer to entry in NEW PERSON file)
+         AGE .... (Computed)
+               Enter '^' to STOP or <ret> to continue...
+
+                                  PATIENT FILE
+
+B         KEY - PATIENT(2) - NAME .... (Free Text, 3 to 30 chars)
+
+         AGENCY/ALLIED COUNTRY .... (pointer to entry in OTHER FEDERAL AGENCY file)
+         AGENT ORANGE EXAM DATE .... (Date)
+         AGENT ORANGE EXPOS. INDICATED? .... (Set of Codes)
+         AGENT ORANGE EXPOSURE LOCATION .... (Set of Codes)
+         AGENT ORANGE REGISTRATION # .... (Numeric, 6 digits, 0 decimals places)
+         AGENT ORANGE REGISTRATION DATE .... (Date)
+         AGENT ORANGE REPORTED TO C.O. .... (Date)
+         AMOUNT OF AID & ATTENDANCE .... (Numeric, 10 digits, 2 decimals places)
+         AMOUNT OF GI INSURANCE .... (Numeric, 8 digits, 2 decimals places)
+         AMOUNT OF HOUSEBOUND .... (Numeric, 10 digits, 2 decimals places)
+         AMOUNT OF OTHER INCOME .... (Numeric, 8 digits, 2 decimals places)
+         AMOUNT OF OTHER RETIREMENT .... (Numeric, 8 digits, 2 decimals places)
+         AMOUNT OF SSI .... (Numeric, 8 digits, 2 decimals places)
+         AMOUNT OF VA DISABILITY .... (Numeric, 7 digits, 0 decimals places)
+         AMOUNT OF VA PENSION .... (Numeric, 10 digits, 2 decimals places)
+               Enter '^' to STOP or <ret> to continue...
+
+                                  PATIENT FILE
+
+B         KEY - PATIENT(2) - NAME .... (Free Text, 3 to 30 chars)
+
+         APPOINTMENT REQUEST COMMENT .... (Free Text, 2 to 200 chars)
+AEACL    APPOINTMENT REQUEST DATE .... (Date)
+         APPOINTMENT REQUEST ON 1010EZ .... (Set of Codes)
+         APPOINTMENT REQUEST STATUS .... (Set of Codes)
+         ARE YOU IN RECEIPT OF A&A? .... (Set of Codes)
+AAP      ATTENDING PHYSICIAN .... (pointer to entry in NEW PERSON file)
+         Agent Orange Exposure Location .... (Set of Codes)
+         BAD ADDRESS INDICATOR .... (Set of Codes)
+         BRANCH OF SERVICE, LAST .... (pointer to entry in BRANCH OF SERVICE file)
+         BRANCH OF SERVICE, NNTL .... (pointer to entry in BRANCH OF SERVICE file)
+         BRANCH OF SERVICE, NTL .... (pointer to entry in BRANCH OF SERVICE file)
+ACB      CATEGORY OF BENEFICIARY .... (pointer to entry in CATEGORY OF BENEFICIARY file)
+               Enter '^' to STOP or <ret> to continue...
+
+                                  PATIENT FILE
+
+B         KEY - PATIENT(2) - NAME .... (Free Text, 3 to 30 chars)
+
+         CELLULAR NUMBER CHANGE DT/TM .... (Date)
+         CELLULAR NUMBER CHANGE SITE .... (pointer to entry in INSTITUTION file)
+         CELLULAR NUMBER CHANGE SOURCE .... (Set of Codes)
+         CHECK FOR DUPLICATE .... (Set of Codes)
+         CITY .... (Free Text, 2 to 15 chars)
+         CITY (CIVIL) .... (Free Text, 2 to 30 chars)
+         CITY (VA) .... (Free Text, 2 to 30 chars)
+         CLAIM FOLDER LOCATION .... (pointer to entry in INSTITUTION file)
+         CLAIM NUMBER .... (Free Text, 7 to 9 chars)
+         CLASS II DENTAL INDICATOR .... (Set of Codes)
+         CMOR ACTIVITY SCORE .... (Numeric, 7 digits, 0 decimals places)
+         CNH CURRENT .... (Set of Codes)
+         COLLATERAL SPONSOR'S NAME .... (pointer to entry in PATIENT file)
+         COMBAT FROM DATE .... (Date)
+         COMBAT INDICATED ON 1010EZ .... (Set of Codes)
+         COMBAT SERVICE INDICATED? .... (Set of Codes)
+               Enter '^' to STOP or <ret> to continue...
+
+                                  PATIENT FILE
+
+B         KEY - PATIENT(2) - NAME .... (Free Text, 3 to 30 chars)
+
+         COMBAT SERVICE LOCATION .... (pointer to entry in POW PERIOD file)
+         COMBAT TO DATE .... (Date)
+         COMBAT VETERAN END DATE .... (Date)
+         COMBAT WHERE .... (pointer to entry in POW PERIOD file)
+AS       CONDITION .... (Set of Codes)
+         CONFIDENTIAL ADDR CHANGE DT/TM .... (Date)
+         CONFIDENTIAL ADDR CHANGE SITE .... (pointer to entry in INSTITUTION file)
+         CONFIDENTIAL ADDR COUNTRY .... (pointer to entry in COUNTRY CODE file)
+         CONFIDENTIAL ADDR POSTAL CODE .... (Free Text, 1 to 10 chars)
+         CONFIDENTIAL ADDR PROVINCE .... (Free Text, 1 to 20 chars)
+         CONFIDENTIAL ADDRESS ACTIVE? .... (Set of Codes)
+         CONFIDENTIAL ADDRESS CITY .... (Free Text, 2 to 30 chars)
+         CONFIDENTIAL ADDRESS COUNTY .... (Numeric, 3 digits, 0 decimals places)
+         CONFIDENTIAL ADDRESS STATE .... (pointer to entry in STATE file)
+         CONFIDENTIAL ADDRESS ZIP CODE .... (Free Text, 5 to 20 chars)
+               Enter '^' to STOP or <ret> to continue...
+
+                                  PATIENT FILE
+
+B         KEY - PATIENT(2) - NAME .... (Free Text, 3 to 30 chars)
+
+         CONFIDENTIAL END DATE .... (Date)
+         CONFIDENTIAL PHONE NUMBER .... (Free Text, 4 to 20 chars)
+         CONFIDENTIAL START DATE .... (Date)
+         CONFIDENTIAL STREET [LINE 1] .... (Free Text, 2 to 30 chars)
+         CONFIDENTIAL STREET [LINE 2] .... (Free Text, 2 to 30 chars)
+         CONFIDENTIAL STREET [LINE 3] .... (Free Text, 2 to 30 chars)
+ACMOR    COORDINATING MASTER OF RECORD .... (pointer to entry in INSTITUTION file)
+         COUNTRY .... (pointer to entry in COUNTRY CODE file)
+         COUNTY .... (Numeric, 3 digits, 0 decimals places)
+         COVERED BY HEALTH INSURANCE? .... (Set of Codes)
+ACA      CURRENT ADMISSION .... (pointer to entry in PATIENT MOVEMENT file)
+         CURRENT ENROLLMENT .... (pointer to entry in PATIENT ENROLLMENT file)
+ACS      CURRENT MEANS TEST STATUS .... (pointer to entry in MEANS TEST STATUS file)
+         CURRENT MOH INDICATOR .... (Set of Codes)
+               Enter '^' to STOP or <ret> to continue...
+
+                                  PATIENT FILE
+
+B         KEY - PATIENT(2) - NAME .... (Free Text, 3 to 30 chars)
+
+         CURRENT MOVEMENT .... (pointer to entry in PATIENT MOVEMENT file)
+D        CURRENT PH INDICATOR .... (Set of Codes)
+         CURRENT PURPLE HEART REMARKS .... (Set of Codes)
+C        CURRENT PURPLE HEART STATUS .... (Set of Codes)
+         CURRENT ROOM .... (pointer to entry in ROOM-BED file)
+E        CV DATE EDITED .... (Date)
+         Cell Phone .... (Free Text, 4 to 20 chars)
+         D-CITY .... (Free Text, 1 to 30 chars)
+         D-DESIGNEE SAME AS NOK? .... (Set of Codes)
+         D-NAME COMPONENTS .... (pointer to entry in NAME COMPONENTS file)
+         D-NAME OF DESIGNEE .... (Free Text, 3 to 35 chars)
+         D-PHONE NUMBER .... (Free Text, 3 to 20 chars)
+         D-RELATIONSHIP TO PATIENT .... (Free Text, 3 to 30 chars)
+         D-STATE .... (pointer to entry in STATE file)
+         D-STREET ADDRESS [LINE 1] .... (Free Text, 3 to 30 chars)
+         D-STREET ADDRESS [LINE 2] .... (Free Text, 3 to 30 chars)
+               Enter '^' to STOP or <ret> to continue...^
+/*
+*   Up-arrowed out - there was lots more still to come
+*/
+
+Want Related Tables Listed?  Y// 
+
+/*
+*    Related tables are broken into two types, those which are subfiles
+*    to the current file, and then those that have fields that point TO
+*    the primary file (pointers to other files are included in the 
+*    listing above
+*/
+
+                       TABLES RELATED TO PATIENT FILE (2)
+
+In the M world, these tables are subfiles to the PATIENT file.
+
+     <There are 32 subfile tables for the 'PATIENT' file>
+
+     PATIENT - ENROLLMENT CLINIC    (2.001)
+     PATIENT - ENROLLMENT CLINIC - ENROLLMENT DATA    (2.011)
+     PATIENT - ALIAS    (2.01)
+     PATIENT - RACE INFORMATION    (2.02)
+     PATIENT - PATIENT ELIGIBILITIES    (2.0361)
+     PATIENT - RATED DISABILITIES (VA)    (2.04)
+     PATIENT - SERVICE CONNECTED CONDITIONS    (2.05)
+     PATIENT - PH DATE/TIME UPDATED    (2.0534)
+     PATIENT - ETHNICITY INFORMATION    (2.06)
+     PATIENT - ICN HISTORY    (2.0992)
+     PATIENT - CMOR HISTORY    (2.0993)
+     PATIENT - DISPOSITION LOG-IN DATE/TIME    (2.101)
+     PATIENT - DATE OF DENTAL TREATMENT    (2.11)
+               Enter '^' to STOP or <ret> to continue...
+
+
+                       TABLES RELATED TO PATIENT FILE (2)
+
+     PATIENT - ARCHIVED DATA    (2.12)
+     PATIENT - ARCHIVED DATA - DATE OF ARCHIVE    (2.13)
+     PATIENT - CONFIDENTIAL ADDRESS CATEGORY    (2.141)
+     PATIENT - INSURANCE TYPE    (2.312)
+     PATIENT - INSURANCE TYPE - ELIGIBILITY/BENEFIT    (2.322)
+     PATIENT - INSURANCE TYPE - ELIGIBILITY/BENEFIT - CONTACT INFORMATION    (2.3226)
+     PATIENT - INSURANCE TYPE - ELIGIBILITY/BENEFIT - HEALTHCARE SERVICES DELIVERY    (2.3227)
+     PATIENT - INSURANCE TYPE - ELIGIBILITY/BENEFIT - SUBSCRIBER DATES    (2.3228)
+     PATIENT - INSURANCE TYPE - ELIGIBILITY/BENEFIT - SUBSCRIBER ADDITIONAL INFO    (2.3229)
+     PATIENT - INSURANCE TYPE - ELIGIBILITY/BENEFIT - SUBSCRIBER REFERENCE ID    (2.32291)
+     PATIENT - INSURANCE TYPE - ELIGIBILITY/BENEFIT - SERVICE TYPES    (2.32292)
+     PATIENT - SERVICE [OEF OR OIF]    (2.3215)
+               Enter '^' to STOP or <ret> to continue...
+
+
+                       TABLES RELATED TO PATIENT FILE (2)
+
+     PATIENT - MILITARY SERVICE EPISODE    (2.3216)
+     PATIENT - CD STATUS DIAGNOSES    (2.396)
+     PATIENT - CD STATUS PROCEDURES    (2.397)
+     PATIENT - CD STATUS CONDITIONS    (2.398)
+     PATIENT - CD HISTORY DATE    (2.399)
+     PATIENT - CD HISTORY DATE - CD REASON    (2.409)
+     PATIENT - APPOINTMENT    (2.98)
+               Enter <ret> to continue...
+
+/*
+/   The following are the files (or in SQL and the relational world Tables)
+/   that point to the selected primary file.  The fields that are primary
+/   identifiers for a file and those which are DINUMed to the selected
+/   current files are marked.
+/   These files are currently listed in file number order instead of by 
+/   file name order.
+*/
+
+                       TABLES RELATED TO PATIENT FILE (2)
+
+In the M world, the following tables are files and subfiles that contain links
+to the PATIENT file
+  (an * indicates that the link is the primary identifier (.01) for the file,
+   an *X indicates that the link is also DINUMed to the PATIENT file
+
+     <There are 316 related tables for the 'PATIENT' file>
+
+     PRF ASSIGNMENT    (26.13)*
+     PRF HL7 EVENT    (26.21)*
+     PATIENT ENROLLMENT    (27.11)
+     ENROLLMENT QUERY LOG    (27.12)*
+     ENROLLMENT/ELIGIBILITY UPLOAD AUDIT    (27.14)
+     NOSE AND THROAT RADIUM HISTORY    (28.11)*
+     MST HISTORY    (29.11)
+     DG SECURITY LOG    (38.1)*X
+     INCONSISTENT DATA    (38.5)*X
+     EMBOSSED CARD TYPE - CARDS IN HOLD    (39.13)*
+               Enter '^' to STOP or <ret> to continue...
+
+
+                       TABLES RELATED TO PATIENT FILE (2)
+
+     ADT/HL7 TRANSMISSION    (39.4)
+     OPC    (40.1)*X
+     OPC ERRORS    (40.15)*X
+     SCHEDULED ADMISSION    (41.1)*
+     PRE-REGISTRATION AUDIT    (41.41)*
+     PRE-REGISTRATION CALL LIST    (41.42)*
+     PRE-REGISTRATION CALL LOG    (41.43)
+     WAIT LIST - PATIENT    (42.51)*
+     G&L CORRECTIONS    (43.5)
+     HOSPITAL LOCATION - APPOINTMENT - PATIENT    (44.003)*
+     HOSPITAL LOCATION - CHART CHECK - PATIENT    (44.007)*
+     PTF    (45)*
+     PTF MESSAGE    (45.5)
+     CENSUS WORKFILE    (45.85)*
+     PTF TRANSACTION REQUEST LOG    (45.87)
+     PAF    (45.9)*
+     RAI MDS ASIH PATIENT    (46.14)*X
+               Enter '^' to STOP or <ret> to continue...
+
+
+                       TABLES RELATED TO PATIENT FILE (2)
+
+     DUE ANSWER SHEET    (50.0731)
+     IV STATS - PATIENT    (50.801)*
+     IV STATS - DATE - IV DRUG - PATIENT    (50.806)*X
+     PRESCRIPTION    (52)
+     PATIENT NOTIFICATION (Rx READY)    (52.11)*
+     RX VERIFY    (52.4)
+     PENDING OUTPATIENT ORDERS    (52.41)
+     PRESCRIPTION REFILL REQUEST    (52.43)
+     RX SUSPENSE    (52.5)
+     PHARMACY EXTERNAL INTERFACE    (52.51)
+     PHARMACY ARCHIVE    (52.8)
+     PSO AUDIT LOG    (52.87)
+     PHARMACY PRINTED QUEUE - LABEL/PROFILE    (52.9001)*
+     TPB ELIGIBILITY    (52.91)*X
+     NON-VERIFIED ORDERS    (53.1)
+     PRE-EXCHANGE NEEDS - PATIENT    (53.401)*X
+     MAR LABELS - USER OR WARD - PATIENT    (53.4102)*X
+               Enter '^' to STOP or <ret> to continue...
+
+
+                       TABLES RELATED TO PATIENT FILE (2)
+
+     MISCELLANEOUS REPORT FILE - REPORT NUMBER - PATIENT    (53.43011)*X
+     PHYSICIANS' ORDERS - PATIENT    (53.4401)*X
+     PICK LIST - PATIENT    (53.51)*X
+     BCMA MISSING DOSE REQUEST    (53.68)
+     BCMA REPORT REQUEST    (53.69)
+     BCMA UNABLE TO SCAN LOG    (53.77)
+     BCMA MEDICATION VARIANCE LOG    (53.78)*
+     BCMA MEDICATION LOG    (53.79)*
+     PHARMACY PATIENT    (55)*X
+     PHARMACY PATIENT - UNIT DOSE    (55.06)
+     DRUG ACCOUNTABILITY TRANSACTION    (58.81)
+     CS WORKSHEET    (58.85)
+     CS DESTRUCTION    (58.86)
+     PBM PATIENT DEMOGRAPHICS    (59.9)
+     BLOOD INVENTORY - DATE/TIME UNIT RELOCATION    (65.03)
+     REFERRAL PATIENT    (67)
+     LAB SECTION PRINT - USER REQUEST LIST - LRDFN    (69.3)
+               Enter '^' to STOP or <ret> to continue...^ 
+
+
+                       TABLES RELATED TO PATIENT FILE (2)
+
+     RAD/NUC MED PATIENT    (70)*X
+     NUC MED EXAM DATA    (70.2)*
+     RAD/NUC MED REPORTS    (74)
+     RAD/NUC MED ORDERS    (75.1)*
+     HL7 Message Exceptions File    (79.3)
+     MEDICAL RECORD    (90)*X
+     PT. TEXT    (99)*X
+     OE/RR PATIENT EVENT    (100.2)*
+     ORDER PARAMETERS    (100.99)
+     ORDER PARAMETERS - OR3 PATIENTS TO CONVERT    (100.9903)*X
+     ORDER DEA ARCHIVE INFO    (101.52)
+     PATIENT TASK    (102.3)
+     ORAM FLOWSHEET    (103)*X
+     NUTRITION PERSON    (115)
+     DIETETIC ENCOUNTERS - PATIENT    (115.701)*X
+     DIETITIAN TICKLER FILE - ITEM    (119.01)
+     GMRV VITAL MEASUREMENT    (120.5)
+               Enter '^' to STOP or <ret> to continue...
+
+
+                       TABLES RELATED TO PATIENT FILE (2)
+
+     PATIENT ALLERGIES    (120.8)*
+     ADVERSE REACTION REPORTING    (120.85)
+     ADVERSE REACTION ASSESSMENT    (120.86)*X
+     REQUEST/CONSULTATION    (123)
+     GMR TEXT    (124.3)
+     GMRY PATIENT I/O FILE    (126)*X
+     SURGERY    (130)*
+     SURGERY WAITING LIST - PATIENT    (133.801)*
+     SURGERY TRANSPLANT ASSESSMENTS    (139.5)*
+     SCD (SPINAL CORD) REGISTRY    (154)*X
+     OUTCOMES    (154.1)*
+     SPN ADMISSIONS    (154.991)
+     FEE BASIS PATIENT    (161)*X
+     FEE BASIS PATIENT MRA    (161.26)*
+     FEE CH REPORT OF CONTACT    (161.5)
+     FEE BASIS ID CARD AUDIT    (161.83)*X
+     FEE BASIS PAID TO IB    (161.9)*
+               Enter '^' to STOP or <ret> to continue...
+
+
+                       TABLES RELATED TO PATIENT FILE (2)
+
+     FEE BASIS PAYMENT    (162)*X
+     FEE NOTIFICATION/REQUEST    (162.2)
+     VA FORM 10-7078    (162.4)
+     FEE BASIS UNAUTHORIZED CLAIMS    (162.7)
+     CRHD TEMPORARY DATA - PATIENT    (183.21)*
+     CRHD HOT TEAM PATIENT LIST - PATIENTS    (183.31)*
+     RECORD TRACKING SORT GLOBAL - DFN    (194.31)*X
+     NURS AMIS DAILY EXCEPTION REPORT - PATIENT    (213.51)*X
+     NURS PATIENT    (214)*X
+     NURS CLASSIFICATION    (214.6)
+     NURS REVIEW CLASSIFICATION    (214.7)
+     DENTAL PATIENT    (220)*X
+     DENTAL TREATMENT (AMIS)    (221)
+     ED LOG    (230)
+     ED LOG HISTORY    (230.1)
+     CLINICAL EVENTS    (234)
+     IVM PATIENT    (301.5)*
+               Enter '^' to STOP or <ret> to continue...
+
+
+                       TABLES RELATED TO PATIENT FILE (2)
+
+     IVM BILLING TRANSMISSION    (301.61)
+     IVM FINANCIAL QUERY LOG    (301.62)*
+     IVM EXTRACT MANAGEMENT    (301.63)
+     IVM ADDRESS CHANGE LOG    (301.7)
+     AR DATA QUEUE - BILL NUMBER    (348.41)
+     AR DATA QUEUE - COPAY PATIENT    (348.43)*
+     INTEGRATED BILLING ACTION    (350)
+     MEANS TEST BILLING CLOCK    (351)
+     IB CONTINUOUS PATIENT    (351.1)*
+     SPECIAL INPATIENT BILLING CASES    (351.2)*
+     TRICARE PHARMACY TRANSACTIONS    (351.5)
+     TRANSFER PRICING PATIENT    (351.6)*X
+     LTC COPAY CLOCK    (351.81)
+     BILLING PATIENT    (354)*X
+     IB PATIENT COPAY ACCOUNT    (354.7)*X
+     GROUP INSURANCE PLAN    (355.3)
+     INSURANCE BUFFER    (355.33)
+               Enter '^' to STOP or <ret> to continue...
+
+
+                       TABLES RELATED TO PATIENT FILE (2)
+
+     INSURANCE CLAIMS YEAR TO DATE    (355.5)
+     PERSONAL POLICY    (355.7)
+     SPONSOR RELATIONSHIP    (355.81)*
+     CLAIMS TRACKING    (356)
+     INSURANCE REVIEW    (356.2)
+     CLAIMS TRACKING ROI    (356.25)
+     CLAIMS TRACKING ROI CONSENT    (356.26)
+     ENCOUNTER FORM TRACKING    (357.96)
+     AICS ERROR AND WARNING LOG    (359.3)
+     EDI MESSAGES    (364.2)
+     IIV RESPONSE    (365)
+     IIV TRANSMISSION QUEUE    (365.1)
+     IB NCPDP EVENT LOG - EVENT    (366.141)
+     PFSS CHARGE CACHE    (373)
+     PFSS ACCOUNT    (375)
+     ENROLLMENT RATED DISABILITY UPLOAD AUDIT    (390)
+     HOME TELEHEALTH PATIENT    (391.31)
+               Enter '^' to STOP or <ret> to continue...
+
+
+                       TABLES RELATED TO PATIENT FILE (2)
+
+     ADT/HL7 PIVOT    (391.71)
+     TREATING FACILITY LIST    (391.91)*
+     PATIENT DATA EXCEPTION    (391.98)*
+     BENEFICIARY TRAVEL CLAIM    (392)
+     BENEFICIARY TRAVEL CERTIFICATION    (392.2)
+     BENEFICIARY TRAVEL MANUAL DEDUCTIBLE WAIVER    (392.7)
+     BT PATIENT ALTERNATE INCOME    (392.9)*X
+     INCOMPLETE RECORDS    (393)*
+     *PDX TRANSACTION    (394)
+     *PDX STATISTICS    (394.4)
+     VAQ - TRANSACTION    (394.61)
+     VAQ - WORKLOAD    (394.87)
+     HINQ SUSPENSE    (395.5)*X
+     HINQ AUDIT    (395.7)*X
+     FORM 7131    (396)*
+     CAPRI TEMPLATES    (396.17)*
+     AMIE REPORT    (396.2)*
+               Enter '^' to STOP or <ret> to continue...
+
+
+                       TABLES RELATED TO PATIENT FILE (2)
+
+     2507 REQUEST    (396.3)*
+     FORM 28-8861    (396.9)
+     BILL/CLAIMS    (399)
+     RECALL REMINDERS    (403.5)*
+     RECALL REMINDERS REMOVED    (403.56)*
+     OUTPATIENT PROFILE    (404.41)*X
+     PATIENT TEAM ASSIGNMENT    (404.42)*
+     PCMM HL7 TRANSMISSION LOG    (404.471)
+     PCMM HL7 EVENT    (404.48)
+     PATIENT MOVEMENT    (405)
+     PATIENT RELATION    (408.12)*
+     INCOME RELATION    (408.22)*
+     ANNUAL MEANS TEST    (408.31)
+     MEANS TEST CHANGES    (408.41)
+     SD WAIT LIST    (409.3)*
+     EWL CLEAN-UP    (409.39)*
+     SDSC SERVICE CONNECTED CHANGES    (409.48)
+               Enter '^' to STOP or <ret> to continue...
+
+
+                       TABLES RELATED TO PATIENT FILE (2)
+
+     SCHEDULING VISITS    (409.5)
+     APPOINTMENT PFSS ACCOUNT REFERENCE    (409.55)
+     OUTPATIENT ENCOUNTER    (409.68)
+     PATIENT APPOINTMENT INFO LOG - PATIENT    (409.69)*
+     DELETED OUTPATIENT ENCOUNTER    (409.74)
+     ACRP TRANSMISSION HISTORY    (409.77)
+     ACCOUNTS RECEIVABLE    (430)
+     DIRECT DELIVERY PATIENTS    (440.2)*X
+     INTERNAL DISTRIBUTION ORDER/ADJ.    (445.3)
+     INVENTORY DISTRIBUTED PATIENT SUPPLIES    (446.1)
+     PATIENT FUNDS    (470)*X
+     CMOP TRANSMISSION - PRESCRIPTIONS    (550.215)
+     CRISIS NOTE DISPLAY - DATE/TIME OF ACCESS    (600.71)
+     PSYCH INSTRUMENT PATIENT    (601.2)*X
+     INCOMPLETE PSYCH TEST PATIENT    (601.4)*X
+     MH ADMINISTRATIONS    (601.84)
+     MH CR SCRATCH    (601.94)
+               Enter '^' to STOP or <ret> to continue...
+
+
+                       TABLES RELATED TO PATIENT FILE (2)
+
+     CLOZAPINE PATIENT LIST    (603.01)
+     ADDICTION SEVERITY INDEX    (604)
+     MH CLINICAL FILE    (615)*X
+     SECLUSION/RESTRAINT    (615.2)
+     MH WAIT LIST - PATIENT    (617.01)*
+     MENTAL HEALTH CENSUS - BOARDED ON PSYCHIATRY    (618.04)*X
+     MENTAL HEALTH INPT    (618.4)
+     DIAGNOSTIC RESULTS - MENTAL HEALTH    (627.8)
+     HBHC PATIENT    (631)*
+     HBHC VISIT    (632)*
+     HBHC EVALUATION/ADMISSION ERROR(S)    (634.1)*
+     HBHC VISIT ERROR(S)    (634.2)*
+     HBHC DISCHARGE ERROR(S)    (634.3)*
+     HBHC PSEUDO SSN ERROR(S)    (634.5)*
+     SOCIAL WORK CASE    (650)
+     SOCIAL WORK PATIENT    (655)*X
+     SWS ASSESSMENT DATA BASE    (655.2)*X
+               Enter '^' to STOP or <ret> to continue...
+
+
+                       TABLES RELATED TO PATIENT FILE (2)
+
+     PROSTHETICS PATIENT    (665)*X
+     PROS LETTER TRANSACTION FILE    (665.4)*
+     HOME OXYGEN TRANSACTIONS FILE - BILLING MONTH - VENDOR - PATIENT    (665.72319)*
+     PROSTHETIC SUSPENSE    (668)
+     MEDICAL PATIENT    (690)*X
+     CP TRANSACTION    (702)*
+     CP RESULT REPORT    (703.1)
+     CP_HL7_LOG    (704.002)
+     CP_MOVEMENT_AUDIT    (704.005)*
+     TERM_RANGE_CHECK    (704.107)
+     OBS_FLOWSHEET_SUPP_PAGE    (704.1122)
+     OBS_ALARM    (704.115)
+     OBS    (704.117)
+     CP_KARDEX_ACTION    (704.121)
+     HEMODIALYSIS ACCESS POINTS    (704.201)*
+     HEMODIALYSIS STUDY    (704.202)
+               Enter '^' to STOP or <ret> to continue...
+
+
+                       TABLES RELATED TO PATIENT FILE (2)
+
+     EDR EVENT    (705)
+     1010EZ HOLDING    (712)
+     EAS MT PATIENT STATUS    (713.1)*
+     EAS LTC MONTHLY MAX CALCULATIONS    (714.5)*
+     EVENT CAPTURE PATIENT    (721)
+     ADMISSION EXTRACT    (727.802)
+     CLINIC NOSHOW EXTRACT    (727.804)
+     NURSING EXTRACT    (727.805)
+     DENTAL EXTRACT    (727.806)
+     PHYSICAL MOVEMENT EXTRACT    (727.808)
+     UNIT DOSE LOCAL EXTRACT    (727.809)
+     PRESCRIPTION EXTRACT    (727.81)
+     SURGERY EXTRACT    (727.811)
+     MENTAL HEALTH EXTRACT    (727.812)
+     RADIOLOGY EXTRACT    (727.814)
+     EVENT CAPTURE LOCAL EXTRACT    (727.815)
+     CLINIC I EXTRACT    (727.816)
+               Enter '^' to STOP or <ret> to continue...
+
+
+                       TABLES RELATED TO PATIENT FILE (2)
+
+     TREATING SPECIALTY CHANGE EXTRACT    (727.817)
+     CLINIC II EXTRACT    (727.818)
+     IV DETAIL EXTRACT    (727.819)
+     ADMISSION SETUP EXTRACT    (727.82)
+     PHYSICAL MOVEMENT SETUP EXTRACT    (727.821)
+     TREATING SPECIALTY CHANGE SETUP EXTRACT    (727.822)
+     PAI EXTRACT    (727.823)
+     LAB RESULTS EXTRACT    (727.824)
+     QUASAR EXTRACT    (727.825)
+     PROSTHETICS EXTRACT    (727.826)
+     CLINIC EXTRACT    (727.827)
+     BLOOD BANK EXTRACT    (727.829)
+     NUTRITION EXTRACT    (727.832)
+     BCMA EXTRACT    (727.833)
+     IV EXTRACT DATA    (728.113)
+     UNIT DOSE EXTRACT DATA    (728.904)
+     QA OCCURRENCE SCREEN    (741)*
+               Enter '^' to STOP or <ret> to continue...
+
+
+                       TABLES RELATED TO PATIENT FILE (2)
+
+     QA PATIENT INCIDENT REVIEW    (742)*
+     FALL OUT    (743.1)*
+     CONSUMER CONTACT    (745.1)
+     FUNCTIONAL INDEPENDENCE MEASUREMENT RECORD    (783)
+     WV PATIENT    (790)*X
+     WV LAB TESTS    (790.08)
+     ROR PATIENT EVENTS    (798.3)*X
+     ROR PATIENT    (798.4)*X
+     ROR LOG - MESSAGE    (798.74)
+     REMINDER GEC DIALOG ASSOCIATION HISTORY    (801.55)*
+     REMINDER REPORT TEMPLATE - PATIENT    (810.16)*
+     REMINDER EXTRACT SUMMARY - EXTRACT FINDINGS    (810.31)*
+     REMINDER EXTRACT SUMMARY - COMPLIANCE TOTALS - FINDING TOTALS - UNIQUE APPL
+ICABLE PATIENT LIST    (810.3316)*
+     REMINDER PATIENT LIST - PATIENTS    (810.53)*
+     ORDER CHECK PATIENT ACTIVE DATA    (860.1)*X
+     MPIF CMOR REQUEST    (984.9)
+               Enter '^' to STOP or <ret> to continue...
+
+
+                       TABLES RELATED TO PATIENT FILE (2)
+
+     WII ADMISSIONS DISCHARGES    (987.5)
+     CIRN HL7 EXCEPTION LOG - EXCEPTION    (991.12)
+     CIRN SITE PARAMETER    (991.8)
+     NUPA SAVED NOTES    (1927.09)
+     NUPA CARE PLANS    (1927.4)
+     IMAGE    (2005)
+     IMAGE AUDIT    (2005.1)
+     IMAGING PATIENT REFERENCE    (2005.6)
+     IMAGING DUPLICATE UID LOG    (2005.66)
+     IMAGING USER PREFERENCE - PATIENT LIST    (2006.1867)*
+     PACS MESSAGE    (2006.5)
+     DICOM WORKLIST PATIENT - PATIENT    (2006.552)
+     DICOM WORKLIST STUDY - STUDY    (2006.562)
+     DICOM GATEWAY PARAMETER    (2006.563)
+     EXPORT DICOM RUN    (2006.565)
+     IMAGING WINDOWS SESSIONS    (2006.82)
+     MAGV IMPORT STUDY LOG    (2006.9421)
+               Enter '^' to STOP or <ret> to continue...
+
+
+                       TABLES RELATED TO PATIENT FILE (2)
+
+     IMAGE ACCESS LOG    (2006.95)
+     MULTI IMAGE PRINT    (2006.961)*
+     VIST ROSTER    (2040)*
+     ANRV PATIENT REVIEW    (2048)*
+     VBECS WORKLOAD CAPTURE    (6002.01)
+     VBECS DSS EXTRACT    (6002.03)
+     TIU AUDIT TRAIL    (8925.5)
+     ALERT - ALERT DATE/TIME    (8992.01)
+     ALERT TRACKING    (8992.1)
+     A&SP PATIENT    (509850.2)*X
+     AUDIOMETRIC EXAM DATA    (509850.9)
+     STATION ORDER    (791810)
+     ROES ELIGIBILITY CONFIRMATION    (791814)*
+     PATIENT/IHS    (9000001)*X
+     BPS CERTIFICATION    (9002313.31)
+     BPS LOG OF TRANSACTIONS    (9002313.57)
+     BPS TRANSACTION    (9002313.59)
+               Enter '^' to STOP or <ret> to continue...
+
+
+                       TABLES RELATED TO PATIENT FILE (2)
+
+     BPS REQUESTS    (9002313.77)
+     APSP INTERVENTION    (9009032.4)
+
+
+Select File: 
+VISTA>

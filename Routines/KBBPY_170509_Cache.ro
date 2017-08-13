@@ -1,0 +1,3443 @@
+Cache for Windows^INT^KBBPY* routines and unit tests (KBBPUY*)^~Format=Cache.S~^RAW
+%RO on 09 May 2017   2:33 PM
+KBBPUYCV^INT^1^64401,68045^0
+KBBPUYCV ;JLI/JIVEYSOFT.COM - run coverage analysis ;04/28/17  18:54
+ ;;0.0;KBBP;;;
+ ;
+ D RUNTHEM1(2)
+ Q
+ ;
+RUNTHEM(LEVEL,ROUTINES) ;
+ N ROUNAMES,XCLDROUS,NAME
+ S ROUNAMES(1)="KBBPUYNM,^KBBPYNM,^KBBPYQRY,^KBBPYDO1,^KBBPYROU,^KBBPYSHO,^KBBPYREL"
+ S ROUNAMES(2)="^KBBPYSET,^KBBPYSE1,^KBBPYSE2,^KBBPYSH1,^KBBPYPRO,^KBBPYREF"
+ S NAME=$S($D(ROUTINES):ROUTINES,1:"KBBPY*")
+ D COVERAGE^%ut(NAME,.ROUNAMES,.XCLDROUS,LEVEL)
+ Q
+ ;
+RUNTHEM1(LEVEL,ROUTINES) ;
+ N ROUNAMES,XCLDROUS,X,NAME
+ S ROUNAMES(1)="KBBPUYNM,^KBBPYNM,^KBBPYQRY,^KBBPYDO1,^KBBPYROU,^KBBPYSHO"
+ S ROUNAMES(2)="^KBBPYSET,^KBBPYSE1,^KBBPYSE2,^KBBPYSH1,^KBBPYPRO,^KBBPYREF"
+ D COVERAGE^%ut("KBBPY*",.ROUNAMES,.XCLDROUS,LEVEL)
+ Q
+ ;
+KBBPYSHO ;
+ N ROUNAMES,XCLDROUS
+ S ROUNAMES(1)="EN^KBBPYSHO"
+ D COVERAGE^%ut("KBBPY*",.ROUNAMES,.XCLDROUS,2)
+ Q
+ ;
+KBBPYQRY ;
+ N %ut
+ S %ut=1 ; make it look like inside a unit test
+ N ROUNAMES,XCLDROUS
+ S ROUNAMES(1)="EN^KBBPYQRY"
+ D COVERAGE^%ut("KBBPY*",.ROUNAMES,.XCLDROUS,2)
+ K %ut
+ Q
+ ;
+KBBPYROU ;
+ N ROUNAMES,XCLDROUS
+ S ROUNAMES(1)="EN^KBBPZ999"
+ D COVERAGE^%ut("KBBPY*",.ROUNAMES,.XCLDROUS,2)
+ Q
+ ;
+1 ;
+ D RUNTHEM(1)
+ Q
+ ;
+3 ;
+ D RUNTHEM(3)
+ Q
+ ;
+ONEROU ;
+ N ROUNAME,RUNROUS,XCLUDE,LEVEL
+ Q:'$$GETINFO(.ROUNAME,.LEVEL)
+ S RUNROUS(1)="KBBPUYNM"
+ S RUNROUS(2)="^"_ROUNAME
+ D COVERAGE^%ut(ROUNAME,.RUNROUS,.XCLUDE,LEVEL)
+ Q
+ ;
+GETINFO(ROUNAME,LEVEL) ; .EF - returns 1 if OK, 0 if should exit
+ N X,Y
+LOOP ;
+ R !,"Enter Routine Name: ",ROUNAME:DTIME Q:(ROUNAME="")!(ROUNAME[U)!'$T 0
+ W !,"Entered ",ROUNAME," - Is this correct? Y// " R Y:DTIME I Y'="","Yy"'[$E(Y,1) G LOOP
+ S LEVEL=2
+ R !,"Level: 2// ",X:DTIME Q:'$T!(X[U) 0  I X'="" G:"123"'[X LOOP S LEVEL=X
+ Q 1
+EOR ;
+
+KBBPUYDO^INT^1^64412,52274^0
+KBBPUYDO ;JIVEYSOFT.COM/JLI - Unit tests for KBBPYDO1 ;05/09/17  14:31;
+ ;;0.0;KBBP;
+ ; includes tests for:
+ ;   KBBPYDO1
+ ;
+ D EN^%ut($T(+0))
+ Q
+ ;
+STARTUP ;
+ D STARTUP^KBBPUYNM
+ K ^XTMP("KBBPY")
+ Q
+ ;
+SHUTDOWN ;
+ D SHUTDOWN^KBBPUYNM
+ Q
+ ;
+ ; Tests for routine KBBPYDO1
+GET1ONE ; @TEST - run GET1^KBBPYDO1 for one set of conditions
+ N UTSTDATA,DABASE,JLIXCNT,ROOT,NODE,SECMENU,VAL,VDATA
+ S UTSTDATA=$NA(^TMP("KBBPUYDO")) K @UTSTDATA
+ D BLD1TEST(UTSTDATA,.SECMENU)
+ S ROOT=$NA(^TMP($J)) K @ROOT
+ S DABASE=DUZ
+ S VDATA(1)="DATA1"
+ D BLDSET(ROOT,UTSTDATA,.VDATA,1)
+ S @ROOT@(VDATA(1),"XT")=1
+ K @ROOT@(VDATA(1),"XVAL")
+ D GET1^KBBPYDO1($NA(@ROOT@(VDATA(1))))
+ D CHKEQ^%ut($P(^VA(200,DUZ,0),U),$G(@ROOT@(VDATA(1),"XVAL",1,1)),"Bad value returned for Name field")
+ ;
+ D BLDSET(ROOT,UTSTDATA,.VDATA,4)
+ D GET1^KBBPYDO1($NA(@ROOT@(VDATA(1))))
+ D CHKEQ^%ut($P(^VA(200,DUZ,0),U),$G(@ROOT@(VDATA(1),"XVAL",1,1)),"Bad value returned for Name field")
+ D CHKEQ^%ut($P(^VA(200,DUZ,1),U,2),$G(@ROOT@(VDATA(1),"XVAL",2,1)),"Bad value returned for Sex field")
+ S NODE=$O(^VA(200,DUZ,51," "),-1),VAL=$P(^VA(200,DUZ,51,NODE,0),U),VAL=$P(^DIC(19.1,VAL,0),U)
+ S NODE=$O(@ROOT@(VDATA(1),"XVAL",3,1,""),-1)
+ D CHKEQ^%ut(VAL,$G(@ROOT@(VDATA(1),"XVAL",3,1,NODE)),"Bad value returned for Security Key field")
+ S NODE=$O(^VA(200,DUZ,203," "),-1),VAL=$P(^VA(200,DUZ,203,NODE,0),U),VAL=$P(^DIC(19,VAL,0),U)
+ S NODE=$O(@ROOT@(VDATA(1),"XVAL",4,1,""),-1)
+ D CHKEQ^%ut(VAL,$G(@ROOT@(VDATA(1),"XVAL",4,1,NODE)),"Bad value returned for Secondary Option field")
+ ;
+ K @UTSTDATA,@ROOT
+ Q
+ ;
+GET1TOT ; @TEST - run GET1^KBBPYDO1 for values for output
+ N UTSTDATA,DABASE,JLIXCNTL,ROOT,NODE,VAL,VDATA
+ S UTSTDATA=$NA(^TMP("KBBPUYDO")) K @UTSTDATA
+ D BLDTOT(UTSTDATA)
+ S ROOT=$NA(^TMP($J)) K @ROOT
+ S VDATA(1)="DATATOT"
+ S DABASE=DUZ
+ D BLDSET(ROOT,UTSTDATA,.VDATA,4)
+ D GET1^KBBPYDO1($NA(@ROOT@(VDATA(1))))
+ D CHKEQ^%ut($P(^VA(200,DUZ,0),U),$G(@ROOT@(VDATA(1),"XVAL",1,1)),"Bad value returned for Name field")
+ D CHKEQ^%ut($P(^VA(200,DUZ,1),U,2),$G(@ROOT@(VDATA(1),"XVAL",2,1)),"Bad value returned for Sex field")
+ S NODE=$O(^VA(200,DUZ,51," "),-1),VAL=$P(^VA(200,DUZ,51,NODE,0),U),VAL=$P(^DIC(19.1,VAL,0),U)
+ S NODE=$O(@ROOT@(VDATA(1),"XVAL",3,1,""),-1)
+ D CHKEQ^%ut(VAL,$G(@ROOT@(VDATA(1),"XVAL",3,1,NODE)),"Bad value returned for Security Key field")
+ S NODE=$O(^VA(200,DUZ,203," "),-1),VAL=$P(^VA(200,DUZ,203,NODE,0),U),VAL=$P(^DIC(19,VAL,0),U)
+ S NODE=$O(@ROOT@(VDATA(1),"XVAL",4,1,""),-1)
+ D CHKEQ^%ut(VAL,$G(@ROOT@(VDATA(1),"XVAL",4,1,NODE)),"Bad value returned for Secondary Option field")
+ ;
+ K @UTSTDATA,@ROOT
+ Q
+ ;
+GET1TOT2 ; @TEST - run GET1^KBBPYDO1 for values for output
+ N UTSTDATA,DABASE,JLIXCNTL,ROOT,NODE,VAL,VDATA,COND,CONDTOT,DATATOT,DONE,DRUG,DRUGNAME,FILLCOND
+ N FILLDATE,I,J,JLI,JLI1,K,KBBPFIL,KBBPFILN,KBBPSETS,PATH,PNT,PTNAME,REFILDAT,RFILCOND,TOTSETS,UTSTCOND
+ N VARTOT,X,X0,X1,X2,X4,X5,X6,X8,X9,XBASE,XCONDR
+ S UTSTDATA=$NA(^TMP("KBBPUYDO")) K @UTSTDATA
+ D BLDTOT2(UTSTDATA)
+ S ROOT=$NA(^TMP($J)) K @ROOT
+ S VDATA(1)="DATATOT"
+ F I=0:0 S I=$O(^PS(55,I)) Q:I'>0  D  Q:DONE
+ . F J=0:0 S J=$O(^PS(55,I,"P",J)) Q:J'>0  D  Q:DONE
+ . . S PNT=+$G(^PS(55,I,"P",J,0)) Q:PNT'>0  D  Q:DONE
+ . . . S X=^PSRX(PNT,0),DRUG=$P(X,U,6),DRUGNAME=$P($G(^PSDRUG(DRUG,0)),U) Q:DRUGNAME=""
+ . . . S FILLDATE=$P($G(^PSRX(PNT,2)),U,2) Q:FILLDATE=""
+ . . . F K=0:0 S K=$O(^PSRX(PNT,1,K)) Q:K'>0  S REFILDAT=+^PSRX(PNT,1,K,0) Q:'REFILDAT  D
+ . . . . S FILLCOND="X="_FILLDATE,RFILCOND="X="_REFILDAT
+ . . . . S DONE=1,DABASE=I
+ . . . . Q
+ . . . Q
+ . . Q
+ . Q
+ I '$D(DABASE) W !,"GET1TOT2^KBBPUYDO - No Pharmacy Patient data found for tests - skipping",! Q
+ S PTNAME=$P(^DPT(DABASE,0),U)
+ D BLDSET(ROOT,UTSTDATA,.VDATA,4)
+ S JLI=ROOT,JLI1=$E(ROOT,1,$L(ROOT)-1)
+ S COND("TOT")="CONDTOT"
+ S CONDTOT(2)="I X="_DRUGNAME
+ S CONDTOT(3)=FILLCOND
+ S CONDTOT(4)=RFILCOND
+ S UTSTCOND(2)="X="_DRUGNAME
+ S UTSTCOND(3)=FILLCOND
+ S UTSTCOND(4)=RFILCOND
+ S KBBPFIL=2,KBBPFILN="PATIENT"
+ S DATATOT=$NA(@ROOT@("DATATOT"))
+ S KBBPSETS=2,KBBPSETS(1)="1,",KBBPSETS(2)="2,"
+ S PATH(1)=".01;2R55^.01;55.03T52"
+ S TOTSETS=2,TOTSETS(1)="2;3;",TOTSETS(2)="2;4;"
+ S VARTOT(1)=".01;2",VARTOT(2)="6;52",VARTOT(3)="22;52",VARTOT(4)=".01;52.1"
+ S X0=55.03,X1="",X2=55,X4=52,X5=52.1,X6=.01,X8="",X9="REFILL DATE^52.1^.01^0;1^1^52.1;52^""AD""",XBASE="^PS(55,DABASE,""P"",DALOOP3"
+ S XCONDR="CONDTOT"
+ D GET1^KBBPYDO1($NA(@ROOT@(VDATA(1))))
+ D CHKEQ^%ut(PTNAME,@ROOT@(VDATA(1),"XVAL",1,1),"Bad value returned for Patient Name field")
+ D CHKEQ^%ut(DRUGNAME,@ROOT@(VDATA(1),"XVAL",2,1),"Bad value returned for Drug Name field")
+ ;
+ K @UTSTDATA,@ROOT
+ Q
+ ;
+CHKIT ;@TEST - check if current data meets conditions and remove other values
+ N UTSTDATA,DABASE,JLIXCNT,COND,NODE,ROOT,SECMENU,VAL,VDATA
+ S UTSTDATA=$NA(^TMP("KBBPUYDO")) K @UTSTDATA
+ D BLD1TEST(UTSTDATA,.SECMENU)
+ S COND(1)="I X=$P(^VA(200,DUZ,0),U)"
+ S COND(2)="I X=$P(^VA(200,DUZ,1),U,2)"
+ S COND(3)="I X=""XUPROGMODE"""
+ S COND(4)="I X="""_SECMENU_""""
+ S VDATA(1)="DATA1"
+ S ROOT=$NA(^TMP($J)) K @ROOT
+ S DABASE=DUZ
+ D BLDSET(ROOT,UTSTDATA,.VDATA,4)
+ S ROOT=$NA(@ROOT@(VDATA(1)))
+ D CHKIT^KBBPYDO1(ROOT,"COND")
+ D CHKEQ^%ut($P(^VA(200,DUZ,0),U),$G(@ROOT@("XVAL",1,1)),"Bad value returned for Name field")
+ D CHKEQ^%ut($P(^VA(200,DUZ,1),U,2),$G(@ROOT@("XVAL",2,1)),"Bad value returned for Sex field")
+ S NODE=$O(@ROOT@("XVAL",3,1," "),-1)
+ D CHKEQ^%ut("XUPROGMODE",$G(@ROOT@("XVAL",3,1,NODE)),"Bad value returned for Security Key field")
+ S NODE=$O(@ROOT@("XVAL",4,1,""),-1),VAL=$G(@ROOT@("XVAL",4,1,NODE))
+ D CHKEQ^%ut(SECMENU,VAL,"Incorrect value returned for Secondary Option field")
+ K @UTSTDATA
+ Q
+ ;
+BLDSET(ROOT,UTSTDATA,DATA,NVALS) ; Build data arr/ay for specified number of variables
+ ; DATA - passed by reference
+ N ARG1,ARG2,I,LBL,NCNT,XROOT,YROOT,ZROOT
+ K @ROOT
+ F I=0:0 S I=$O(DATA(I)) Q:I'>0  D
+ . S LBL="" F  S LBL=$O(@UTSTDATA@(DATA(I),LBL)) Q:LBL=""  S:$D(@UTSTDATA@(DATA(I),LBL))#2 @ROOT@(DATA(I),LBL)=^(LBL) D
+ . . F NCNT=1:1:NVALS S XROOT=$NA(@UTSTDATA@(DATA(I),LBL,NCNT)),YROOT=$NA(@ROOT@(DATA(I),LBL,NCNT)) D
+ . . . I $D(@XROOT)#2 S @YROOT=@XROOT
+ . . . S ARG1="" F  S ARG1=$O(@XROOT@(ARG1)) Q:ARG1=""  S:$D(@XROOT@(ARG1))#2 @YROOT@(ARG1)=@XROOT@(ARG1) I $D(@XROOT@(ARG1))>1 D
+ . . . . S ZROOT=$NA(@XROOT@(ARG1))
+ . . . . S ARG2="" F  S ARG2=$O(@ZROOT@(ARG2)) Q:ARG2=""  S:$D(@ZROOT@(ARG2))#2 @YROOT@(ARG1,ARG2)=@ZROOT@(ARG2) I $D(@XROOT@(ARG2))>1 D
+ . . . . Q
+ . . . Q
+ . . Q
+ . Q
+ Q
+ ;
+BLD1TEST(ROOT,SECMENU) ; build array of single data set data
+ S @ROOT@("DATA1","XT")="4"
+ S @ROOT@("DATA1","XT",1)="I $D(DA(""P200"")) S DA=DA(""P200""),XTVDATA=$S($D(^VA(200,DA,0)):$P(^(0),""^"",1),1:"""") S:XTVDATA'="""" @ROOT@(""XVAL"",1,NVAL)=XTVDATA"
+ S @ROOT@("DATA1","XT",2)="I $D(DA(""P200"")) S DA=DA(""P200""),XTVDATA=$S($D(^VA(200,DA,1)):$P(^(1),""^"",2),1:"""") S:XTVDATA'="""" @ROOT@(""XVAL"",2,NVAL)=XTVDATA"
+ S @ROOT@("DATA1","XT",3)="I $D(DA(""P200"")) S DA(1)=DA(""P200"") X @ROOT@(""XT"",3,1)"
+ S @ROOT@("DATA1","XT",3,0)="S XTVDATA=$S($D(^VA(200,DA(1),51,DA,0)):$P(^(0),""^"",1),1:""""),XTVDATA=$S($D(^DIC(19.1,+XTVDATA,0)):$P(^(0),U),1:"""") S:XTVDATA'="""" @ROOT@(""XVAL"",3,NVAL,NVAL1)=XTVDATA"
+ S @ROOT@("DATA1","XT",3,1)="S DA=0 F NVAL1=1:1 S DA=$O(^VA(200,DA(1),51,DA)) Q:DA'>0  X @ROOT@(""XT"",3,0)"
+ S @ROOT@("DATA1","XT",4)="I $D(DA(""P200"")) S DA(1)=DA(""P200"") X @ROOT@(""XT"",4,1)"
+ S @ROOT@("DATA1","XT",4,0)="S XTVDATA=$S($D(^VA(200,DA(1),203,DA,0)):$P(^(0),""^"",1),1:""""),XTVDATA=$S($D(^DIC(19,+XTVDATA,0)):$P(^(0),U),1:"""") S:XTVDATA'="""" @ROOT@(""XVAL"",4,NVAL,NVAL1)=XTVDATA"
+ S @ROOT@("DATA1","XT",4,1)="S DA=0 F NVAL1=1:1 S DA=$O(^VA(200,DA(1),203,DA)) Q:DA'>0  X @ROOT@(""XT"",4,0)"
+ S @ROOT@("DATA1","XTDA")="1"
+ S @ROOT@("DATA1","XTDA",1)="S DA(""P200"")=DABASE"
+ S @ROOT@("DATA1","XTN",1)="200"
+ S @ROOT@("DATA1","XTN",2)="200"
+ S @ROOT@("DATA1","XTN",3)="200.051;200"
+ S @ROOT@("DATA1","XTN",4)="200.03;200"
+ S @ROOT@("DATA1","XTNM",1)="NEW PERSON NAME"
+ S @ROOT@("DATA1","XTNM",2)="NEW PERSON SEX"
+ S @ROOT@("DATA1","XTNM",3)="NEW PERSON KEY"
+ S @ROOT@("DATA1","XTNM",4)="NEW PERSON SECONDARY MENU OPTIONS"
+ S @ROOT@("DATA1","XTS",1)=""
+ S @ROOT@("DATA1","XVAL",1,1)=$P(^VA(200,DUZ,0),U)
+ S @ROOT@("DATA1","XVAL",2,1)=$P(^VA(200,DUZ,1),U,2)
+ S @ROOT@("DATA1","XVAL",3,1,2)="XUPROGMODE"
+ S SECMENU=+$G(^VA(200,DUZ,203,1,0)),SECMENU=$P($G(^DIC(19,SECMENU,0)),U)
+ S @ROOT@("DATA1","XVAL",4,1,1)=SECMENU
+ Q
+ ;
+BLDTOT(ROOT) ;
+ S @ROOT@("DATATOT","XM",1)=".01"
+ S @ROOT@("DATATOT","XM",2)="4"
+ S @ROOT@("DATATOT","XM",3)=".01"
+ S @ROOT@("DATATOT","XM",4)=".01"
+ S @ROOT@("DATATOT","XT")="4"
+ S @ROOT@("DATATOT","XT",1)="I $D(DA(""P200"")) S DA=DA(""P200""),XTVDATA=$S($D(^VA(200,DA,0)):$P(^(0),""^"",1),1:"""") S:XTVDATA'="""" @ROOT@(""XVAL"",1,NVAL)=XTVDATA"
+ S @ROOT@("DATATOT","XT",2)="I $D(DA(""P200"")) S DA=DA(""P200""),XTVDATA=$S($D(^VA(200,DA,1)):$P(^(1),""^"",2),1:"""") S:XTVDATA'="""" @ROOT@(""XVAL"",2,NVAL)=XTVDATA"
+ S @ROOT@("DATATOT","XT",3)="I $D(DA(""P200"")) S DA(1)=DA(""P200"") X @ROOT@(""XT"",3,1)"
+ S @ROOT@("DATATOT","XT",3,0)="S XTVDATA=$S($D(^VA(200,DA(1),51,DA,0)):$P(^(0),""^"",1),1:""""),XTVDATA=$S($D(^DIC(19.1,+XTVDATA,0)):$P(^(0),U),1:"""") S:XTVDATA'="""" @ROOT@(""XVAL"",3,NVAL,NVAL1)=XTVDATA"
+ S @ROOT@("DATATOT","XT",3,1)="S DA=0 F NVAL1=1:1 S DA=$O(^VA(200,DA(1),51,DA)) Q:DA'>0  X @ROOT@(""XT"",3,0)"
+ S @ROOT@("DATATOT","XT",4)="I $D(DA(""P200"")) S DA(1)=DA(""P200"") X @ROOT@(""XT"",4,1)"
+ S @ROOT@("DATATOT","XT",4,0)="S XTVDATA=$S($D(^VA(200,DA(1),203,DA,0)):$P(^(0),""^"",1),1:""""),XTVDATA=$S($D(^DIC(19,+XTVDATA,0)):$P(^(0),U),1:"""") S:XTVDATA'="""" @ROOT@(""XVAL"",4,NVAL,NVAL1)=XTVDATA"
+ S @ROOT@("DATATOT","XT",4,1)="S DA=0 F NVAL1=1:1 S DA=$O(^VA(200,DA(1),203,DA)) Q:DA'>0  X @ROOT@(""XT"",4,0)"
+ S @ROOT@("DATATOT","XTDA")="1"
+ S @ROOT@("DATATOT","XTDA",1)="S DA(""P200"")=DABASE"
+ S @ROOT@("DATATOT","XTN",1)="200"
+ S @ROOT@("DATATOT","XTN",2)="200"
+ S @ROOT@("DATATOT","XTN",3)="200.051;200"
+ S @ROOT@("DATATOT","XTN",4)="200.03;200"
+ S @ROOT@("DATATOT","XTNM",1)="NEW PERSON NAME"
+ S @ROOT@("DATATOT","XTNM",2)="NEW PERSON SEX"
+ S @ROOT@("DATATOT","XTNM",3)="NEW PERSON KEY"
+ S @ROOT@("DATATOT","XTNM",4)="NEW PERSON SECONDARY MENU OPTIONS"
+ S @ROOT@("DATATOT","XTS",1)=""
+ Q
+ ;
+BLDTOT2(ROOT) ;
+ S @ROOT@("DATATOT","XM",1)=.01
+ S @ROOT@("DATATOT","XM",2)=6
+ S @ROOT@("DATATOT","XM",3)=22
+ S @ROOT@("DATATOT","XM",4)=.01
+ S @ROOT@("DATATOT","XT")=4
+ S @ROOT@("DATATOT","XT",1)="I $D(DA(""P2"")) S DA=DA(""P2""),XTVDATA=$S($D(^DPT(DA,0)):$P(^(0),""^"",1),1:"""") S:XTVDATA'="""" @ROOT@(""XVAL"",1,NVAL)=XTVDATA"
+ S @ROOT@("DATATOT","XT",2)="I $D(DA(""P52"")) S DA=DA(""P52""),XTVDATA=$S($D(^PSRX(DA,0)):$P(^(0),""^"",6),1:""""),XTVDATA=$S($D(^PSDRUG(+XTVDATA,0)):$P(^(0),U),1:"""") S:XTVDATA'="""" @ROOT@(""XVAL"",2,NVAL)=XTVDATA"
+ S @ROOT@("DATATOT","XT",3)="I $D(DA(""P52"")) S DA=DA(""P52""),XTVDATA=$S($D(^PSRX(DA,2)):$P(^(2),""^"",2),1:"""") S:XTVDATA'="""" @ROOT@(""XVAL"",3,NVAL)=XTVDATA"
+ S @ROOT@("DATATOT","XT",4)="I $D(DA(""P52"")) S DA(1)=DA(""P52"") X @ROOT@(""XT"",4,1)"
+ S @ROOT@("DATATOT","XT",4,0)="S XTVDATA=$S($D(^PSRX(DA(1),1,DA,0)):$P(^(0),""^"",1),1:"""") S:XTVDATA'="""" @ROOT@(""XVAL"",4,NVAL,NVAL1)=XTVDATA"
+ S @ROOT@("DATATOT","XT",4,1)="S DA=0 F NVAL1=1:1 S DA=$O(^PSRX(DA(1),1,DA)) Q:DA'>0  X @ROOT@(""XT"",4,0)"
+ S @ROOT@("DATATOT","XTDA")=3
+ S @ROOT@("DATATOT","XTDA",1)="S DA(""P2"")=DABASE"
+ S @ROOT@("DATATOT","XTDA",2)="S DA(""P55"")=DABASE"
+ S @ROOT@("DATATOT","XTDA",3)="S DA(""P52"")=$S($D(^PS(55,DABASE,""P"",DALOOP3,0)):+$P(^(0),U,1),1:0)"
+ S @ROOT@("DATATOT","XTDA",3,1)="S DALOOP3=$O(^PS(55,DABASE,""P"",DALOOP3))"
+ S @ROOT@("DATATOT","XTN",1)=2
+ S @ROOT@("DATATOT","XTN",2)=52
+ S @ROOT@("DATATOT","XTN",3)=52
+ S @ROOT@("DATATOT","XTN",4)="52.1;52"
+ S @ROOT@("DATATOT","XTNM",1)="PATIENT NAME"
+ S @ROOT@("DATATOT","XTNM",2)="PRESCRIPTION DRUG"
+ S @ROOT@("DATATOT","XTNM",3)="PRESCRIPTION FILL DATE"
+ S @ROOT@("DATATOT","XTNM",4)="PRESCRIPTION REFILL DATE"
+ S @ROOT@("DATATOT","XTS",1)=""
+ S @ROOT@("DATATOT","XTS",2)=""
+ S @ROOT@("DATATOT","XTS",3)=3
+ Q
+ ;
+
+KBBPUYNM^INT^1^63984,53811^0
+KBBPUYNM ;JIVEYSOFT.COM/JLI - Unit tests for KBBPYNM ;03/07/16  14:56;
+ ;;0.0;KBBP;
+ ; includes tests for:
+ ;   KBBPYREF
+ ;   KBBPYNM
+ ;   KBBPYREL
+ ;   KBBPYQRY
+ D EN^%ut($T(+0))
+ Q
+ ;
+STARTUP ;
+ ; ZEXCEPT: UTSTGLOB - created in this code, killed in SHUTDOWN
+ K ^XTMP("KBBPY")
+ S UTSTGLOB=$NA(^TMP("KBBPYROU-OUTPUT",$J)) K @UTSTGLOB
+ Q
+ ;
+SHUTDOWN ;
+ ; ZEXCEPT: UTSTGLOB - created in STARTUP, killed in this code
+ D QUE^KBBPYREF
+ K @UTSTGLOB
+ K UTSTGLOB
+ Q
+ ; For routine KBBPYREF
+BUILD1 ;@TEST - run build process
+ L +^XTMP("KBBPY"):1 I '$T W !,"Skipped BUILD1 - could not get lock on global" Q
+ D QUE1^KBBPYREF
+ D CHKTF($D(^XTMP("KBBPY","FNM","NEW PERSON",200)),"NEW PERSON entry in ^XTMP(""KBBPY"",""FNM"") not found")
+ D CHKEQ("200^",$G(^XTMP("KBBPY","FNM","NEW PERSON",200)),"Value for NEW PERSON entry incorrect")
+ D CHKTF($D(^XTMP("KBBPY","FNM","KEYS",200.051)),"KEYS entry for NEW PERSON file, not found")
+ D CHKEQ("200.051;200^51",$G(^XTMP("KBBPY","FNM","KEYS",200.051)),"Incorrect value for KEYS entry for NEW PERSON file")
+ D CHKTF($D(^XTMP("KBBPY","XR1","PATIENT",44,44.001,2)),"Value for PATIENT field in 44.001 not present")
+ D CHKEQ("1;0^S^44.001;44^",$G(^XTMP("KBBPY","XR1","PATIENT",44,44.001,2)),"Incorrect value for PATIENT field in 44.001")
+ D CHKTF($D(^XTMP("KBBPY","XR1","PATIENT",44,44.003,.01)),"Value for PATIENT field in 44.003 not present")
+ D CHKEQ("0;1^S;1^44.003;44.001;44^",$G(^XTMP("KBBPY","XR1","PATIENT",44,44.003,.01)),"Incorrect value for PATIENT field in 44.003")
+ L -^XTMP("KBBPY")
+ Q
+ ;
+CHECK1 ;@TEST - run build process via global not present KBBPYREF
+ N ZTQUEUED
+ K ^XTMP("KBBPY","FNM"),^XTMP("KBBPY","XR1")
+ S ZTQUEUED=1 ; turns off printing of . as it builds the globals
+ D CHECK^KBBPYREF
+ K ZTQUEUED
+ D CHKBUILD ; check actual tests
+ Q
+ ;
+CHECK2 ;@TEST - run build via code that would ask about rebuilding KBBPYREF
+ N ZTQUEUED
+ S ZTQUEUED=1
+ D CHECK^KBBPYREF
+ D CHKBUILD
+ Q
+ ;
+QUE ;@TEST - run build directly by forcing it KBBPYREF
+ N ZTQUEUED
+ S ZTQUEUED=1 ; turns off printing of . as it builds the globals
+ D QUE^KBBPYREF ; sets variables and calls BUILD to generate globals
+ D CHKBUILD
+ Q
+ ;
+CHKBUILD ; tests on each version that builds the x-reference globals
+ D CHKTF($D(^XTMP("KBBPY","FNM","NEW PERSON",200)),"NEW PERSON entry in ^XTMP(""KBBPY"",""FNM"") not found")
+ D CHKEQ("200^",$G(^XTMP("KBBPY","FNM","NEW PERSON",200)),"Value for NEW PERSON entry incorrect")
+ D CHKTF($D(^XTMP("KBBPY","FNM","KEYS",200.051)),"KEYS entry for NEW PERSON file, not found")
+ D CHKEQ("200.051;200^51",$G(^XTMP("KBBPY","FNM","KEYS",200.051)),"Incorrect value for KEYS entry for NEW PERSON file")
+ D CHKTF($D(^XTMP("KBBPY","XR1","PATIENT",44,44.001,2)),"Value for PATIENT field in 44.001 not present")
+ D CHKEQ("1;0^S^44.001;44^",$G(^XTMP("KBBPY","XR1","PATIENT",44,44.001,2)),"Incorrect value for PATIENT field in 44.001")
+ D CHKTF($D(^XTMP("KBBPY","XR1","PATIENT",44,44.003,.01)),"Value for PATIENT field in 44.003 not present")
+ D CHKEQ("0;1^S;1^44.003;44.001;44^",$G(^XTMP("KBBPY","XR1","PATIENT",44,44.003,.01)),"Incorrect value for PATIENT field in 44.003")
+ Q
+ ;
+ ; for routine KBBPYNM
+KBBPFIL ;@TEST - build file structure KBBPYNM
+ N KBBPFIL,ZTQUEUED
+ K ^XTMP("KBBPY","FNM")
+ K ^XTMP("KBBPY","XR1")
+ ;S ZTQUEUED=1 D QUE^KBBPYREF K ZTQUEUED
+ S KBBPFIL=200
+ D KBBPFIL^KBBPYNM(KBBPFIL) ;(200)
+ D CHKTF($D(^XTMP("KBBPY","FNM","NEW PERSON",200)),"NEW PERSON entry in ^XTMP(""KBBPY"",""FNM"") not found")
+ D CHKEQ("200^",$G(^XTMP("KBBPY","FNM","NEW PERSON",200)),"Value for NEW PERSON entry incorrect")
+ Q
+ ;
+KBBPFIL1 ;@TEST - check single level subfile processing KBBPYNM
+ N FIL,KBBP1,KBBPNN,KBBPNOD,KBBPT,UPFIL,XFIL,XUPFLD,XUPNOD
+ N KBBP1,KBBPNN,KBBPNOD,KBBPT
+ S XFIL=0
+ ; try and get a subfile
+ S FIL=200 F  S FIL=$O(^DD(FIL)) Q:(FIL'<201)  I $G(^DD(FIL,0,"UP"))=200 S XFIL=FIL,UPFIL=200 Q
+ I XFIL'>0 W !,"Did not find a subfile for testing in file 200." Q
+ S XUPFLD=$O(^DD(UPFIL,"SB",XFIL,0)),XUPNOD=$P($P(^DD(UPFIL,XUPFLD,0),U,4),";")
+ S KBBPNN=0,KBBPNOD=""
+ S KBBP1=200,KBBPT=XFIL,KBBPNOD=KBBPNOD,KBBPNN=KBBPNN
+ D KBBPFIL1^KBBPYNM(.KBBPT,.KBBPNOD,.KBBPNN,KBBP1) ;(UPFIL,.XFIL,.KBBPNN,.KBBPNOD)
+ D CHKEQ(200,KBBPT,"Returned up file value not correct.")
+ D CHKEQ(1,KBBPNN,"Bad value returned for KBBPNN.")
+ D CHKEQ(XUPNOD,KBBPNOD,"Incorrect value for node returned.")
+ Q
+ ;
+KBBPFIL2 ;@TEST - check two level subfile processing in KBBPFIL1 KBBPYNM
+ N FIL,KBBP1,KBBPNN,KBBPNOD,KBBPT,UPFIL,XFIL,XUPFLD,XUPNOD
+ N KBBP1,KBBPNN,KBBPNOD,KBBPT
+ S XFIL=0
+ ; try and get a second level subfile
+ S FIL=200 F  S FIL=$O(^DD(FIL)) Q:(FIL'<201)  I $G(^DD(FIL,0,"UP"))>200 S XFIL=FIL,UPFIL=^DD(FIL,0,"UP") I $G(^DD(UPFIL,0,"UP"))=200 Q
+ I XFIL'>0 W !,"Did not find a second level subfile for testing in file 200." Q
+ S XUPFLD=$O(^DD(UPFIL,"SB",XFIL,0)),XUPNOD=$P($P(^DD(UPFIL,XUPFLD,0),U,4),";")
+ S KBBPNN=0,KBBPNOD=""
+ S KBBP1=UPFIL,KBBPT=XFIL,KBBPNOD=KBBPNOD,KBBPNN=KBBPNN
+ D KBBPFIL1^KBBPYNM(.KBBPT,.KBBPNOD,.KBBPNN,KBBP1)
+ D CHKEQ(UPFIL,KBBPT,"1-Returned up file value not correct.")
+ D CHKEQ(1,KBBPNN,"1-Bad value returned for KBBPNN.")
+ D CHKEQ(XUPNOD,KBBPNOD,"1-Incorrect value for node returned.")
+ ;
+ S XUPFLD=$O(^DD(200,"SB",KBBPT,0)),XUPNOD=$P($P(^DD(200,XUPFLD,0),U,4),";")_";"_XUPNOD
+ S KBBP1=200
+ D KBBPFIL1^KBBPYNM(.KBBPT,.KBBPNOD,.KBBPNN,KBBP1)
+ D CHKEQ(200,KBBPT,"2-Returned up file value not correct.")
+ D CHKEQ(2,KBBPNN,"2-Bad value returned for KBBPNN.")
+ D CHKEQ(XUPNOD,KBBPNOD,"2-Incorrect value for node returned.")
+ Q
+ ;
+KBBPFLD ;@TEST - in KBBPYNM
+ N KBBP1,KBBP2,KBBPNOD,KBBPTOP,KBBPXREF,NAME,KBBPFLD,KBBPFIL,KBBPNN
+ N KBBP1,KBBP2,KBBPFIL,KBBPFLD,KBBPNM,KBBPNN,KBBPNOD,KBBPTOP,KBBPDIC
+ S KBBPFLD=.01,KBBPFIL=200,KBBPNN=0
+ S NAME=$O(^DD(KBBPFIL,0,"NM","")),KBBP1=$P(^DD(KBBPFIL,KBBPFLD,0),U,4),KBBP2="",KBBPTOP=KBBPFIL,KBBPNOD="0"
+ S KBBPDIC="^VA(200,"
+ K ^XTMP("KBBPY","XR1")
+ S KBBPNM=NAME,KBBPFLD=KBBPFLD,KBBPFIL=KBBPFIL,KBBPNN=0,KBBP1=KBBP1,KBBP2=KBBP2,KBBPTOP=KBBPTOP,KBBPNOD=KBBPNOD
+ D KBBPFLD^KBBPYNM(.KBBPNM,KBBPFIL,KBBPDIC,KBBPFLD,KBBPNN,KBBP1,KBBP2,KBBPTOP,KBBPNOD) ;(KBBPFIL,"^VA(200,",KBBPFLD,KBBPNN,.NAME,KBBP1,KBBP2,KBBPTOP,KBBPNOD)
+ D CHKTF($D(^XTMP("KBBPY","XR1",NAME,KBBPTOP,KBBPFIL,KBBPFLD)),"XR1 Global for NAME field on NEW PERSON file not built correctly.")
+ D CHKEQ(KBBP1_U_KBBPNOD_U_KBBP2_U_"""B""",$G(^XTMP("KBBPY","XR1",KBBPNM,KBBPTOP,KBBPFIL,KBBPFLD)),"Expected value not found")
+ Q
+ ;
+XREF ;@TEST - Get standard x-ref if any KBBPYNM
+ N KBBPXREF
+ N KBBPDIC,KBBPFIL,KBBPFLD,KBBPNN,KBBPXREF
+ S KBBPFIL=200,KBBPFLD=.01,KBBPXREF="",KBBPNN=0,KBBPDIC="^VA(200,"
+ D XREF^KBBPYNM(.KBBPXREF,KBBPFIL,KBBPDIC,KBBPFLD,KBBPNN) ;(200,"^VA(200,",.01,.KBBPXREF,0)
+ D CHKEQ("""B""",KBBPXREF,"Bad x-ref for NAME field of NEW PERSON file.")
+ ;
+ S KBBPFIL=200.194,KBBPFLD=.02,KBBPNN=1
+ D XREF^KBBPYNM(.KBBPXREF,KBBPFIL,KBBPDIC,KBBPFLD,KBBPNN) ;(200.194,"^VA(200,",.02,.KBBPXREF,1)
+ D CHKEQ("""AXQA""",KBBPXREF,"Bad x-ref on PACKAGE ID for ALERT DATE/TIME subfile of NEW PERSON file.")
+ Q
+ ;
+XREF1 ;@TEST - get xref name, and rest of set code KBBPYNM
+ N FILEDIC,SETCODE,XREF
+ N KBBPDIC,KBBPXK,KBBPXREF
+ S FILEDIC="^DPT(",SETCODE="S ^DPT(""B"",$E(X,1,30),DA)="""""
+ S KBBPDIC=FILEDIC,KBBPXK=SETCODE,KBBPXREF=""
+ D XREF1^KBBPYNM(.KBBPXK,.KBBPXREF,KBBPDIC) ;(FILEDIC,.SETCODE,.XREF)
+ D CHKEQ("""B""",KBBPXREF,"Not the expected x-ref")
+ D CHKEQ("$E(X,1,30),DA)=""""",KBBPXK,"Not the following code for x-ref set")
+ Q
+ ;
+CHKX ;@TEST - check xref structure KBBPYNM
+ N KBBPNN,KBBPXK,KBBPXREF
+ N KBBPNN,KBBPXK,KBBPXREF
+ S KBBPNN=0,KBBPXREF="""B""",KBBPXK="$E(X,1,30),DA)="""""
+ S KBBPNN=0,KBBPXREF=KBBPXREF,KBBPXK=KBBPXK
+ D CHKX^KBBPYNM(.KBBPXREF,KBBPXK,KBBPNN) ;(.KBBPXK,.KBBPXREF,KBBPDIC) ;(KBBPXK,KBBPNN,.KBBPXREF)
+ D CHKEQ("""B""",KBBPXREF,"Incorrect value returned for ""B"" X-REF")
+ ;
+ S KBBPNN=1,KBBPXREF="""AXQA""",KBBPXK="$E(X,1,30),DA(1),DA)="""""
+ S KBBPNN=KBBPNN,KBBPXREF=KBBPXREF,KBBPXK=KBBPXK
+ D CHKX^KBBPYNM(.KBBPXREF,KBBPXK,KBBPNN) ;(KBBPXK,KBBPNN,.KBBPXREF)
+ D CHKEQ("""AXQA""",KBBPXREF,"Incorrect value returned for ""AXQA"" X-REF")
+ ;
+ S KBBPNN=1,KBBPXREF="DA(1)",KBBPXK="""USC3"",""B"",$E(X,1,30),DA)="""""
+ S KBBPNN=KBBPNN,KBBPXREF=KBBPXREF,KBBPXK=KBBPXK
+ D CHKX^KBBPYNM(.KBBPXREF,KBBPXK,KBBPNN) ;(KBBPXK,KBBPNN,.KBBPXREF)
+ D CHKEQ("",KBBPXREF,"Value returned for x-ref when it shouldn't have")
+ Q
+ ;
+XRPNT ;@TEST - build file relationships data for file 200
+ N GLOB
+ S GLOB=$NA(^TMP("KBBPY",$J)) K @GLOB
+ D XRPNT^KBBPYNM(200)
+ D CHKEQ(200,$G(@GLOB@("FIL")),"Bad file number after XRPNT")
+ D CHKEQ(1,$G(@GLOB@("PN",1,200,3.7)),"Unexpected number of entries for 3.7")
+ D CHKEQ(".01;200R3.7",$G(@GLOB@("PN",1,200,3.7,1)),"Incorrect file data for 3.7")
+ K @GLOB
+ Q
+ ;
+ ; following tests for routine KBBPYREL
+ ;
+LISTOUT ;@TEST - output data from global if printing
+ N UTSTGLOB,X,KBBPFILX,KBBPXV,LINNUM,SETNUM,LINESOUT
+ S UTSTGLOB=$NA(^TMP("KBBPUYNM-LINEOUT",$J)) K @UTSTGLOB
+ S KBBPFILX="This Is My Header Text",KBBPXV="",SETNUM=1
+ K ^TMP("KBBPYREL",$J)
+ F LINNUM=1:1:24+10 S ^TMP("KBBPYREL",$J,SETNUM,LINNUM)="My Line "_LINNUM
+ F LINNUM=1:1:24+10 D LISTOUT^KBBPYREL(KBBPFILX,KBBPXV,SETNUM,LINNUM)
+ D CHKTF(40=$G(@UTSTGLOB@(0)),"Incorrect number of lines shown in zero node")
+ D CHKEQ("My Line 1",$G(@UTSTGLOB@(1)),"Incorrect text in node 1 of global data")
+ D CHKEQ("My Line 34",$G(@UTSTGLOB@(40)),"Incorrect text in node 40 of global data")
+ D CHKEQ("",$G(@UTSTGLOB@(41)),"Unexpected text found in global node 41")
+ K @UTSTGLOB,^TMP("KBBPYREL",$J)
+ Q
+ ;
+LISTDATA ;@TEST - output data to text (or for tests global nodes)
+ N UTSTGLOB,X,KBBPFIL,KBBPFILX,KBBPXV,SETNUM,LINES,LINNUM,IOSL,LINESOUT
+ S UTSTGLOB=$NA(^TMP("KBBPUYNM-LINEOUT",$J)) K @UTSTGLOB
+ S KBBPFIL="AAABBB",KBBPFILX="This Is My Header Text",KBBPXV="",SETNUM=1
+ S IOSL=300
+ K ^TMP("KBBPYREL",$J)
+ S LINES=24+10
+ F LINNUM=1:1:LINES S ^TMP("KBBPYREL",$J,SETNUM,LINNUM)="My Line "_LINNUM
+ D LISTDATA^KBBPYREL(KBBPFIL,KBBPFILX,SETNUM,LINES)
+ D CHKEQ(43,$G(@UTSTGLOB@(0)),"Incorrect number of lines listed")
+ D CHKEQ("@IOF",$G(@UTSTGLOB@(1)),"Not the expected form feed in node 1")
+ D CHKEQ("                             This Is My Header Text",$G(@UTSTGLOB@(4)),"Not the expected node four (header line)")
+ D CHKEQ("     <There are 34 subfile tables for the 'AAABBB' file>",$G(@UTSTGLOB@(8)),"Expected line with number of entries as node 8")
+ D CHKEQ("My Line 34",$G(@UTSTGLOB@(43)),"Not expected text for node 42")
+ D CHKEQ(0,$D(@UTSTGLOB@(44)),"Did not expect any data in node 43")
+ K @UTSTGLOB,^TMP("KBBPYREL",$J)
+ Q
+ ;
+SELCTREL ;@TEST - selection of item number
+ N VALUE
+ S VALUE=$$SELCT^KBBPYREL(15,5)
+ D CHKEQ(1,VALUE,"SELCT didn't return the expected value")
+ Q
+ ;
+CHEK ;@TEST - check if should stop or continue (if user interaction)
+ D CHKEQ(1,$$CHEK^KBBPYREL(),"Expected '1' to be returned")
+ Q
+ ;
+HEDR ;@TEST - check output for header text
+ N KBBPFILX,UTSTGLOB,LINESOUT
+ S UTSTGLOB=$NA(^TMP("KBBPUYNM-LINEOUT",$J)) K @UTSTGLOB
+ S KBBPFILX="This Is My Header Text"
+ D HEDR^KBBPYREL(KBBPFILX)
+ D CHKEQ(5,$G(@UTSTGLOB@(0)),"Incorrect number of lines listed")
+ D CHKEQ("@IOF",$G(@UTSTGLOB@(1)),"Not the expected form feed in node 1")
+ D CHKEQ("                             This Is My Header Text",$G(@UTSTGLOB@(4)),"Not the expected node four (header line)")
+ D CHKEQ("",$G(@UTSTGLOB@(5)),"Expected null line as node 5")
+ D CHKEQ(0,$D(@UTSTGLOB@(6)),"Did not expect any node 6")
+ K @UTSTGLOB
+ Q
+ ;
+GETLIST ; @TEST - return number of names beginning with specified characters
+ N COUNT,LENGTH,LONGNAME,NAME,START,STRTLEN
+ S NAME="PATIENT",START=NAME,STRTLEN=$L(START)
+ S COUNT=0 I $D(^DIC("B",NAME)) S COUNT=1
+ F  S NAME=$O(^DIC("B",NAME)) Q:$E(NAME,1,STRTLEN)'=START  S COUNT=COUNT+1
+ D CHKEQ(COUNT,$$GETLIST^KBBPYREL(START),"Count returned for PATIENT not expected count")
+ ;
+ S NAME="PAT",START=NAME,STRTLEN=$L(START)
+ S COUNT=0 I $D(^DIC("B",NAME)) S COUNT=1
+ S LONGNAME=0,LENGTH=0
+ F  S NAME=$O(^DIC("B",NAME)) Q:$E(NAME,1,STRTLEN)'=START  S COUNT=COUNT+1 I $L(NAME)>LENGTH S LONGNAME=NAME,LENGTH=$L(NAME)
+ D CHKEQ(COUNT,$$GETLIST^KBBPYREL(START),"Count returned for PAT not expected count")
+ D CHKEQ(1,$D(^TMP("KBBPYREL",$J,"SHO",COUNT)),"Expected global for full count to be present")
+ D CHKEQ(1,$$GETLIST^KBBPYREL(LONGNAME),"Count for matches to longest name should be only 1")
+ D CHKEQ(LONGNAME,$P($G(^TMP("KBBPYREL",$J,"SHO",1)),U,2),"First node in global should match longest name")
+ D CHKEQ(0,$D(^TMP("KBBPYREL",$J,"SHO",2)),"Should not have data in second node of global for single match")
+ ;
+ S NAME="ZZZXXYY"
+ F  Q:$D(^DIC("B",NAME))=0  S NAME=NAME_"x"
+ D CHKEQ(0,$$GETLIST^KBBPYREL(NAME),"Should have found no matches for "_NAME)
+ Q
+ ;
+NUMTHERE ;@TEST - output of header for related files with number found
+ N UTSTGLOB,KBBPCNT,KBBPFIL,NONETEXT
+ S UTSTGLOB=$NA(^TMP("KBBPUYNM-NUMTHERE",$J)) K @UTSTGLOB
+ S KBBPCNT=14,NONETEXT="SUBFILE ENTRIES",KBBPFIL="TESTING SAMPLE"
+ D NUMTHERE^KBBPYREL(KBBPFIL,NONETEXT,KBBPCNT)
+ D CHKEQ("     <There are "_KBBPCNT_" "_NONETEXT_" for the '"_KBBPFIL_"' file>",@UTSTGLOB@(1),"not the expected text for the output")
+ K @UTSTGLOB
+ Q
+ ;
+ENREL ;@TEST
+ N UTSTGLOB,LINESOUT,UTESTXV
+ S UTSTGLOB=$NA(^TMP("KBBPUYNM-ENREL",$J)) K @UTSTGLOB
+ K ^XTMP("KBBPY")
+ S UTESTXV=U
+ D EN^KBBPYREL
+ ; the following are based on text at expected positions no matter what related files might be added or removed
+ D CHKEQ(54,$G(@UTSTGLOB@(0)),"Not the expected number of lines")
+ D CHKEQ($C(7)_"First I have to rebuild the field cross-reference file",$G(@UTSTGLOB@(2)),"Expected line 2 not found")
+ D CHKEQ("         1.  NEW PERSON  (200)",$G(@UTSTGLOB@(7)),"Line listing file for selection not as expected")
+ D CHKEQ("In the M world, these tables are subfiles to the NEW PERSON file.",$G(@UTSTGLOB@(13)),"Not the expected heading at line 13 ")
+ D CHKEQ("In the M world, the following tables are files and subfiles that contain links",$G(@UTSTGLOB@(37)),"Not the expected heading at line 32")
+ D CHKEQ("               Enter '^' to STOP or <ret> to continue...",$G(@UTSTGLOB@(+$G(@UTSTGLOB@(0)))),"Not the expected prompt at the last line")
+ K @UTSTGLOB
+ Q
+ ;
+LIST ;
+ ;
+ Q
+ ;
+LOOP ;
+ ;
+ Q
+ ;
+SHOW1 ;
+ ;
+ Q
+ ;
+CHKEQ(EXPECTED,ACTUAL,COMMENT) ;
+ D CHKEQ^%ut(EXPECTED,ACTUAL,$G(COMMENT))
+ Q
+ ;
+CHKTF(TEST,COMMENT) ;
+ D CHKTF^%ut(TEST,$G(COMMENT))
+ Q
+ ;
+XTROU ;
+ ;;KBBPUYSH
+ ;;KBBPUYRO
+ ;;KBBPUYSE
+ ;;KBBPUYDO
+ ;;KBBPUYPR
+ ;;KBBPUYQR
+
+KBBPUYPR^INT^1^63962,69830^0
+KBBPUYPR ;JIVEYSOFT.COM/JLI - Unit tests for KBBPYNM ;02/14/16  19:23;
+ ;;0.0;KBBP;
+ ; includes tests for:
+ ;   KBBPYPRO
+ D EN^%ut($T(+0))
+ Q
+ ;
+STARTUP ;
+ D STARTUP^KBBPUYNM
+ Q
+ ;
+SHUTDOWN ;
+ D SHUTDOWN^KBBPUYNM
+ Q
+ ;
+GETCODE1 ; @TEST
+ N ROOT,KBBPFILE,KBBPFLDR,KBBPPATH,VAR1,PATH
+ K ^XTMP("KBBPY") D QUE1^KBBPYREF
+ S ROOT=$NA(^TMP("KBBPYNM_GETCODE",$J)) K @ROOT
+ S KBBPFILE=200,KBBPFLDR="VAR1",KBBPPATH="PATH"
+ D XRPNT^KBBPYNM(KBBPFILE)
+ S VAR1(1)=".01;200",VAR1(2)="4;200",VAR1(3)=".01;200.051"
+ S @ROOT@("DATA1","XM",1)=.01
+ S @ROOT@("DATA1","XM",2)=4
+ S @ROOT@("DATA1","XM",3)=.01
+ S @ROOT@("DATA1","XT")=3
+ S @ROOT@("DATA1","XT",1)="I $D(DA(""P200"")) S DA=DA(""P200""),XTVDATA=$S($D(^VA(200,DA,0)):$P(^(0),""^"",1),1:"""") S:XTVDATA'="""" @ROOT@(""XVAL"",1,NVAL)=XTVDATA"
+ S @ROOT@("DATA1","XT",2)="I $D(DA(""P200"")) S DA=DA(""P200""),XTVDATA=$S($D(^VA(200,DA,1)):$P(^(1),""^"",2),1:"""") S:XTVDATA'="""" @ROOT@(""XVAL"",2,NVAL)=XTVDATA"
+ S @ROOT@("DATA1","XT",3)="I $D(DA(""P200"")) S DA(1)=DA(""P200"") X @ROOT@(""XT"",3,1)"
+ S @ROOT@("DATA1","XT",3,0)="S XTVDATA=$S($D(^VA(200,DA(1),51,DA,0)):$P(^(0),""^"",1),1:""""),XTVDATA=$S($D(^DIC(19.1,+XTVDATA,0)):$P(^(0),U),1:"""") S:XTVDATA'="""" @ROOT@(""XVAL"",3,NVAL,NVAL1)=XTVDATA"
+ S @ROOT@("DATA1","XT",3,1)="S DA=0 F NVAL1=1:1 S DA=$O(^VA(200,DA(1),51,DA)) Q:DA'>0  X @ROOT@(""XT"",3,0)"
+ S @ROOT@("DATA1","XTDA")=1
+ S @ROOT@("DATA1","XTDA",1)="S DA(""P200"")=DABASE"
+ S @ROOT@("DATA1","XTN",1)=200
+ S @ROOT@("DATA1","XTN",2)=200
+ S @ROOT@("DATA1","XTN",3)="200.051;200"
+ S @ROOT@("DATA1","XTNM",1)="NEW PERSON NAME"
+ S @ROOT@("DATA1","XTNM",2)="NEW PERSON SEX"
+ S @ROOT@("DATA1","XTNM",3)="NEW PERSON KEY"
+ S @ROOT@("DATA1","XTS",1)=""
+ D GETCODE^KBBPYPRO(ROOT,KBBPFILE,KBBPFLDR,KBBPPATH)
+ D CHKEQ(200,$G(^TMP("KBBPY",$J,"FIL")),"Incorrect value for file number")
+ D CHKTF($D(^TMP("KBBPY",$J,"C"))=0,"Unexpected presence of C node")
+ D CHKEQ("NAME^200^.01^0;1^^200^""B""",$G(^TMP("KBBPY",$J,"X",1,200)),"Incorrect value for NAME field")
+ D CHKEQ("SEX^200^4^1;2^^200^",$G(^TMP("KBBPY",$J,"X",2,200)),"Incorrect value for SEX Date field")
+ D CHKEQ("KEY^200.051^.01^0;1^51^200.051;200^""AB""",$G(^TMP("KBBPY",$J,"X",3,200)),"Incorrect value for KEY field")
+ K @ROOT
+ K ^TMP("KBBPY",$J)
+ Q
+ ;
+GETCODE2 ; @TEST - set up data for a linked file path
+ N ROOT,KBBPFILE,KBBPFLDR,KBBPPATH,VAR1,PATH
+ K ^XTMP("KBBPY") D QUE1^KBBPYREF
+ S ROOT=$NA(^TMP("KBBPYNM_GETCODE",$J)) K @ROOT
+ S KBBPFILE=2,KBBPFLDR="VAR1",KBBPPATH="PATH"
+ D XRPNT^KBBPYNM(KBBPFILE)
+ S VAR1(1)="6;52",VAR1(2)="22;52"
+ S PATH(1)=".01;2R55^.01;55.03T52"
+ S @ROOT@("DATA1","XM",1)=6
+ S @ROOT@("DATA1","XM",2)=22
+ S @ROOT@("DATA1","XT")=2
+ S @ROOT@("DATA1","XT",1)="I $D(DA(""P52"")) S DA=DA(""P52""),XTVDATA=$S($D(^PSRX(DA,0)):$P(^(0),""^"",6),1:""""),XTVDATA=$S($D(^PSDRUG(+XTVDATA,0)):$P(^(0),U),1:"""") S:XTVDATA'="""" @ROOT@(""XVAL"",1,NVAL)=XTVDATA"
+ S @ROOT@("DATA1","XT",2)="I $D(DA(""P52"")) S DA=DA(""P52""),XTVDATA=$S($D(^PSRX(DA,2)):$P(^(2),""^"",2),1:"""") S:XTVDATA'="""" @ROOT@(""XVAL"",2,NVAL)=XTVDATA"
+ S @ROOT@("DATA1","XTDA")=3
+ S @ROOT@("DATA1","XTDA",1)="S DA(""P2"")=DABASE"
+ S @ROOT@("DATA1","XTDA",2)="S DA(""P55"")=DABASE"
+ S @ROOT@("DATA1","XTDA",3)="S DA(""P52"")=$S($D(^PS(55,DABASE,""P"",DALOOP3,0)):+$P(^(0),U,1),1:0)"
+ S @ROOT@("DATA1","XTDA",3,1)="S DALOOP3=$O(^PS(55,DABASE,""P"",DALOOP3))"
+ S @ROOT@("DATA1","XTN",1)=52
+ S @ROOT@("DATA1","XTN",2)=52
+ S @ROOT@("DATA1","XTNM",1)="PRESCRIPTION DRUG"
+ S @ROOT@("DATA1","XTNM",2)="PRESCRIPTION FILL DATE"
+ S @ROOT@("DATA1","XTS",1)=""
+ S @ROOT@("DATA1","XTS",2)=""
+ S @ROOT@("DATA1","XTS",3)=3
+ D GETCODE^KBBPYPRO(ROOT,KBBPFILE,KBBPFLDR,KBBPPATH)
+ D CHKEQ(2,$G(^TMP("KBBPY",$J,"FIL")),"Incorrect value for file number")
+ D CHKEQ(".01;2R55^.01;55.03T52",$G(^TMP("KBBPY",$J,"C",52)),"Unexpected result for C node for file 52")
+ D CHKEQ(".01;2R55",$G(^TMP("KBBPY",$J,"C",55)),"Unexpected result for C node for file 55")
+ D CHKEQ("DRUG^52^6^0;6^^52^",$G(^TMP("KBBPY",$J,"X",1,52)),"Incorrect value for Drug field")
+ D CHKEQ("FILL DATE^52^22^2;2^^52^",$G(^TMP("KBBPY",$J,"X",2,52)),"Incorrect value for Fill Date field")
+ K @ROOT
+ K ^TMP("KBBPY",$J)
+ Q
+ ;
+CHKEQ(EXPECTED,ACTUAL,COMMENT) ;
+ D CHKEQ^%ut(EXPECTED,ACTUAL,COMMENT)
+ Q
+ ;
+CHKTF(TEST,COMMENT) ;
+ D CHKTF^%ut(TEST,COMMENT)
+ Q
+ ;
+XTROU ;
+
+KBBPUYQR^INT^1^64403,67407^0
+KBBPUYQR ;JIVEYSOFT.COM/JLI - Unit tests for KBBPYQRY ;04/30/17  18:43;
+ ;;0.0;KBBP;
+ ; includes tests for:
+ ;   KBBPYQRY
+ D EN^%ut($T(+0))
+ Q
+ ;
+STARTUP ;
+ D STARTUP^KBBPUYNM
+ Q
+ ;
+SHUTDOWN ;
+ D SHUTDOWN^KBBPUYNM
+ Q
+ ;
+ ; KBBPYQRY - set up a routine to perform specific queries
+ ;
+EN ; @TEST
+ N DATE1,DATE2,DATEVAL
+ S DATE1=$$SETDATE($$NOW^XLFDT())
+ D EN^KBBPYQRY
+ S DATE2=$$SETDATE($$NOW^XLFDT())
+ S DATEVAL=$E($P($T(+1^KBBPZ999),";",3),1,15)
+ ;W !,"DATE1=",DATE1,"  DATE2=",DATE2,"  DATEVAL=",DATEVAL
+ D CHKTF((DATEVAL=DATE1)!(DATEVAL=DATE2),"Date of KBBPZ999 is "_DATEVAL_" and should be either "_DATE1_" or "_DATE2)
+ D CHKEQ("FILE ;;200",$T(FILE^KBBPZ999),"Incorrect FILE line in result")
+ Q
+ ;
+SETDATE(X) ; .EF - put date and time in format used in first line of saved routine
+ Q $E(X,4,5)_"/"_$E(X,6,7)_"/"_$E(X,2,3)_"  "_$E(X,9,10)_":"_$E(X,11,12)
+ ;
+GETSETS ; @TEST - get set(s) of data for search criteria
+ N UTSTX,KBBPFIL,KBBPI,KBBPEXIT,UTSTCOND,KBBPSET,KBBPQRY
+ I '$D(^XTMP("KBBPY","XR1"))!'$D(^XTMP("KBBPY","FNM")) D QUE^KBBPYREF
+ S KBBPFIL=200
+ D XRPNT^KBBPYNM(KBBPFIL)
+ K ^TMP("KBBPY",$J,"X")
+ S UTSTX="SEX@200",KBBPI=0,KBBPEXIT=0,KBBPQRY=1,UTSTCOND(1)="X=$P(^VA(200,DUZ,1),U,2)"
+ S KBBPSET=$$GETSETS^KBBPYQRY(.KBBPI,.KBBPEXIT,KBBPFIL,KBBPQRY)
+ D CHKEQ(1,KBBPSET,"Wrong number returned for number of sets")
+ D CHKEQ("SEX^200^4^1;2^^200^^^^X=$P(^VA(200,DUZ,1),U,2)",$G(^TMP("KBBPY",$J,"X",1,200)),"Unexpected global value returned for SEX@NEW PERSON")
+ K UTSTCOND
+ ;
+ S KBBPFIL=0 ; SHOULD GET BACK @
+ S KBBPSET=$$GETSETS^KBBPYQRY(.KBBPI,.KBBPEXIT,KBBPFIL,KBBPQRY)
+ D CHKEQ(0,KBBPSET,"Wrong number returned for number of sets")
+ K ^TMP("KBBPY",$J)
+ Q
+ ;
+GETFLDS ;
+ ;
+ ;
+ANDOR1 ; @TEST - selection of AND/OR data sets for search
+ N SETS
+ D ANDOR^KBBPYQRY(.SETS,2) ; two sets of conditions are ORed together
+ D CHKEQ(2,SETS,"Wrong number of sets")
+ D CHKEQ("1",SETS(1),"Incorrect data for first of two sets")
+ D CHKEQ("2",SETS(2),"Incorrect data for second of two sets")
+ Q
+ ;
+ANDOR2 ; @TEST -
+ N SETS
+ D ANDOR^KBBPYQRY(.SETS,3) ; 3 sets of conditions go to two AND pairs are ORed with each other
+ D CHKEQ(2,SETS,"Wrong number of sets")
+ D CHKEQ("1,2",SETS(1),"Incorrect data for first of two sets")
+ D CHKEQ("1,3",SETS(2),"Incorrect data for second of two sets")
+ Q
+ ;
+ ;
+OUTDATA ; @TEST - selection of fields for output
+ N KBBPI,KBBPEXIT,KBBPFIL,KBBPQRY,KBBPQRY,PATH,UTSTX,UTSTCOND
+ S KBBPI=0,KBBPEXIT=0,KBBPFIL=200,KBBPQRY=1,PATH=""
+ I '$D(^XTMP("KBBPY","XR1"))!'$D(^XTMP("KBBPY","FNM")) D QUE^KBBPYREF
+ D XRPNT^KBBPYNM(KBBPFIL)
+ S UTSTX(1)="NAME@200",UTSTX(2)="SEX@200",UTSTX(3)="KEY@200",UTSTX(4)="SEC@200"
+ S UTSTCOND(3)="X[""XU""",UTSTCOND(4)="X[""XWB"""
+ K ^TMP("KBBPY",$J,"X"),^TMP("KBBPYS",$J,"TOT")
+ D OUTDATA^KBBPYQRY(.PATH,.KBBPI,.KBBPEXIT,KBBPFIL,KBBPQRY)
+ D CHKEQ("NAME^200^.01^0;1^^200^""B""",$G(^TMP("KBBPYS",$J,"TOT",1,200)),"Incorrect value for NAME field output")
+ D CHKEQ("SEX^200^4^1;2^^200^",$G(^TMP("KBBPYS",$J,"TOT",2,200)),"Incorrect value for SEX field output")
+ D CHKEQ("KEY^200.051^.01^0;1^51^200.051;200^""AB""^^^X[""XU""",$G(^TMP("KBBPYS",$J,"TOT",3,200)),"Incorrect value for KEY field output")
+ D CHKEQ("SECONDARY MENU OPTIONS^200.03^.01^0;1^203^200.03;200^""AD""^^^X[""XWB""",$G(^TMP("KBBPYS",$J,"TOT",4,200)),"Incorrect value for SECONDARY OPTION field output")
+ ;
+ S KBBPFIL=2,KBBPFIL=2,KBBPI=0
+ I $S('$D(^TMP("KBBPY",$J,"FIL")):1,^("FIL")'=KBBPFIL:1,'$D(^TMP("KBBPY",$J,"PNT")):1,1:0) D XRPNT^KBBPYNM(KBBPFIL)
+ D QUE^KBBPYREF
+ S KBBPI=0,KBBPFIL=2 D XRPNT^KBBPYNM(KBBPFIL)
+ K UTSTX,UTSTCOND
+ S UTSTX(1)="DRUG ALLERGY INDICATION"
+ S KBBPEXIT=0
+ K ^TMP("KBBPY",$J,"X"),^TMP("KBBPYS",$J,"TOT")
+ D OUTDATA^KBBPYQRY(.PATH,.KBBPI,.KBBPEXIT,KBBPFIL,KBBPQRY)
+ D CHKEQ("DRUG ALLERGY INDICATION^52^34.1^3;6^^52^",$G(^TMP("KBBPYS",$J,"TOT",1,52)),"Unexpected global value returned for DRUG ALLERGY INDICATION data node")
+ Q
+ ;
+OUTANDOR ;  - NOT ACTIVE
+ N TSTGLOB1,TSTGLOB2,TOTSETS,UTVALS
+ S TSTGLOB1=^TMP("OUTANDOR_UT1",$J,"TOT") K @TSTGLOB1
+ S TSTGLOB2=^TMP("OUTANDOR_UT2",$J,"C") K @TSTGLOB2
+ S UTVALS(1)="1,2"
+ S @TSTGLOB1@(1,200)="NAME^200^.01^0;1^^200^""B"""
+ S @TSTGLOB1@(2,200)="SEX^200^4^1;2^^200^"
+ S @TSTGLOB1@(3,200)="KEY^200.051^.01^0;1^51^200.051;200^""AB""^^^X[""XU"""
+ S @TSTGLOB1@(4,200)="SECONDARY MENU OPTIONS^200.03^.01^0;1^203^200.03;200^""AD""^^^X[""XWB"""
+ D OUTANDOR^KBBPYQRY(.TOTSETS,200)
+ ;W !,"OUTANDOR1",! ZW TOTSETS
+ ;
+ K @TSTGLOB1,@TSTGLOB2,TOTSETS
+ S @TSTGLOB1@(1,2)="NAME^2^.01^0;1^^2^""B"""
+ S @TSTGLOB1@(2,52)="DRUG^52^6^0;6^^52^^^^X[""ASPRIN"""
+ S @TSTGLOB1@(3,52)="FILL DATE^52^22^2;2^^52^^^^(3150000<X)&(3160000>X)"
+ S @TSTGLOB1@(4,52)="REFILL DATE^52.1^.01^0;1^1^52.1;52^""AD""^^^(3150000<X)&(3160000>X)"
+ S @TSTGLOB2@(52)=".01;2R55^.01;55.03T52"
+ S @TSTGLOB2@(55)=".01;2R55"
+ K UTVALS S UTVALS(1)="1,2",UTVALS(2)="1,3"
+ K TOTSETS
+ D OUTANDOR^KBBPYQRY(.TOTSETS,2)
+ ;W !,"OUTANDOR2",! ZW TOTSETS
+ ;
+ K @TSTGLOB1,@TSTGLOB2
+ Q
+ ;
+ROU ;
+SAVE ;
+LAUNCH ;
+OUTTYPE ;
+SETGRPS ;
+SETG ;
+ ;
+ADD ;@TEST
+ N COUNT,DATA,KBBPYR,TAG
+ S KBBPYR=$NA(^TMP($J,"KBBPYR")) K @KBBPYR
+ S COUNT=0
+ S TAG="TAG1"
+ S DATA="TAG LINE MARKER"
+ S DATA(1)="TAG+1 DATA"
+ S DATA(2)="TAG+2 DATA"
+ D ADD^KBBPYQRY(.COUNT,TAG,"DATA")
+ D CHKEQ^%ut("TAG1 ;;TAG LINE MARKER",@KBBPYR@(1,0),"Incorrect tag line")
+ D CHKEQ^%ut(" ;;TAG+1 DATA",@KBBPYR@(2,0),"Incorrect TAG+1 line")
+ D CHKEQ^%ut(" ;;TAG+2 DATA",@KBBPYR@(3,0),"Incorrect TAG+2 line")
+ D CHKEQ^%ut(" ;;",@KBBPYR@(4,0),"Incorrect TAG+3 line")
+ D CHKEQ^%ut(0,$D(@KBBPYR@(5,0)),"No TAG+4 line should be there")
+ K @KBBPYR
+ Q
+ ;
+ADDSET ;@TEST - add sets of data to routine model
+ N SETNUM,COUNTER,KBBPYR,KBBPYS
+ S COUNTER=0
+ S KBBPYR=$NA(^TMP($J,"KBBPYR")),KBBPYS=$NA(^TMP("KBBPYS",$J))
+ K @KBBPYR,@KBBPYS
+ ; (Set,NumberInSet,FileNumber)
+ S @KBBPYS@(1,1,"FILE11")="NAME11^FILE11^FLD11^DATA11^^^^^^CONDITION11"
+ S @KBBPYS@(1,2,"FILE12")="NAME12^SFILE12^FLD12^DATA12^^^^^^CONDITION12"
+ S @KBBPYS@(2,1,"FILE21")="NAME21^FILE21^FLD21^DATA21^^^^^^CONDITION21"
+ F SETNUM=1:1:2 D ADDSET^KBBPYQRY(.COUNTER,SETNUM)
+ D CHKEQ("1 ;",$G(@KBBPYR@(1,0)),"BAD SET NUMBER 1 LINE")
+ D CHKEQ(" ;;FLD11*FILE11;CONDITION11",$G(@KBBPYR@(2,0)),"NOT EXPECTED DATA FOR LINE 2")
+ D CHKEQ(" ;;FLD12*SFILE12;CONDITION12",$G(@KBBPYR@(3,0)),"NOT EXPECTED DATA FOR LINE 3")
+ D CHKEQ(" ;;",$G(@KBBPYR@(4,0)),"SHOULD BE ONLY SPACE ;; FOR LINE 4")
+ D CHKEQ(" ;;FLD21*FILE21;CONDITION21",$G(@KBBPYR@(6,0)),"Not data expected for Line 6")
+ D CHKEQ(0,$D(@KBBPYR@(8,0)),"No line 8 expected")
+ K @KBBPYR,@KBBPYS
+ Q
+ ;
+ ;
+CHKEQ(EXPECTED,ACTUAL,COMMENT) ;
+ D CHKEQ^%ut(EXPECTED,ACTUAL,$G(COMMENT))
+ Q
+ ;
+CHKTF(TEST,COMMENT) ;
+ D CHKTF^%ut(TEST,$G(COMMENT))
+ Q
+ ;
+XTROU ;
+
+KBBPUYRO^INT^1^64412,52286^0
+KBBPUYRO ;JIVEYSOFT.COM/JLI - Unit tests for KBBPYNM ;05/01/17  17:09;
+ ;;0.0;KBBP;
+ ; Includes tests for:
+ ;   KBBPYROU
+ ;
+ D EN^%ut($T(+0))
+ Q
+ ;
+STARTUP ;
+ D STARTUP^KBBPUYNM
+ Q
+ ;
+SHUTDOWN ;
+ D SHUTDOWN^KBBPUYNM
+ Q
+ ;
+ ; Unit tests for KBBPYROU - base version for created query routines
+ ;
+EN ; @TEST - run the whole process
+ N UTSTGLOB,KEY,NAME,SEX,SPACES
+ S UTSTGLOB=$NA(^TMP("KBBPYROU-OUTPUT",$J)) K @UTSTGLOB
+ D EN^KBBPYROU
+ D CHKEQ("@IOF",$G(@UTSTGLOB@(1)),"Missing page feed line as first line of output")
+ D CHKEQ("  and  NEW PERSON KEY (file #200.051;200)   *** I X=""XUPROGMODE""",$G(@UTSTGLOB@(6)),"Incorrect 6th line of output")
+ D CHKEQ("    NEW PERSON KEY   *** condition: I X[""XU""",$G(@UTSTGLOB@(11)),"Incorrect 11th line of output")
+ S $P(SPACES," ",40)=" ",NAME=$E($P(^VA(200,DUZ,0),U)_SPACES,1,36)
+ S SEX=$P(^VA(200,DUZ,1),U,2),SEX=$E($S(SEX="M":"MALE",SEX="F":"FEMALE",1:"")_SPACES,1,7)
+ S KEY="XU" ; just look at first two characters of key output
+ D CHKEQ(NAME_SEX_KEY,$E($G(@UTSTGLOB@(13)),1,45),"Not expected first line of data")
+ ; since only the KEY should be different, and we are looking at only the first two characters of it
+ D CHKEQ(NAME_SEX_KEY,$E($G(@UTSTGLOB@(+$G(@UTSTGLOB@(0)))),1,45),"Not expected last line of data")
+ K @UTSTGLOB
+ Q
+ ;
+DOWORK ;@TEST - DOWORK
+ N UTSTGLOB,B100,CNT,KBBPUDAT,VALUE
+ S UTSTGLOB=$NA(^TMP("KBBPYROU-OUTPUT",$J)) K @UTSTGLOB
+ S CNT=$$GETDATA(.KBBPUDAT)
+ S $P(B100," ",100)=""
+ S VALUE=$E(KBBPUDAT(1)_B100,1,35)_" "_$E(KBBPUDAT(2)_B100,1,6)_" "_$E(KBBPUDAT(3)_B100,1,27)_" "
+ D EN^KBBPYROU
+ D CHKEQ(12+CNT,$G(@UTSTGLOB@(0)),"Incorrect number of lines in zero node")
+ D CHKEQ("@IOF",$G(@UTSTGLOB@(1)),"Incorrect text on first line")
+ D CHKEQ("  and  NEW PERSON SEX (file #200)   *** I X=$P(^VA(200,DUZ,1),U,2)",$G(@UTSTGLOB@(5)),"Incorrect text for fifth line of output")
+ D CHKEQ("    NEW PERSON KEY   *** condition: I X[""XU""",$G(@UTSTGLOB@(11)),"Incorrect text for eleventh line of output")
+ D CHKEQ(VALUE,$G(@UTSTGLOB@(+$G(@UTSTGLOB@(0)))),"Incorrect text for last line")
+ K @UTSTGLOB
+ Q
+ ;
+SETTYP ;@TEST
+ N XWID,XWIDT,FIL,FLD,TYP,I,X,UTSTGLOB
+ S I=1,FIL=2.011,FLD=2,X=^DD(FIL,FLD,0),TYP=$P(X,U,2)
+ D SETTYP^KBBPYROU(.XWID,.XWIDT,FIL,FLD,TYP,I,X)
+ D CHKEQ(12,XWID(1),"Wrong value for width of 2.011,2")
+ D CHKEQ("C",XWIDT(1),"Incorrect type data for 2.011,2")
+ ;
+ S I=1,FIL=2,FLD=2,X="",TYP="CB"
+ D SETTYP^KBBPYROU(.XWID,.XWIDT,FIL,FLD,TYP,I,X)
+ D CHKEQ(1,XWID(1),"Wrong value for width of binary computed value")
+ D CHKEQ("C",XWIDT(1),"Incorrect type data for binary computed value")
+ ;
+ S UTSTGLOB=$NA(^TMP("SETTYP-OUTPUT",$J)) K @UTSTGLOB
+ S I=1,FIL="FILE_NUMBER",FLD="FLD_NUMBER",X="",TYP="z"
+ D SETTYP^KBBPYROU(.XWID,.XWIDT,FIL,FLD,TYP,I,X)
+ D CHKEQ(30,XWID(1),"Wrong value for width of unknown type")
+ D CHKEQ("U",XWIDT(1),"Incorrect type data for unknown type")
+ S X=+$G(@UTSTGLOB@(0))
+ D CHKEQ(1,X,"Incorrect number of lines output to user")
+ D CHKEQ("Unknown data type file=FILE_NUMBER  field=FLD_NUMBER",$G(@UTSTGLOB@(X)),"Incorrect text returned to user")
+ K @UTSTGLOB
+ ;
+ S I=1,FIL="FILE_NUMBER",FLD="FLD_NUMBER",X="S %DT=""ER"",%DT(0)=""-NOW"" D ^%DT",TYP="D"
+ D SETTYP^KBBPYROU(.XWID,.XWIDT,FIL,FLD,TYP,I,X)
+ D CHKEQ(12,XWID(1),"Wrong value for Date without time")
+ D CHKEQ("D",XWIDT(1),"Incorrect type data for Date type without time")
+ ;
+ S I=1,FIL="FILE_NUMBER",FLD="FLD_NUMBER",X="S %DT=""ETR"",%DT(0)=""-NOW"" D ^%DT W Y",TYP="D"
+ D SETTYP^KBBPYROU(.XWID,.XWIDT,FIL,FLD,TYP,I,X)
+ D CHKEQ(18,XWID(1),"Wrong value for Date with time, no seconds")
+ D CHKEQ("D",XWIDT(1),"Incorrect type data for Date type with time")
+ ;
+ S I=1,FIL="FILE_NUMBER",FLD="FLD_NUMBER",X="S %DT=""ESTR"",%DT(0)=""-NOW"" D ^%DT W Y",TYP="D"
+ D SETTYP^KBBPYROU(.XWID,.XWIDT,FIL,FLD,TYP,I,X)
+ D CHKEQ(21,XWID(1),"Wrong value for width of Date type with time and seconds")
+ D CHKEQ("D",XWIDT(1),"Incorrect type data for Date type with time and seconds")
+ ;
+ S I=1,FIL="FILE_NUMBER",FLD="FLD_NUMBER",X="",TYP="NJ4,0"
+ D SETTYP^KBBPYROU(.XWID,.XWIDT,FIL,FLD,TYP,I,X)
+ D CHKEQ("4,0",XWID(1),"Wrong value for width of Number type")
+ D CHKEQ("N",XWIDT(1),"Incorrect type data for Number type")
+ ;
+ S I=1,FIL="FILE_NUMBER",FLD="FLD_NUMBER",X="",TYP="NJ8,2"
+ D SETTYP^KBBPYROU(.XWID,.XWIDT,FIL,FLD,TYP,I,X)
+ D CHKEQ("8,2",XWID(1),"Wrong value for width of Number type with decimal values")
+ D CHKEQ("N",XWIDT(1),"Incorrect type data for Number type with decimal values")
+ ;
+ K ^TMP("*SETTYP-UYRO-OUTPUT",$J)
+ M ^TMP("*SETTYP-UYRO-OUTPUT",$J)=^TMP("KBBPYROU-OUTPUT",$J)
+ K @UTSTGLOB
+ Q
+ ;
+PRNT ; @TEST
+ N DATA,UTSTGLOB,KBBPPACK,LINE1,LINE5,TOTSETS,XNMAX,XWID,XWIDT,PRMRYFIL,FILETYP,PATHS,XTN
+ S UTSTGLOB=$NA(^TMP("KBBPYROU-OUTPUT",$J)) K @UTSTGLOB
+ S PRMRYFIL=200
+ S XTN(1)=200,XTN(2)=200,XTN(3)="200.051;200",XTN(4)="200.03;200"
+ D FILETYPS^KBBPYROU(.FILETYP,.PATHS,.XTN,PRMRYFIL)
+ S DATA("TOT")=$NA(^TMP($J,"DATATOT")) K @DATA("TOT")
+ S @DATA("TOT")@("XT")=3
+ S @DATA("TOT")@("XTN",1)="200"
+ S @DATA("TOT")@("XTN",2)="200"
+ S @DATA("TOT")@("XTN",3)="200.051;200"
+ S @DATA("TOT")@("XVAL",1,1)="USER,SELECTED"
+ S @DATA("TOT")@("XVAL",2,1)="M"
+ S @DATA("TOT")@("XVAL",3,1,1)="XUPROG"
+ S @DATA("TOT")@("XVAL",3,1,2)="XUMGR"
+ S @DATA("TOT")@("XVAL",3,1,3)="XUPROGMODE"
+ S @DATA("TOT")@("XVAL",3,1,5)="XUSCREENMAN"
+ S @DATA("TOT")@("XVAL",3,1,19)="XUMF INSTITUTION"
+ S XWID(1)=35,XWID(2)=6,XWID(3)=27
+ S XWIDT(1)="F",XWIDT(2)="S;M:MALE;F:FEMALE;",XWIDT(3)="F"
+ S XNMAX=3,KBBPPACK=0
+ D PRNT^KBBPYROU(.DATA,.XWID,.XWIDT,.FILETYP,XNMAX,KBBPPACK)
+ D CHKEQ(5,$G(@UTSTGLOB@(0)),"Incorrect number of lines returned")
+ S LINE1="USER,SELECTED                       MALE   XUPROG                      "
+ S LINE5="USER,SELECTED                       MALE   XUMF INSTITUTION            "
+ D CHKEQ(LINE1,$G(@UTSTGLOB@(1)),"Text not correct for LINE1")
+ D CHKEQ(LINE5,$G(@UTSTGLOB@(5)),"Text not correct for LINE5")
+ K @UTSTGLOB
+ Q
+ ;
+OUTPUT ; @TEST
+ N UTSTGLOB,XLN,XWID,XWIDT,KBBPPACK,XNMAX
+ N B100,CNT,GVAL,I,KBBPUDAT,LASTLINE,NAM,PNT,VAL,VALUE
+ S UTSTGLOB=$NA(^TMP("KBBPYROU-OUTPUT",$J)) K @UTSTGLOB
+ S CNT=$$GETDATA(.KBBPUDAT)
+ S VAL=KBBPUDAT(1)_U_KBBPUDAT(2)_U_KBBPUDAT(3)_U
+ S XWID(1)=35,XWID(2)=6,XWID(3)=27
+ S XWIDT(1)="F",XWIDT(2)="S",XWIDT(3)="F"
+ S XLN="XLN",XLN(1)=VAL ;
+ S KBBPPACK=0,XNMAX=3
+ D OUTPUT^KBBPYROU(.XLN,.XWID,.XWIDT,KBBPPACK,XNMAX)
+ S LASTLINE=+$G(@UTSTGLOB@(0))
+ D CHKEQ(1,LASTLINE,"Incorrect number of lines for normal")
+ S $P(B100," ",100)=" "
+ S VALUE=$E(KBBPUDAT(1)_B100,1,35)_" "_$E(KBBPUDAT(2)_B100,1,6)_" "_$E(KBBPUDAT(3)_B100,1,27)_" "
+ D CHKEQ(VALUE,$G(@UTSTGLOB@(LASTLINE)),"Incorrect text for normal")
+ K @UTSTGLOB
+ S KBBPPACK=1
+ D OUTPUT^KBBPYROU(.XLN,.XWID,.XWIDT,KBBPPACK,XNMAX)
+ S LASTLINE=+$G(@UTSTGLOB@(0))
+ D CHKEQ(1,LASTLINE,"Incorrect number of lines for normal")
+ D CHKEQ(VAL,$G(@UTSTGLOB@(LASTLINE)),"Incorrect text for normal")
+ ;
+ K @UTSTGLOB
+ S KBBPPACK=2
+ D OUTPUT^KBBPYROU(.XLN,.XWID,.XWIDT,KBBPPACK,XNMAX)
+ S LASTLINE=+$G(@UTSTGLOB@(0))
+ D CHKEQ(1,LASTLINE,"Incorrect number of lines for normal")
+ D CHKEQ(""""_KBBPUDAT(1)_""","""_KBBPUDAT(2)_""","""_KBBPUDAT(3)_""",,",$G(@UTSTGLOB@(LASTLINE)),"Incorrect text for normal")
+ ;
+ K @UTSTGLOB
+ Q
+ ;
+SETOUT ;@TEST - setup format and write output
+ N LASTLINE,XWID,XWIDT,XVALUE,KBBPPACK,XNMAX
+ N B100,CNT,GVAL,I,KBBPUDAT,NAM,PNT,VAL,VALUE,XX
+ S XWID(1)=35,XWID(2)=6,XWID(3)=27
+ S XWIDT(1)="F",XWIDT(2)="S",XWIDT(3)="F"
+ S CNT=$$GETDATA(.KBBPUDAT)
+ S XVALUE=KBBPUDAT(1)_U_KBBPUDAT(2)_U_KBBPUDAT(3)_U
+ ;
+ S KBBPPACK=0,XNMAX=3
+ S XX=$$SETOUT^KBBPYROU(.XWID,.XWIDT,XVALUE,KBBPPACK,XNMAX) ; convert input ^-separated data into output form and write out
+ S $P(B100," ",100)=" "
+ S VALUE=$E(KBBPUDAT(1)_B100,1,35)_" "_$E(KBBPUDAT(2)_B100,1,6)_" "_$E(KBBPUDAT(3)_B100,1,27)_" "
+ D CHKEQ(VALUE,XX,"Incorrect text for normal")
+ ;
+ S KBBPPACK=1
+ S XX=$$SETOUT^KBBPYROU(.XWID,.XWIDT,XVALUE,KBBPPACK,XNMAX) ; convert input ^-separated data into output form and write out
+ D CHKEQ(XVALUE,XX,"Incorrect text for ^-separated")
+ ;
+ S KBBPPACK=2
+ S XX=$$SETOUT^KBBPYROU(.XWID,.XWIDT,XVALUE,KBBPPACK,XNMAX) ; convert input ^-separated data into output form and write out
+ D CHKEQ(""""_KBBPUDAT(1)_""","""_KBBPUDAT(2)_""","""_KBBPUDAT(3)_""",,",XX,"Incorrect text for csv")
+ K ^TMP("*SETOUT-UYRO-OUTPUT",$J)
+ M ^TMP("*SETOUT-UYRO-OUTPUT",$J)=^TMP("KBBPYROU-OUTPUT",$J)
+ Q
+ ;
+GETDATA(KBBPUDAT) ; get data for name and sex fields, last key containing XU and return number of keys containing XU
+ N CNT,GVAL,I,NAM,PNT,VAL
+ S KBBPUDAT(1)=$P(^VA(200,DUZ,0),U),KBBPUDAT(2)=$P(^VA(200,DUZ,1),U,2)
+ S GVAL=$P(^DD(200,4,0),U,3)
+ F I=1:1 S VAL=$P(GVAL,";",I) Q:VAL=""  I $P(VAL,":")=KBBPUDAT(2) S KBBPUDAT(2)=$P(VAL,":",2) Q
+ S VAL="",CNT=0 F I=0:0 S I=$O(^VA(200,DUZ,51,I)) Q:I'>0  S PNT=+^(I,0) I PNT>0 S NAM=$P($G(^DIC(19.1,PNT,0)),U) I NAM["XU" S VAL=NAM,CNT=CNT+1
+ S KBBPUDAT(3)=VAL
+ Q CNT
+ ;
+FILETYPS ; @TEST - determine and whether fields are single or multiple relative to primary file
+ N FILETYP,PATH,XTN,PRMRYFIL
+ S PRMRYFIL=200
+ S XTN(1)=200,XTN(2)=200,XTN(3)="200.051;200",XTN(4)="200.03;200"
+ D FILETYPS^KBBPYROU(.FILETYP,.PATH,.XTN,PRMRYFIL)
+ D CHKEQ("SINGLE",$G(FILETYP(1)),"Incorrect for main file in NEW PERSON file (#200)")
+ D CHKEQ("MULTIPLE",$G(FILETYP(3)),"Incorrect value for KEY subfile for NEW PERSON file (#200)")
+ D CHKEQ("MULTIPLE",$G(FILETYP(4)),"Incorrect value for SECONDARY OPTION subfile for NEW PERSON file (#200)")
+ ;
+ S PRMRYFIL=2
+ S PATH(1)=".01;2R55^.01;55.03T52"
+ S XTN(1)=2,XTN(2)=52,XTN(3)=52,XTN(4)="52.1;52"
+ D FILETYPS^KBBPYROU(.FILETYP,.PATH,.XTN,PRMRYFIL)
+ D CHKEQ("SINGLE",$G(FILETYP(1)),"Incorrect for main file in PATIENT file (#2)")
+ D CHKEQ("MULTIPLE",$G(FILETYP(3)),"Incorrect value for PRESCRIPTION file (#52)")
+ D CHKEQ("MULTIPLE",$G(FILETYP(4)),"Incorrect value for SECONDARY OPTION subfile for PRESCRIPTION file (#52)")
+ Q
+ ;
+CHKEQ(EXPECTED,ACTUAL,COMMENT) ;
+ D CHKEQ^%ut(EXPECTED,ACTUAL,COMMENT)
+ Q
+ ;
+CHKTF(TEST,COMMENT) ;
+ D CHKTF^%ut(TEST,COMMENT)
+ Q
+ ;
+XTROU ;
+ ;;;KBBPUYSH
+ ;;;KBBPUYNM
+
+KBBPUYSE^INT^1^63984,49522^0
+KBBPUYSE ;JLI/JIVEYSOFT.COM-Unit tests related to KBBPYSE* routines ;03/07/16  13:45
+ ;;0.0;KBBP;;;
+ ;
+ I $T(EN^%ut)'="" D EN^%ut($T(+0))
+ Q
+ ;
+STARTUP ;
+ D STARTUP^KBBPUYNM
+ Q
+ ;
+SHUTDOWN ;
+ D SHUTDOWN^KBBPUYNM
+ Q
+ ;
+GETFILE ; @TEST - file name and number
+ ;GETFILE(KBBPFIL,KBBPFILN,KBBPI) ; called from EN^KBBPYQRY
+ ; KBBPFIL  - passed by reference - contains file number on return (or zero)
+ ; KBBPFILN - passed by reference - contains file name on return
+ ; KBBPI    - passed by reference -
+ N KBBPFIL,KBBPFILN,KBBPI S KBBPI=0
+ D GETFILE^KBBPYSET(.KBBPFIL,.KBBPFILN,.KBBPI)
+ D CHKEQ(200,KBBPFIL,"Incorrect file number returned")
+ D CHKEQ("NEW PERSON",KBBPFILN,"Incorrect file name returned")
+ D CHKEQ(0,KBBPI,"Incorrect value for KBBPI returned")
+ K ^TMP("KBBPYROU-OUTPUT",$J)
+ Q
+ ;
+GETFLDS1 ; @TEST - get criteria for one search set
+ N KBBPI,KBBPFIL,X,UTSTX,KBBPQRY,KBBPEXIT
+ S KBBPFIL=200,KBBPI=0,KBBPQRY=1,KBBPEXIT=0
+ D QUE^KBBPYREF
+ I $S('$D(^TMP("KBBPY",$J,"FIL")):1,^("FIL")'=KBBPFIL:1,'$D(^TMP("KBBPY",$J,"PNT")):1,1:0) D XRPNT^KBBPYNM(KBBPFIL)
+ ;
+ S UTSTX=U
+ S X=$$GETFLDS^KBBPYSET(.KBBPI,.KBBPEXIT,KBBPFIL,KBBPQRY)
+ D CHKEQ(U,X,"Incorrect value returned for ^ input")
+ K ^TMP("KBBPYROU-OUTPUT",$J)
+ Q
+ ;
+GETFLDS2 ; @TEST - get criteria for one search set
+ N KBBPI,KBBPFIL,X,UTSTX,KBBPQRY,KBBPEXIT
+ S KBBPFIL=200,KBBPI=0,KBBPQRY=1,KBBPEXIT=0
+ D QUE^KBBPYREF
+ I $S('$D(^TMP("KBBPY",$J,"FIL")):1,^("FIL")'=KBBPFIL:1,'$D(^TMP("KBBPY",$J,"PNT")):1,1:0) D XRPNT^KBBPYNM(KBBPFIL)
+ ;
+ S UTSTX="",X="",KBBPEXIT=0,KBBPFIL=200,KBBPI=0
+ S X=$$GETFLDS^KBBPYSET(.KBBPI,.KBBPEXIT,KBBPFIL,KBBPQRY)
+ D CHKEQ("",X,"Unexpected value returned for null input")
+ K ^TMP("KBBPYROU-OUTPUT",$J)
+ Q
+ ;
+GETFLDS3 ; @TEST - get criteria for one search set
+ N KBBPI,KBBPFIL,X,UTSTX,KBBPQRY,UTSTCOND,KBBPEXIT
+ S KBBPFIL=200,KBBPI=0,KBBPQRY=1,KBBPEXIT=0
+ D QUE^KBBPYREF
+ I $S('$D(^TMP("KBBPY",$J,"FIL")):1,^("FIL")'=KBBPFIL:1,'$D(^TMP("KBBPY",$J,"PNT")):1,1:0) D XRPNT^KBBPYNM(KBBPFIL)
+ S UTSTX="SEX@200",KBBPFIL=200,KBBPI=0,KBBPEXIT=0,UTSTCOND(1)="X=$P(^VA(200,DUZ,1),U,2)"
+ K ^TMP("KBBPY",$J,"X")
+ S X=$$GETFLDS^KBBPYSET(.KBBPI,.KBBPEXIT,KBBPFIL,KBBPQRY)
+ D CHKEQ("SEX^200^4^1;2^^200^^^^X=$P(^VA(200,DUZ,1),U,2)",$G(^TMP("KBBPY",$J,"X",1,200)),"Unexpected global value returned for SEX@NEW PERSON")
+ K ^TMP("KBBPYROU-OUTPUT",$J)
+ Q
+ ;
+GETFLDS4 ; @TEST - get criteria for one search set
+ N KBBPI,KBBPFIL,X,UTSTX,KBBPQRY,KBBPEXIT,UTSTCOND
+ S KBBPFIL=200,KBBPI=0,KBBPQRY=1,KBBPEXIT=0
+ D QUE^KBBPYREF
+ I $S('$D(^TMP("KBBPY",$J,"FIL")):1,^("FIL")'=KBBPFIL:1,'$D(^TMP("KBBPY",$J,"PNT")):1,1:0) D XRPNT^KBBPYNM(KBBPFIL)
+ ;
+ S KBBPFIL=200,UTSTX(1)="surrogate@mailbox",KBBPI=0,KBBPEXIT=0
+ K ^TMP("KBBPY",$J,"X")
+ S X=$$GETFLDS^KBBPYSET(.KBBPI,.KBBPEXIT,KBBPFIL,KBBPQRY,1)
+ D CHKEQ("SURROGATE^3.703^.01^0;1^9^3.703;3.7^""AB""",$G(^TMP("KBBPY",$J,"X",1,3.7)),"Unexpected global value returned for SURROGAT@MAILBOX")
+ K ^TMP("KBBPYROU-OUTPUT",$J)
+ Q
+ ;
+GETFLDS5 ; @TEST - get criteria for one search set
+ N KBBPI,KBBPFIL,X,UTSTX,KBBPQRY,UTSTCOND,KBBPEXIT
+ S KBBPFIL=2,KBBPFIL=2,KBBPI=0
+ I $S('$D(^TMP("KBBPY",$J,"FIL")):1,^("FIL")'=KBBPFIL:1,'$D(^TMP("KBBPY",$J,"PNT")):1,1:0) D XRPNT^KBBPYNM(KBBPFIL)
+ D QUE^KBBPYREF
+ S KBBPI=0,KBBPFIL=2 D XRPNT^KBBPYNM(KBBPFIL)
+ S UTSTX(1)="DRUG ALLERGY INDICATION",KBBPEXIT=0,UTSTCOND(1)="X=$P(^VA(200,DUZ,1),U,2)",KBBPQRY=1
+ K ^TMP("KBBPY",$J,"X")
+ S X=$$GETFLDS^KBBPYSET(.KBBPI,.KBBPEXIT,KBBPFIL,KBBPQRY,1)
+ D CHKEQ("DRUG ALLERGY INDICATION^52^34.1^3;6^^52^^^^X=$P(^VA(200,DUZ,1),U,2)",$G(^TMP("KBBPY",$J,"X",1,52)),"Unexpected global value returned for DRUG ALLERGY INDICATION data node")
+ D CHKEQ(".01;2R55^.01;55.03T52",$G(^TMP("KBBPY",$J,"C",52)),"Unexpected global value returned for Prescription file path global")
+ D CHKEQ(".01;2R55",$G(^TMP("KBBPY",$J,"C",55)),"Unexpected global value returned for Pharmacy Patient path global")
+ ;
+ K ^TMP("KBBPY",$J)
+ K ^TMP("KBBPYROU-OUTPUT",$J)
+ Q
+ ;
+HUHFIELD ; @TEST - check output for ? input to request for fields
+ N N,UTSTGLOB,TEXT,X
+ S UTSTGLOB=$NA(^TMP("HUHFIELD-OUTPUT",$J)) K @UTSTGLOB
+ D HUHFIELD^KBBPYSET
+ S N=$G(@UTSTGLOB@(0)),TEXT=@UTSTGLOB@(N)
+ D CHKEQ(17,N,"Incorrect number of lines listed in output")
+ D CHKEQ("Enter all or a part of a FIELD NAME.",$G(@UTSTGLOB@(2)),"Incorrect text for first line of output")
+ D CHKEQ("under the main file indented for each level of sub-file.",TEXT,"Incorrect text returned for last text line response to ?")
+ K @UTSTGLOB
+ Q
+ ;
+SHOFILS1 ; @TEST
+ N UTSTFIRST,UTSTSUBS,UTSTGLOB,UTSTFILE,KBBPFIL,UTSTLAST,I
+ S UTSTGLOB=$NA(^TMP("SHOFILS1",$J)) K @UTSTGLOB
+ S UTSTFILE=200,UTSTFIRST=52,UTSTLAST=54
+ D SHOFILS^KBBPYSET
+ ; may have other files added, so check not based on fixed entry numbers
+ D CHKTF($G(@UTSTGLOB@(0))>3,"Expected at least four files to be found, found only "_+$G(@UTSTGLOB@(0)))
+ F I=0:0 S I=$O(@UTSTGLOB@(I)) Q:I'>0  I @UTSTGLOB@(I)["53.44" Q
+ I I'>0 D FAIL^%ut("Failed to find data for file 53.44")
+ I I>0 D CHKEQ("#53.44  PHYSICIANS' ORDERS FILE .01 field is 'USER'",@UTSTGLOB@(I),"Expected text not found for file 53.44")
+ K @UTSTGLOB
+ Q
+ ;
+SHOFILS2 ; @TEST
+ N UTSTFIRST,UTSTSUBS,UTSTGLOB,UTSTFILE,UTSTLAST,I
+ S UTSTFIRST=52,UTSTSUBS=1,UTSTFILE=200,UTSTLAST=54
+ S UTSTGLOB=$NA(^TMP("SHOFILS2",$J)) K @UTSTGLOB
+ D SHOFILS^KBBPYSET
+ D CHKTF($G(@UTSTGLOB@(0))>22,"Expected at least 23 lines of output including sub-files, found only "_$G(@UTSTGLOB@(0)))
+ F I=0:0 S I=$O(@UTSTGLOB@(I)) Q:I'>0  I @UTSTGLOB@(I)["#53.455" Q
+ I I'>0 D FAIL^%ut("Failed to find data for sub-file 53.455")
+ I I>0 D CHKEQ("   #53.455  SPECIAL INSTRUCTIONS SUB-FILE .01 field is 'SPECIAL INSTRUCTIONS'",@UTSTGLOB@(I),"Expected text not found for sub-file 53.455")
+ K @UTSTGLOB
+ Q
+ ;
+GETFILID ;@TEST - get file id if part of field input as field@file
+ N X,XF,FILENUM
+ S X="FIELDNAME@200",FILENUM=""
+ D GETFILID^KBBPYSET(.X,.FILENUM)
+ D CHKEQ("FIELDNAME",X,"Expected field name not returned")
+ D CHKEQ(200,FILENUM,"Expected file number not returned")
+ ;
+ S X="FIELDNAME@NEW PERSON",FILENUM=""
+ D GETFILID^KBBPYSET(.X,.FILENUM)
+ D CHKEQ("FIELDNAME",X,"Expected field name not returned")
+ D CHKEQ(200,FILENUM,"Expected file number not returned")
+ M ^TMP("GETFILID",$J)=^TMP("KBBPYROU-OUTPUT",$J)
+ K ^TMP("KBBPYROU-OUTPUT",$J)
+ Q
+ ;
+CHKEQ(EXPECTED,ACTUAL,COMMENT) ;
+ D CHKEQ^%ut(EXPECTED,ACTUAL,COMMENT)
+ Q
+ ;
+CHKTF(VALUE,COMMENT) ;
+ D CHKTF^%ut(VALUE,COMMENT)
+ Q
+ ;
+XTROU ;
+ ;;;KBBPUYNM;
+
+KBBPUYSH^INT^1^63974,55296^0
+KBBPUYSH ;JIVEYSOFT.COM/JLI - Unit tests for KBBPYNM ;02/26/16  15:21;
+ ;;0.0;KBBP;
+ ; Includes tests for:
+ ;   KBBPYSHO
+ ;   KBBPYSH1
+ ;
+ D EN^%ut($T(+0))
+ Q
+ ;
+STARTUP ;
+ D STARTUP^KBBPUYNM
+ Q
+ ;
+SHUTDOWN ;
+ D SHUTDOWN^KBBPUYNM
+ Q
+ ;
+ ; For routine KBBPYSHO
+ ;
+EN ; @TEST
+ N UTESTVAL,UTESTNUM,UTESTFIL
+ D EN^KBBPYSHO
+ D CHKEQ("200^NEW PERSON",$G(^TMP("KBBPY",$J,"SHO",UTESTVAL)),"Incorrect value set up")
+ Q
+ ;
+SET1 ;@TEST - set one value in list of possible matches.
+ N KBBPI S KBBPI=4
+ I '$D(^XTMP("KBBPY","FNM","ALERT DATE TIME")) D QUE^KBBPYREF
+ K ^TMP("KBBPY",$J,"SHO")
+ D SET1^KBBPYSHO(200.194,.KBBPI)
+ D CHKEQ(5,KBBPI,"Wrong value number returned")
+ D CHKEQ("200.194^ALERT DATE TIME",$G(^TMP("KBBPY",$J,"SHO",KBBPI)),"Incorrect value set up")
+ K ^TMP("KBBPY",$J,"SHO")
+ Q
+ ;
+SELCTSHO ;@TEST - return value to be selected
+ ; when only one choice is available, the value 1 is returned without user interaction
+ D CHKEQ(1,$$SELCT^KBBPYSHO(1,1),"Bad selection value returned")
+ ;
+ S KBBPFIL=200
+ S KBBPY=KBBPFIL-.0000001 F KBBPI=0:0 S KBBPY=$O(^DD(KBBPY)) Q:$E(KBBPY,1,$L(KBBPFIL))'=KBBPFIL  I $D(^DD(KBBPY,0))#2 D SET1^KBBPYSHO(KBBPY,.KBBPI)
+ D CHKEQ("200^NEW PERSON",$G(^TMP("KBBPY",$J,"SHO",$$SELCT^KBBPYSHO(10,KBBPI))),"Incorrect value returned from SELCT^KBBPYSHO")
+ Q
+ ;
+ENSHO ;@TEST - get selected value
+ N UTESTFIL,UTESTVAL,UTESTNUM S UTESTFIL=8994.03
+ D EN^KBBPYSHO
+ D CHKEQ("8994.03^RETURN PARAMETER DESCRIPTION",$G(^TMP("KBBPY",$J,"SHO",UTESTVAL)),"Expected value not returned")
+ K ^TMP("KBBPY",$J,"SHO")
+ Q
+ ;
+ ; For routine KBBPYSH1
+ ;
+TYPESH1 ;@TEST - returns description, if possible, for field type
+ N X
+ S X=^DD(200,.01,0) ; NAME
+ D CHKEQ("Free Text, 3 to 35 chars",$$TYPE^KBBPYSH1(X),"Incorrect value for Free Text")
+ ;
+ S X=^DD(200,30,0) ; DATE ENTERED
+ D CHKEQ("Date",$$TYPE^KBBPYSH1(X),"Incorrect value for Date field")
+ ;
+ D CHKEQ("Unhandled type KBBPTYPE=Z",$$TYPE^KBBPYSH1("^Z"),"Unexpected value for unknown type")
+ Q
+ ;
+XREFSH1 ;@TEST - returns standard cross-ref for field, if any
+ N FILE,FIELD,DICNODE,KBBPNN
+ S FILE=200,DICNODE="^VA(200,",KBBPNN=0
+ ; NAME
+ S FIELD=.01
+ D CHKEQ("B",$$XREF^KBBPYSH1(FILE,FIELD,DICNODE),"Not expected value for field")
+ ; ACCESS CODE
+ S FIELD=2
+ D CHKEQ("A",$$XREF^KBBPYSH1(FILE,FIELD,DICNODE),"Not expected value for field")
+ ; SOCIAL WORKER ?
+ S FIELD=654
+ D CHKEQ("",$$XREF^KBBPYSH1(FILE,FIELD,DICNODE),"Not expected value for field")
+ ; NICK NAME
+ S FIELD=13
+ D CHKEQ("D",$$XREF^KBBPYSH1(FILE,FIELD,DICNODE),"Not expected value for field")
+ Q
+ ;
+CHKXSH1 ;@TEST - Determine whether cross-reference fits standard pattern for look-up
+ N KBBPXREF,KBBPXK,KBBPNN
+ ; NAME
+ S KBBPXREF="B",KBBPXK="$E(X,1,30),DA)=""""",KBBPNN=0
+ D CHKX^KBBPYSH1(.KBBPXREF,KBBPXK,KBBPNN)
+ D CHKEQ("B",KBBPXREF,"Not expected value for B x-ref")
+ ; ACCESS CODE
+ S KBBPXREF="A",KBBPXK="X,DA)=+$H",KBBPNN=0
+ D CHKX^KBBPYSH1(.KBBPXREF,KBBPXK,KBBPNN)
+ D CHKEQ("A",KBBPXREF,"Not expected value for A x-ref")
+ ; SOCIAL WORKER ?
+ S KBBPXREF="ASWB",KBBPXK="DA,DA)=""""",KBBPNN=0
+ D CHKX^KBBPYSH1(.KBBPXREF,KBBPXK,KBBPNN)
+ D CHKEQ("",KBBPXREF,"Not expected value for ASWB x-ref")
+ ; SOCIAL WORKER'S NUMBER
+ S KBBPXREF="ASWD",KBBPXK="$E(X,1,30),DA)=""""",KBBPNN=0
+ D CHKX^KBBPYSH1(.KBBPXREF,KBBPXK,KBBPNN)
+ D CHKEQ("ASWD",KBBPXREF,"Not expected value for  x-ref")
+ ; SSN
+ S KBBPXREF="BS5",KBBPXK="$E(",KBBPNN=0
+ D CHKX^KBBPYSH1(.KBBPXREF,KBBPXK,KBBPNN)
+ D CHKEQ("",KBBPXREF,"Not expected value for  x-ref")
+ ; SSN
+ S KBBPXREF="SSN",KBBPXK="$E(X,1,30),DA)=""""",KBBPNN=0
+ D CHKX^KBBPYSH1(.KBBPXREF,KBBPXK,KBBPNN)
+ D CHKEQ("SSN",KBBPXREF,"Not expected value for  x-ref")
+ ; NICK NAME
+ S KBBPXREF="D",KBBPXK="$$UP^XLFSTR($E(X,1,30)),DA)=""""",KBBPNN=0
+ D CHKX^KBBPYSH1(.KBBPXREF,KBBPXK,KBBPNN)
+ D CHKEQ("D",KBBPXREF,"Not expected value for  x-ref")
+ Q
+ ;
+CHKEQ(EXPECTED,ACTUAL,COMMENT) ;
+ D CHKEQ^%ut(EXPECTED,ACTUAL,COMMENT)
+ Q
+ ;
+CHKTF(TEST,COMMENT) ;
+ D CHKTF^%ut(TEST,COMMENT)
+ Q
+ ;
+XTROU ;
+ ;;;KBBPUYNM
+
+KBBPYDO1^INT^1^64404,49663^0
+KBBPYDO1 ;ISC-SF.SEA/JLI - DO THE THINGS ;05/01/17  13:47;
+ ;;2.0;KBBP;;May 15, 1992
+ I $T(EN^%ut)="" W !,"Can't run Unit Tests" Q
+ D EN^%ut("KBBPUYNM")
+ Q
+ ;
+ ;
+GET1(ROOT) ;
+ N XT,NROOT
+ S:'$D(ROOT) ROOT="^TMP($J)"
+GETONE ;
+ N DA,I,XN,XVAL,NVAL,J,K
+ I '$D(ROOT) S ROOT="^TMP($J)"
+ S XT=$G(@ROOT@("XT"))
+ S XN=$G(@ROOT@("XTDA"))
+ F I=0:0 S I=$O(@ROOT@("XTS",I)) Q:I'>0  D
+ . I @ROOT@("XTS",I)="" X @ROOT@("XTDA",I)
+ . Q
+ K XVAL,@ROOT@("XVAL")
+ S NVAL=1
+ F J=1:1:XT X @ROOT@("XT",J)
+ K DA F I=1:1:XN D
+ . I $D(@ROOT@("XTDA",I))>9 S @("DALOOP"_I)=0 D
+ . . F NVAL=1:1 X @ROOT@("XTDA",I,1) Q:@("DALOOP"_I)'>0  D
+ . . . F J=1:1:XN X:@ROOT@("XTS",J)=I @ROOT@("XTDA",J) I J=XN D
+ . . . . F K=1:1:XT X @ROOT@("XT",K)
+ . . . . Q
+ . . . Q
+ . . Q
+ . Q
+ Q
+ ;
+CHKIT(ROOT,XCONDR) ;
+ ; ROOT    - input - global root for related data
+ ; XCONDR  - input - indicator for array or global with conditions
+ ; FILETYP - passed by reference - indicator of multiple or single fields
+ N NVAL,XY,I,X,I1,NVAL1,XCOND,XT,XX
+ Q:'$D(ROOT)  Q:'$D(XCONDR)  Q:XCONDR=""  Q:'$D(@XCONDR)
+ ;W !,"CHKIT-1 ROOT=",ROOT,"   XCONDR=",XCONDR
+ S XT=$G(@ROOT@("XT"))
+ M XCOND=@XCONDR
+ F NVAL=1:1:XT I $D(XCOND(NVAL)) D
+ . ;W !,"CHKIT-2 NVAL=",NVAL,"  XCOND(NVAL)=",XCOND(NVAL)
+ . S XY=$NA(@ROOT@("XVAL",NVAL))
+ . I '$D(@XY) S XX="@ROOT@(""XVAL"",NVAL)" K @XX Q
+ . S I=""
+ . F  S I=$O(@XY@(I)) Q:I=""  D:$D(@XY@(I))>9  I $D(@XY@(I)),$D(@XY@(I))<9 S X=@XY@(I) X XCOND(NVAL) I '$T K @XY@(I) S XX=$E(ROOT,1,$L(ROOT)-1)_",""XVAL"",NVAL,I)" K @XX
+ . . S I1="" F  S I1=$O(@XY@(I,I1)) Q:I1=""  I $D(@XY@(I,I1))<9 S X=@XY@(I,I1) X XCOND(NVAL) I '$T K @XY@(I,I1) S XX=$E(ROOT,1,$L(ROOT)-1)_",""XVAL"",NVAL,I,I1)" K @XX
+ . . Q
+ . Q
+ Q
+ ;
+EOR ;
+
+KBBPYNM^INT^1^63991,72816^0
+KBBPYNM ;SF-ISC.JLI -- SET UP SQL CROSS-REFS ON VARIABLES FOR DATA DICTIONARY ;03/14/16  20:13;
+ ;;0.0;KBBPTOOLS;;
+ ;A6AXFNM ;SF-ISC.JLI -- SET UP SQL CROSS-REFS ON VARIABLES FOR DATA DICTIONARY ;3/1/94  13:46 ;
+ ;;2.0; ;;May 15, 1992
+ I $T(EN^%ut)="" W !,"Can't run Unit Tests" Q
+ D EN^%ut("KBBPUYNM")
+ Q
+ ;
+BUILD ;
+ N %DT,KBBPI,KBBPFIL,X,Y
+ I $G(^XTMP("KBBPY","FNM"))'="" Q
+ S ^XTMP("KBBPY","FNM")=$H
+ S KBBPFIL=1 F KBBPI=0:0 S ^XTMP("KBBPY","FNM")=$H S KBBPFIL=$O(^DD(KBBPFIL)) Q:KBBPFIL'>0  D KBBPFIL(KBBPFIL)
+ S X="N",%DT="T" D ^%DT S ^XTMP("KBBPY","FNM")=Y K %DT,X,Y
+ ;K KBBP1,KBBP2,KBBP3,KBBPANM,KBBPDIC,KBBPFIL,KBBPFLD,KBBPI,KBBPJ,KBBPK,KBBPM,KBBPNM,KBBPNN,KBBPNOD,KBBPT,KBBPTOP,KBBPXK,KBBPXREF,KBBPXVAL
+ Q
+ ;
+KBBPFIL(KBBPFIL) ; get filename and x-refs for one file (may be a subfile) entry
+ I '($D(^DD(KBBPFIL,0))#2) QUIT
+ I (KBBPFIL=2.98)!(KBBPFIL=2.001) ;W !,"KBBPFIL=",KBBPFIL,"  KBBPFIL IS HERE"
+ N KBBP1,KBBP2,KBBPDIC,KBBPFLD,KBBPJ,KBBPNM,KBBPNN,KBBPNOD,KBBPT,KBBPTOP
+ S KBBP2="",(KBBPTOP,KBBP1,KBBPT)=KBBPFIL,KBBPNOD="",KBBPNN=0
+ ; if a subfile, determine order of stack
+ F KBBPJ=0:0 S KBBP2=$S(KBBP2'="":KBBP2_";",1:"")_KBBP1 Q:'$D(^DD(KBBP1,0,"UP"))  S (KBBPTOP,KBBP1)=^("UP") I $O(^DD(KBBP1,"SB",KBBPT,0))>0 D KBBPFIL1(.KBBPT,.KBBPNOD,.KBBPNN,KBBP1) ; naked global reference
+ S KBBPDIC=$S($D(^DIC(KBBPTOP,0,"GL")):^("GL"),1:"")
+ S KBBPNM=$S($D(^DD(KBBPFIL,0,"NM")):$O(^("NM","")),1:$P(^DD(KBBPFIL,0),U)),^XTMP("KBBPY","FNM",KBBPNM,KBBPFIL)=KBBP2_U_KBBPNOD
+ ; get information for each field
+ F KBBPFLD=0:0 S KBBPFLD=$O(^DD(KBBPFIL,KBBPFLD)) Q:KBBPFLD'>0  I $D(^(KBBPFLD,0))#2 S KBBPNM=$P(^(0),U),KBBP1=$P(^(0),U,4) D KBBPFLD(.KBBPNM,KBBPFIL,KBBPDIC,KBBPFLD,KBBPNN,KBBP1,KBBP2,KBBPTOP,KBBPNOD) ; naked global reference
+ Q
+ ;
+KBBPFIL1(KBBPT,KBBPNOD,KBBPNN,KBBP1) ;
+ ; KBBPT - passed by reference
+ ; KBBPNOD - passed by reference
+ ; KBBPNN  - passed by reference
+ ; KBBP1
+ N KBBP3
+ I (KBBP1=2.98)!(KBBP1=2.001) ;W !,"KBBP1=",KBBP1,"  KBBPFIL1 IS HERE"
+ S KBBP3=$O(^DD(KBBP1,"SB",KBBPT,0))
+ S KBBPT=KBBP1,KBBPNOD=$P($P(^DD(KBBP1,KBBP3,0),U,4),";")_$S(KBBPNOD'="":";"_KBBPNOD,1:""),KBBPNN=KBBPNN+1
+ Q
+ ;
+KBBPFLD(KBBPNM,KBBPFIL,KBBPDIC,KBBPFLD,KBBPNN,KBBP1,KBBP2,KBBPTOP,KBBPNOD) ;
+ N KBBPANM,KBBPK,KBBPXREF
+ I (KBBPFIL=2.98)!(KBBPFIL=2.001) ;W !,"KBBPFIL=",KBBPFIL,"  KBBPFLD IS HERE"
+ I KBBPNM?.E1L.E F KBBPK=1:1:$L(KBBPNM) I $E(KBBPNM,KBBPK)?1L S KBBPNM=$E(KBBPNM,1,KBBPK-1)_$C($A($E(KBBPNM,KBBPK))-32)_$E(KBBPNM,KBBPK+1,$L(KBBPNM))
+ F KBBPK=0:0 Q:$E(KBBPNM)'=" "  S KBBPNM=$E(KBBPNM,2,99)
+ S KBBPANM=$S($E(KBBPNM)="*":$E(KBBPNM,2,99),1:"") F KBBPK=0:0 Q:$E(KBBPANM)'=" "&($E(KBBPANM)'="*")  S KBBPANM=$E(KBBPANM,2,99)
+ I KBBPNM="" S KBBPNM="<null name>"
+ D XREF(.KBBPXREF,KBBPFIL,KBBPDIC,KBBPFLD,KBBPNN)
+ S ^XTMP("KBBPY","XR1",KBBPNM,KBBPTOP,KBBPFIL,KBBPFLD)=KBBP1_U_KBBPNOD_U_KBBP2_U_KBBPXREF
+ Q:KBBPANM=""
+ S ^XTMP("KBBPY","XR1",KBBPANM,KBBPTOP,KBBPFIL,KBBPFLD)=KBBP1_U_KBBPNOD_U_KBBP2_U_KBBPXREF
+ Q
+ ;
+XREF(KBBPXREF,KBBPFIL,KBBPDIC,KBBPFLD,KBBPNN) ;
+ N KBBPK,KBBPXK
+ I (KBBPFIL=2.98)!(KBBPFIL=2.001) ;W !,"KBBPFIL=",KBBPFIL,"  XREF IS HERE"
+ S KBBPXREF=""
+ F KBBPK=0:0 S KBBPK=$O(^DD(KBBPFIL,KBBPFLD,1,KBBPK)) Q:KBBPK'>0  I $D(^(KBBPK,1)) S KBBPXK=^(1) I $E(KBBPXK,1,2)="S " D XREF1(.KBBPXK,.KBBPXREF,KBBPDIC),CHKX(.KBBPXREF,KBBPXK,KBBPNN) I KBBPXREF'="" Q  ; naked global reference
+ Q
+ ;
+XREF1(KBBPXK,KBBPXREF,KBBPDIC) ;
+ S KBBPXK=$P(KBBPXK,KBBPDIC,2) I KBBPXK'="" S KBBPXREF=$P(KBBPXK,","),KBBPXK=$P(KBBPXK,",",2,99)
+ Q
+ ;
+CHKX(KBBPXREF,KBBPXK,KBBPNN) ;
+ N KBBPXVAL,KBBPM
+ S KBBPXVAL=$P(KBBPXK,",DA"),KBBPXK="DA"_$P(KBBPXK,",DA",2,99) I $E(KBBPXVAL,1,7)'="$E(X,1,"&(KBBPXVAL'="X") S KBBPXREF="" Q
+ I KBBPNN>0 F KBBPM=KBBPNN:-1:1 S KBBPXVAL=$P(KBBPXK,","),KBBPXK=$P(KBBPXK,",",2,99) Q:KBBPXVAL'=("DA("_KBBPM_")")
+ I $P(KBBPXK,"=")'="DA)" S KBBPXREF=""
+ Q
+ ;
+XRPNT(KBBPFIL) ; called from KBBPYSET all tags below (XRP0 through CHKSEC) are called internally
+ ;  KBBPYSET only uses the first argument
+ N II,J,J1,J3,K,M,N,X,X0,X1,XA,XAB,Z1,SILENT
+ S SILENT=$S($D(ZTQUEUED):1,$T(ISUTEST^%ut)'="":$$ISUTEST^%ut(),1:0)
+ K ^TMP("KBBPY",$J,"P")
+ S ^TMP("KBBPY",$J,"P",KBBPFIL)=""
+ F J=0:0 S J=$O(^DD(KBBPFIL,"SB",J)) Q:J'>0  S ^TMP("KBBPY",$J,"P",J)="" I (J=2.98)!(J=2.001) ;W !,"J=",J,"  XRPNT-A"
+ K ^TMP("KBBPY",$J,"PN"),^("PNT") ; naked global reference
+ S X="",X0=0,XA=KBBPFIL,J1=1
+ F Z1=0:0 S Z1=$O(^TMP("KBBPY",$J,"P",Z1)) Q:Z1'>0  D
+ . S X1=Z1 D XRPNT0
+ K ^TMP("KBBPY",$J,"P")
+ S XAB=KBBPFIL
+ F II=0:0 S II=$O(^DD(XAB,0,"PT",II)) Q:II'>0  D
+ . I (XAB=2.98)!(XAB=2.001) ;W !,"XAB=",XAB,"  XRPNT IS HERE"
+ . I $D(^DIC(II,0)),$D(^DD(XAB,0,"PT",II,.01)),$D(^DD(II,.01,0)) D
+ . . ;I ^DD(II,.01,0)'["DINUM" S (J,^(II))=$G(^TMP("KBBPY",$J,"PNT",II))+1,^(II,J)=".01;"_II_"P"_XAB Q  ; naked global reference
+ . . I ^DD(II,.01,0)'["DINUM" S (J,^(II))=$G(^TMP("KBBPY",$J,"PNT",II))+1,^(II,J)=".01;"_II_"T"_XAB Q  ; naked global reference
+ . . D XRP0
+ F J=0:0 S J=$O(^TMP("KBBPY",$J,"PN",J)) Q:J'>0  D
+ . W:'SILENT "|"
+ . S J1=J+1
+ . F K=0:0 S K=$O(^TMP("KBBPY",$J,"PN",J,KBBPFIL,K)) Q:K'>0  D
+ . . W:'SILENT "."
+ . . F J3=0:0 S J3=$O(^TMP("KBBPY",$J,"PN",J,KBBPFIL,K,J3)) Q:J3'>0  D
+ . . . S X=^(J3),(XA,X1)=K ; naked global reference
+ . . . D XRPNT0
+ F J=0:0 S J=$O(^TMP("KBBPY",$J,"PN",J)) Q:J'>0  D
+ . F K=0:0 S K=$O(^TMP("KBBPY",$J,"PN",J,KBBPFIL,K)) Q:K'>0  D
+ . . F M=0:0 S M=$O(^TMP("KBBPY",$J,"PN",J,KBBPFIL,K,M)) Q:M'>0  D
+ . . . S X=^TMP("KBBPY",$J,"PN",J,KBBPFIL,K,M)
+ . . . S (N,^(K))=$S($D(^TMP("KBBPY",$J,"PNT",K)):^(K),1:0)+1,^(K,N)=X ; naked global references
+ K ^TMP("KBBPY",$J,"P") S ^TMP("KBBPY",$J,"FIL")=KBBPFIL
+ Q
+ ;
+XRP0 ;
+ S (Z2,^(II))=$S($D(^TMP("KBBPY",$J,"PN",1,XAB,II)):^(II),1:0)+1,(X,^(II,Z2))=".01;"_XAB_"R"_II D XRP1 ; naked global references
+ Q
+ ;
+XRP1 ;
+ K ^TMP("KBBPY",$J,"P") F J=0:0 S J=$O(^DD(II,"SB",J)) Q:J'>0  S ^TMP("KBBPY",$J,"P",J)=""
+ I (J=2.98)!(J=2.001) ;W !,"J=",J,"  XRP1 IS HERE"
+ S X0=0,XA=II,J1=2 F Z1=0:0 S Z1=$O(^TMP("KBBPY",$J,"P",Z1)) Q:Z1'>0  S X1=Z1 W:'SILENT "." D XRPNT0
+ Q
+ ;
+XRPNT0 ;
+ F I=0:0 S I=$O(^DD(X1,I)) Q:I'>0  D
+ . I (X1=2.98)!(X1=2.001) ;W !,"X1=",X1,"  XRPNT0 IS HERE"
+ . I $D(^DD(X1,I,0)) D
+ . . S X2=$P(^DD(X1,I,0),U,2)
+ . . I X2["P" D
+ . . . S X2=+$P(X2,"P",2)
+ . . . I X_U[("T"_X2_U) Q
+ . . . I X2>0,X2'=XA,X2'=KBBPFIL D
+ . . . . D XRPNT1
+ . . . . I CHK D
+ . . . . . S (J2,^(X2))=$S($D(^TMP("KBBPY",$J,"PN",J1,KBBPFIL,X2)):^(X2),1:0)+1,^(X2,J2)=X_$S(X'="":U,1:"")_M0 ; naked global references
+ Q
+ ;
+XRPNT1 ;
+ I (KBBPFIL=2.98)!(KBBPFIL=2.001) ;W !,"KBBPFIL=",KBBPFIL,"  XRPNT1 IS HERE"
+ S CHK=1
+ S M0=I_";"_X1_"T"_X2
+ S M1=U_M0_U
+ F M=0:0 S M=$O(^TMP("KBBPY",$J,"PN",M)) Q:M'>0  D
+ . I $D(^TMP("KBBPY",$J,"PN",M,KBBPFIL,X2)) D
+ . . S:^TMP("KBBPY",$J,"PN",M,KBBPFIL,X2)>10 CHK=0
+ . . S:J1=1&(X1'=XA) CHK=0
+ . . Q:'CHK
+ . . F Z=0:0 S Z=$O(^TMP("KBBPY",$J,"PN",M,KBBPFIL,X2,Z)) Q:Z'>0  D
+ . . . I U_^TMP("KBBPY",$J,"PN",M,KBBPFIL,X2,Z)[M1 S CHK=0 Q
+ Q
+ ;
+EOR ;
+
+KBBPYPRO^INT^1^63991,72683^0
+KBBPYPRO ;ISC-SF/JLI-PROGRAMMER'S ENTRY FOR EVALUATION ;03/14/16  20:11;
+ ;;0.0;KBBP;;;
+ I $T(EN^%ut)="" W !,"Can't run Unit Tests" Q
+ D EN^%ut("KBBPUYNM")
+ Q
+ ;
+ENTRY ;
+ ; THE VARIABLE   A6AXFILE   contains the primary file number (this is
+ ;  the base file in which a look-up for a particular entry will give
+ ;  an internal number which is then used in all of the subsequent
+ ;  navigation and evaluation.
+ ;
+ ;  ENTRY IS WITH THE DESIRED FIELDS SPECIFIED IN A6AXFLD ARRAY
+ ;    A6AXFLD(i)=field.number;file.number
+ ;  example
+ ;    A6AXFLD(1)=".01;200"     SELECTS NAME FIELD OF NEW PERSON FILE
+ ;    A6AXFLD(3)="1;200.03"
+ ;    A6AXFLD(4)=".01;10.01"
+ ;
+ ; The array A6AXFPTH holds the path to use to fields in a related file
+ ;  These are processed in the numerical order of the subscripts, and
+ ;  the first path to a specific file will be used for all references
+ ;  to that file.
+ ;
+ ;   A6AXFPTH(1)="201;200T19^3.6;19T3^100;3T16^5;16T10"
+ ;    this path indicates field 201 from file 200 (the first field must
+ ;    start with the base file (or a sub-file within that file) points
+ ;    TO file 19; field 3.6 in file 19 is used to point TO file 3;
+ ;    field 100 in file 3 points To file 16, and field 5 in file 16
+ ;    points TO file 10.
+ ;      This one entry indicates the paths to be used to navigate from
+ ;    File 200 (or a sub-file of file 200) to files 19, 3, 16, and 10.
+ ;  A6AXFPTH(2)="
+ ;
+ ;
+ ; After this routine is called, the code to establish the necessary
+ ; DA values for the files is contained in ^TMP($J,"XTDA",n
+ ;
+ ; The code to establish the data values is stored in ^TMP($J,"XT",n
+ ;
+ ;  The DA values need to be established for the desired entry, the
+ ;  variable DABASE is set to the desired internal entry number in the
+ ;  main routine.  Then the following code can be used to establish
+ ;  the correct DA values for each file.
+ ;    F I=0:0 S I=$O(^TMP($J,"XTDA",I)) Q:I'>0  X ^(I)
+ ;
+ ;  the correct values are stored as DA("Pnnn") where nnn represents
+ ;  the file number.
+ ;
+ ;  Once the DA values have been established for the desired entry,
+ ;  the actual values for the fields can be obtained.  The variable
+ ;  NVAL must be defined -  this value is used to separate data for
+ ;  different entries in the file, and could be sequential numbers or
+ ;  it could be the internal entry number (DABASE).
+ ;  The following code can be used to obtain the values
+ ;    F I=0:0 S I=$O(^TMP($J,"XT",I)) Q:I'>0  X ^(I)
+ ;
+ ;  The resulting values are stored in ^TMP($J,"XVAL",nn,mm,pp) where
+ ;   nn is the value NVAL, mm is the sequence number for the variable
+ ;  (i.e., the subscript in A6AXFLD), and pp and additional subscripts
+ ;  may appear for nested values in a multiple.
+ ;
+ ;  The names of the fields are contained in ^TMP($J,"XTNM",n
+ ;
+ ;
+ ; NOTE that the code indicated above will 'walk' through the series
+ ; of fields indicated in A6AXFLD.  It is of course possible to focus
+ ; on data from a single field to determine the entries which fall
+ ; into a desired range for that field prior to processing additional
+ ; fields.  The subscript of the fields (1,2,...) will be in the order
+ ; of the subscripts specified for A6AXFLD
+ ;
+ ;  F DABASE=0:0 S DABASE=$O(^VA(200,DABASE)) Q:DABASE'>0 D
+ ;  . F I=0:0 S I=$O(^TMP($J,"XTDA",I)) Q:I'>0  X ^(I)
+ ;  . S XVAL=DABASE X ^TMP($J,"XT",4) ; get data for the fourth field
+ ;  . S X=^TMP($J,"XVAL",NVAL,4) ; assuming it is a single value field
+ ;  . ;                          ; otherwise, would have to check each
+ ;  . ;                          ; value
+ ;  . I X<2930101!(X>2931232) K ^TMP($J,"XVAL",NVAL) Q  ;assuming date not
+ ;  . ;                                           ;wanted, kill, quit
+ ;  . F I=0:0 S I=$O(^TMP($J,"XT",I)) Q:I'>0  X ^(I) ; wanted, get all values
+ ;
+ ;
+GETCODE(ROOT,KBBPFILE,KBBPFLDR,KBBPPATH) ;
+ N I,X,N,J,Y,CNT,XNUM,YNAM,XMAJ,Z,KBBPXQ,XN,XNM,XS,KBBPFLD,KBBPFPTH
+ S:'$D(ROOT) ROOT="^TMP($J)"
+ K @ROOT
+ Q:'$D(KBBPFILE)  Q:'$D(KBBPFLDR)  Q:KBBPFLDR=""  Q:'$D(@KBBPFLDR)
+ S KBBPPATH=$S('$D(KBBPPATH):"",1:KBBPPATH)
+ I $S(KBBPPATH="":1,'$D(@KBBPPATH):1,1:0) S KBBPFPTH=""
+ E  M KBBPFPTH=@KBBPPATH
+ M KBBPFLD=@KBBPFLDR
+ K ^TMP("KBBPY",$J,"X"),^("C"),^("FIL")
+ S ^TMP("KBBPY",$J,"FIL")=KBBPFILE S KBBPFIL=KBBPFILE,KBBPFILN=$P(^DIC(KBBPFIL,0),U)
+ F I=0:0 S I=$O(KBBPFPTH(I)) Q:I'>0  S X=KBBPFPTH(I) D
+ . N X1
+ . S N=$L(X,U)
+ . F J=N:-1:1 D
+ . . S X1=$P(X,U,J),Y=$S(X1["P":+$P(X1,";",2),X1["R":+$P(X1,"R",2),1:+$P(X1,"T",2))
+ . . I Y>0,'$D(^TMP("KBBPY",$J,"C",+Y)) S ^(+Y)=$P(X,U,1,J)
+ . . Q
+ . Q
+ S CNT=0 F I=0:0 S I=$O(KBBPFLD(I)) Q:I'>0  S Y=$P(KBBPFLD(I),";"),X=$P(KBBPFLD(I),";",2) D
+ . S XNUM="",YNAM=""
+ . I X>0,X=+X,$D(^DD(X,.01,0)) S XNUM=X
+ . I X'>0,X'="" S XNUM=$O(^DIC("B",X,0)) I XNUM'="" S:$O(^DIC("B",X,XNUM))'="" XNUM=""
+ . I XNUM="" Q
+ . I Y=.001 S YNAM="NUMBER",XMAJ=XNUM S CNT=CNT+1,^TMP("KBBPY",$J,"X",CNT,XMAJ)=YNAM_U_XNUM_U_Y_U_" "_U_U_XMAJ
+ . I Y>0,Y=+Y,$D(^DD(XNUM,Y,0)) S YNAM=$P(^(0),U)
+ . I Y'>0,Y'="",$D(^DD(XNUM,"B",Y)) S YNAM=Y,Y=$O(^(YNAM,0))
+ . I YNAM="" Q
+ . S XMAJ=XNUM F  Q:'$D(^DD(XMAJ,0,"UP"))  S XMAJ=^("UP")
+ . S Z=$G(^XTMP("KBBPY","XR1",YNAM,XMAJ,XNUM,Y))
+ . I Z'="" S CNT=CNT+1,^TMP("KBBPY",$J,"X",CNT,XMAJ)=YNAM_U_XNUM_U_Y_U_Z
+ S KBBPXQ=1 D EXIT^KBBPYSE2
+ M @ROOT@("XTDA")=XN
+ M @ROOT@("XTNM")=XNM
+ M @ROOT@("XTS")=XS
+ I ROOT'="^TMP($J)" M @ROOT@("XT")=^TMP($J,"XT")
+ Q
+
+KBBPYQRY^INT^1^64404,53042^0
+KBBPYQRY ;ISC-SF.SEA/JLI - WRAPPER FOR USER INTERFACE ;03/10/16  16:22
+ ;;0.0;KBBPTOOLS;;
+ ;A6AXFQRY ;ISC-SF.SEA/JLI - WRAPPER FOR USER INTERFACE ;4/21/95  09:35
+ ;;
+ I $T(EN^%ut)="" W !,"Can't run Unit Tests" G EN
+ N X R !,"Press Enter NOW to run the application or wait 5 seconds to run the Unit Tests: ",X:5 I $T G EN
+ W !,"Running Unit Tests",!
+ D EN^%ut("KBBPUYNM")
+ W !!,"To run the KBBPYQRY routine itself use the command DO EN^KBBPYQRY"
+ Q
+ ;
+EN ;
+ N I,ISDEBUG,J,K,KBBPEXIT,KBBPFIL,KBBPFILN,KBBPI,KBBPQRY,KBBPSET,KBBPROU,KBBPTST,TOTSETS
+ N PATH,SETNUM,UTESTING,X,X1
+ K ^TMP("KBBPYS",$J),PATH,^TMP("KBBPY",$J,"C")
+ S KBBPQRY=1,KBBPEXIT=0
+ S UTESTING=0 I $T(EN^%ut)'="" S UTESTING=$$ISUTEST^%ut()
+ ; moved checking of available file name/number to before entering any data
+ ; KBBPZ999 is reserved for unit tests
+ I UTESTING S KBBPROU="KBBPZ999"
+ I 'UTESTING F I=1:1 Q:I>998  S J="00"_I,J=$E(J,$L(J)-2,$L(J)) S X="KBBPZ"_J X ^%ZOSF("TEST") I '$T S KBBPROU=X Q
+ I 'UTESTING I I>998 D WRITEIT("Names for KBBPZnnn are all used up.  Clean out the routines and try again.") Q
+ ;
+ I UTESTING S KBBPFIL=200,KBBPI=0
+ I 'UTESTING D GETFILE^KBBPYSET(.KBBPFIL,.KBBPFILN,.KBBPI)
+ I $G(KBBPFIL)'>0 Q
+ S KBBPFILN=$P(^DIC(KBBPFIL,0),U)
+ I UTESTING S KBBPSET=2 D
+ . N X
+ . S X=$P(^VA(200,DUZ,0),U)
+ . S ^TMP("KBBPYS",$J,1,1,200)="NAME^200^.01^0;1^^200^""B""^^^X="""_X_""""
+ . S X=$P(^VA(200,DUZ,1),U,2)
+ . S ^TMP("KBBPYS",$J,1,2,200)="SEX^200^4^1;2^^200^^^^X="""_X_""""
+ . S ^TMP("KBBPYS",$J,1,3,200)="KEY^200.051^.01^0;1^51^200.051;200^""AB""^^^X=""XUMGR"""
+ . S ^TMP("KBBPYS",$J,"TOT",1,200)="NAME^200^.01^0;1^^200^""B""^^^"
+ . S ^TMP("KBBPYS",$J,"TOT",2,200)="SEX^200^4^1;2^^200^^^^"
+ . S ^TMP("KBBPYS",$J,"TOT",3,200)="KEY^200.051^.01^0;1^51^200.051;200^""AB""^^^X[""XU"""
+ . Q
+ I 'UTESTING S KBBPSET=$$GETSETS(.KBBPI,.KBBPEXIT,KBBPFIL,KBBPQRY) I KBBPEXIT Q
+ K KBBPTST S KBBPTST=0 I KBBPSET<2 S KBBPTST(1)="",KBBPTST=0 I KBBPSET=1 S KBBPTST(1)=1,KBBPTST=1
+ ;
+ I KBBPSET>1 D ANDOR(.KBBPTST,KBBPSET)
+ ;
+ S PATH=""
+ I 'UTESTING D OUTDATA(.PATH,.KBBPI,.KBBPEXIT,KBBPFIL,KBBPQRY) I KBBPEXIT Q
+ D OUTANDOR(.TOTSETS,KBBPFIL)
+ D WRITEIT(""),WRITEIT("")
+ ;
+ D ROU(.KBBPTST,.PATH,.SETNUM,.TOTSETS,KBBPROU) ; was originally fall through
+ K ^TMP("KBBPY"),^TMP("KBBPYS")
+ Q
+ ;
+GETSETS(KBBPI,KBBPEXIT,KBBPFIL,KBBPQRY) ;.EF - get information about sets of conditions for search
+ N KBBPSET,KBBPI,KBBPSET,DONE,FLDS,X
+ F KBBPSET=1:1 Q:(KBBPSET>1)&$$ISUTEST()  K ^TMP("KBBPY",$J,"X") D  Q:KBBPEXIT  I X'="@" Q:'$D(^TMP("KBBPYS",$J,KBBPSET))
+ . D WRITEIT(""),WRITEIT("Set of fields and conditions for Test "_KBBPSET)
+ . S X=$$GETFLDS(.KBBPSET,.KBBPI,.KBBPEXIT,KBBPFIL,KBBPQRY)
+ . I (KBBPSET=0)&(X="") S KBBPEXIT=1
+ . Q
+ Q $S(KBBPSET>0:KBBPSET-1,1:0)
+ ;
+GETFLDS(KBBPSET,KBBPI,KBBPEXIT,KBBPFIL,KBBPQRY) ; .EF - returns last input
+ N DONE,FLDS,X
+ S KBBPI=0,DONE=0
+ F FLDS=1:1 D  Q:KBBPEXIT!$$ISUTEST()  Q:X=""
+ . ; get fields for current set, X="@" indicates delete fields for current set
+ . S X=$$GETFLDS^KBBPYSET(.KBBPI,.KBBPEXIT,KBBPFIL,KBBPQRY)
+ . I KBBPEXIT Q  ; exit from application
+ . I '$D(^TMP("KBBPY",$J,"X",FLDS)) Q  ; finished entry for current set
+ . I $G(^TMP("KBBPY",$J,"X",FLDS))'="@" D
+ . . M ^TMP("KBBPYS",$J,KBBPSET)=^TMP("KBBPY",$J,"X")
+ . . Q
+ . I $G(^TMP("KBBPY",$J,"X",FLDS))="@" D
+ . . ; entry of only @ causes deletion of the CURRENT set of fields and can
+ . . ; be used if an error in entry is found, instead of requiring that
+ . . ; application be restarted.
+ . . K ^TMP("KBBPYS",$J,KBBPSET)
+ . . D WRITEIT(""),WRITEIT("Set "_KBBPSET_" DELETED!"),WRITEIT("")
+ . . S KBBPSET=KBBPSET-1
+ . Q
+ Q X
+ ;
+ANDOR(KBBPTST,KBBPSET,OUTPUT) ;
+ ; KBBPTST - passed by reference -
+ ; KBBPSET - input
+ ; OUTPUT  - OPTIONAL input      - if present, true indicates set up for output values
+ N KBBPI,CNT,DIR,I,X,Y,TEXT,ISUTEST
+ S ISUTEST=$$ISUTEST()
+ S OUTPUT=+$G(OUTPUT)
+ S CNT=0 F I=1:1:KBBPSET S KBBPI(I)=""
+ S DIR(0)="L^1:"_KBBPSET
+ S DIR("A")="Enter numbers for TESTS to be 'AND'ed together (enter ?? for help): "
+ F I=1:1 S TEXT=$T(@("DIRQ+"_I)),TEXT=$P(TEXT,";",3,99) Q:TEXT=""  S DIR("?",I)=TEXT
+ D WRITEIT("The response(s) must be a comma-separated series of digits ranging from 1 to "_KBBPSET_".")
+ D WRITEIT("  Used values from one response may be used in a subsequent response as necessary")
+ F  D  Q:'$D(KBBPI)
+ . S DIR("B")="" F I=1:1:KBBPSET I $D(KBBPI(I)) S DIR("B")=DIR("B")_$S(DIR("B")'="":",",1:"")_I
+ . D  ;
+ . . I ISUTEST S:CNT=0 Y=$S(KBBPSET=2:1,1:"1,2") S:CNT=1 Y=$S(KBBPSET=2:2,1:"1,3")
+ . . D:'ISUTEST ^DIR
+ . . F I=1:1:KBBPSET I (","_Y_",")[(","_I_",") K KBBPI(I)
+ . . Q
+ . F I=0:0 S I=$O(KBBPTST(I)) Q:I'>0  I KBBPTST(I)=Y K Y
+ . I $D(Y) S CNT=CNT+1,KBBPTST(CNT)=Y,KBBPTST=CNT
+ . Q
+ Q
+ ;
+OUTDATA(PATH,KBBPI,KBBPEXIT,KBBPFIL,KBBPQRY) ;
+ ;D OUTDATA(.PATH,.KBBPI,.KBBPEXIT,KBBPFIL,KBBPQRY)
+ N I,J,K,X,X1,OUTPUT,UTESTING
+ S UTESTING=$$ISUTEST()
+ D WRITEIT(""),WRITEIT("Data to **Report** for Matches (Conditions are optional)")
+ S KBBPI=0,X="",OUTPUT=1
+ F  S X=$$GETFLDS^KBBPYSET(.KBBPI,.KBBPEXIT,KBBPFIL,KBBPQRY,OUTPUT) Q:$D(^TMP("KBBPY",$J,"X"))!KBBPEXIT
+ I KBBPEXIT Q
+ M ^TMP("KBBPYS",$J,"TOT")=^TMP("KBBPY",$J,"X")
+ K ^TMP("KBBPY",$J,"X")
+ D WRITEIT(""),WRITEIT("")
+ I X["^" Q
+ K X1 F I=0:0 S I=$O(^TMP("KBBPY",$J,"C",I)) Q:I'>0  F J=1:1 I '$D(X1((255-$L(^(I))),J)) S X1(255-$L(^(I)),J)=^(I) Q  ; naked globals
+ F I=0:0 S I=$O(X1(I)) Q:I'>0  D
+ . F J=0:0 S J=$O(X1(I,J)) Q:J'>0  D
+ . . S X1=X1(I,J)
+ . . S X=0 F K=0:0 S K=$O(PATH(K)) Q:K'>0  I $E(PATH(K),1,$L(X1))=X1 S X=1 Q
+ . . I 'X D
+ . . . F K=1:1 I '$D(PATH(K)) Q
+ . . . S PATH(K)=X1
+ . . K X1(I,J)
+ . . Q
+ . Q
+ Q
+ ;
+OUTANDOR(TOTSETS,KBBPFIL) ;
+ ; TOTSETS - passed by reference -
+ ; KBBPFIL - input
+ N KBBPI,CNT,DIR,I,X,Y,TEXT,ISUTEST,COND,FILETYP,FILNAME,FLDNAME,J,TOTSETSX,XCNT,XPATH,XTN,KBBPSET
+ S ISUTEST=$$ISUTEST()
+ K XTN
+ F I=1:1 S J=$O(^TMP("KBBPYS",$J,"TOT",I,"")) Q:J'>0  S XTN(I)=$P(^(J),U,6)
+ S CNT=0,J="" F  S J=$O(^TMP("KBBPY",$J,"C",J)) Q:J'>0  S CNT=CNT+1,XPATH(CNT)=^(J)
+ D FILETYPS^KBBPYROU(.FILETYP,.XPATH,.XTN,KBBPFIL)
+ K TOTSETS S TOTSETS=0
+ F I=1:1 Q:'$D(^TMP("KBBPYS",$J,"TOT",I))  S X=$O(^(I,"")) Q:X'>0  I FILETYP(I)="SINGLE" D
+ . S FLDNAME=$P(^(X),U),FILNAME=$P(^DIC(X,0),U)
+ . D WRITEIT("   "_FILNAME_" "_FLDNAME_" is not a multiple and will be included on each line of output")
+ . S TOTSETS=TOTSETS+1,TOTSETS(TOTSETS)=I
+ . Q
+ ;
+ D WRITEIT(""),WRITEIT("Select which of the following should be 'AND'ed together, entry of only one")
+ D WRITEIT("number will 'OR' that value with the others.  Entry of 1,2 would have 1 and 2")
+ D WRITEIT("ANDed together, while 1,3 would also have 1 and 3 ANDed together."),WRITEIT("")
+ ;
+ S XCNT=0
+ K KBBPI
+ F I=1:1 Q:'$D(^TMP("KBBPYS",$J,"TOT",I))  S X=$O(^(I,"")) Q:X'>0  I FILETYP(I)'="SINGLE" D
+ . S XCNT=XCNT+1,XCNT(XCNT)=I
+ . S FLDNAME=$P(^TMP("KBBPYS",$J,"TOT",I,X),U),COND=$P(^(X),U,10),FILNAME=$P(^DIC(X,0),U)
+ . D WRITEIT(XCNT_"  "_FILNAME_" "_FLDNAME_"    *** "_COND)
+ . S KBBPI(XCNT)="",KBBPSET=XCNT
+ . Q
+ S DIR(0)="L^1:"_KBBPSET
+ S DIR("A")="Enter numbers for TESTS to be 'AND'ed together (enter ?? for help): "
+ F I=1:1 S TEXT=$T(@("DIRQ+"_I)),TEXT=$P(TEXT,";",3,99) Q:TEXT=""  S DIR("?",I)=TEXT
+ D WRITEIT("Response(s) must be a comma-separated series of digits ranging from 1 to "_KBBPSET_".")
+ D WRITEIT("Used values from one response may be used in a subsequent response as necessary")
+ S CNT=0
+ F  D  Q:'$D(KBBPI)
+ . S DIR("B")=""
+ . F I=1:1:KBBPSET I $D(KBBPI(I)) S DIR("B")=DIR("B")_$S(DIR("B")'="":",",1:"")_I
+ . D  ;
+ . . I ISUTEST S:CNT=0 Y=$S(KBBPSET=2:1,1:"1,2") S:CNT=1 Y=$S(KBBPSET=2:2,1:"1,3")
+ . . D:'ISUTEST ^DIR
+ . . F I=1:1:KBBPSET I (","_Y_",")[(","_I_",") K KBBPI(I)
+ . . Q
+ . F I=0:0 S I=$O(TOTSETS(I)) Q:I'>0  I TOTSETS(I)=Y K Y
+ . I $D(Y) S CNT=CNT+1,TOTSETSX(CNT)=Y,TOTSETSX=CNT
+ . Q
+ F I=1:1:TOTSETSX D
+ . S TOTSETS=TOTSETS+1,TOTSETS(TOTSETS)=""
+ . F J=1:1:XCNT S Y=$P(TOTSETSX(I),",",J) Q:Y=""  S TOTSETS(TOTSETS)=TOTSETS(TOTSETS)_XCNT(Y)_","
+ . Q
+ Q
+ ;
+ROU(KBBPTST,PATH,SETNUM,TOTSETS,KBBPROU) ;
+ N DIF,I,J,LINNUM,X,XCNP
+ S XCNP=0
+ K ^TMP($J,"KBBPYR") S X="KBBPYROU",XCNP=0,DIF="^TMP($J,""KBBPYR""," X ^%ZOSF("LOAD")
+ ; change first line to mark routine
+ S ^TMP($J,"KBBPYR",1,0)=KBBPROU_" "_$P(^TMP($J,"KBBPYR",1,0)," ",2,200)
+ ; update the routine date/time
+ S X=$$NOW^XLFDT()
+ S X=$E(X,4,5)_"/"_$E(X,6,7)_"/"_$E(X,2,3)_"  "_$E(X,9,10)_":"_$E(X,11,12)
+ S $P(^TMP($J,"KBBPYR",1,0),";",3)=X
+ ; find the line with tag FILE
+ S LINNUM=XCNP
+ F LINNUM=1:1 I $P(^TMP($J,"KBBPYR",LINNUM,0)," ")="FILE" Q
+ ; remove all lines from FILE to the end of the routine they will be replaced by the specifications for the new search
+ F I=LINNUM:1 Q:'$D(^TMP($J,"KBBPYR",I,0))  K ^(0) ; naked global
+ ; update FILE tag
+ S LINNUM=LINNUM-1 D ADD(.LINNUM,"FILE","KBBPFIL")
+ ; get and set type of output NORMAL or PACKED (^ or , separated)
+ D OUTTYPE(.LINNUM)
+ S PATH="" D ADD(.LINNUM,"PATH","PATH")
+ D ADD(.LINNUM,"SETS","KBBPTST")
+ F SETNUM=1:1 Q:'$D(^TMP("KBBPYS",$J,SETNUM))  D ADDSET(.LINNUM,SETNUM)
+ I $G(TOTSETS)>0 D ADD(.LINNUM,"TOTSETS","TOTSETS")
+ S SETNUM="TOT" D ADDSET(.LINNUM,SETNUM)
+ D SAVE(KBBPROU) ; was originally fall through
+ Q
+ ;
+SAVE(KBBPROU) ;
+ N DIE,XCN,X
+ S DIE="^TMP($J,""KBBPYR"",",XCN=0,X=KBBPROU X ^%ZOSF("SAVE") K DIE
+ D WRITEIT(""),WRITEIT("")
+ D WRITEIT("The routine to perform the specified analysis has been saved as")
+ D WRITEIT(""),WRITEIT($$INDENT^KBBPYSET(20)_KBBPROU)
+ D WRITEIT(""),WRITEIT("You may use this routine name in the future to repeat the analysis")
+ D WRITEIT(""),WRITEIT("")
+ D LAUNCH(KBBPROU)
+ Q
+ ;
+LAUNCH(KBBPROU) ;
+ ; launch routine
+ N %ZIS,POP,ZTIO,ION,ZTRTN,ZTDESC,KBBPQRY
+ S KBBPROU="EN1^"_KBBPROU
+ I '$$ISUTEST() S %ZIS="QN" D ^%ZIS Q:POP  I IO'=IO(0) S ZTIO=ION S ZTRTN=KBBPROU,ZTDESC="KBBPY QUERY" D ^%ZTLOAD D HOME^%ZIS Q
+ I '$$ISUTEST() D @KBBPROU
+ Q
+ ;
+OUTTYPE(LINNUM) ;
+ N DIR,Y,PACK
+ S Y=1
+ S DIR(0)="Y",DIR("A")="Output Packed"
+ S DIR("A",1)="The output may be PACKED with only a separator between data fields,",DIR("A",2)="or the output may be in a more readable format"
+ I '$$ISUTEST() D ^DIR K DIR
+ S PACK=$S(Y:"PACK",1:"NORMAL")
+ I PACK="PACK" S PACK="^-PACK" D WRITEIT("PACK as ^-separated or ,-separated for Excel (^ or ,)?  ^// ")  R:'$$ISUTEST() Y:DTIME I Y="," S PACK=",-PACK"
+ D ADD(.LINNUM,"PRINT","PACK")
+ Q
+ ;
+ADD(LINNUM,NAME,ARRAY) ;
+ ; LINNUM  - passed by reference - line number of addition to routine
+ ; NAME    - input               -
+ ; ARRAY   - input
+ N I,LNUM1
+ S LNUM1=LINNUM ; DEBUG
+ S LINNUM=LINNUM+1,^TMP($J,"KBBPYR",LINNUM,0)=NAME_" ;;"_@ARRAY
+ F I=0:0 S I=$O(@ARRAY@(I)) Q:I'>0  S LINNUM=LINNUM+1,^TMP($J,"KBBPYR",LINNUM,0)=" ;;"_@ARRAY@(I)
+ S LINNUM=LINNUM+1,^TMP($J,"KBBPYR",LINNUM,0)=" ;;"
+ Q
+ ;
+ADDSET(LINNUM,SETNUM) ; add set of data to list
+ ; LINNUM - passed by reference - LINNUM subscript
+ ; SETNUM - input - set number
+ N J,K,LNUM1,X
+ S LNUM1=LINNUM
+ S LINNUM=LINNUM+1,^TMP($J,"KBBPYR",LINNUM,0)=SETNUM_" ;" ; mark start of set number
+ F J=0:0 S J=$O(^TMP("KBBPYS",$J,SETNUM,J)) Q:J'>0  D  ; and place data for each entry in set
+ . S K=$O(^TMP("KBBPYS",$J,SETNUM,J,0)) ; get file number for search or output
+ . S X=^TMP("KBBPYS",$J,SETNUM,J,K) ; get data for item
+ . S LINNUM=LINNUM+1,^TMP($J,"KBBPYR",LINNUM,0)=" ;;"_$P(X,U,3)_"*"_$P(X,U,2)_";"_$P(X,U,10,100) ; create entry in routine
+ . Q
+ S LINNUM=LINNUM+1,^TMP($J,"KBBPYR",LINNUM,0)=" ;;" ; mark end of set data
+ Q
+ ;
+WRITEIT(TEXT,NOLINFED) ;
+ D WRITEOUT^KBBPYROU(TEXT,$G(NOLINFED))
+ Q
+ ;
+ISUTEST() ; .EF
+ I $T(ISUTEST^%ut)="" Q 0
+ Q $$ISUTEST^%ut()
+ ;
+DIRQ ;  The following is used in ANDOR for output as response to ?? entry
+ ;;"The separate tests indicated to be performed may be used to select entries"
+ ;;"which meet all of the criteria (all are 'and'ed together) or which meet a"
+ ;;"combination of the tests 'or' another combination of tests.  The"
+ ;;"test numbers entered together indicate that they should be 'anded'"
+ ;;"together that result is 'or'ed together with other 'and'ed sets."
+ ;;"The most direct is all numbers entered together so all conditions"
+ ;;"must be met for the entry to be selected."
+ ;;" "
+ ;;"For 3 sets of conditions, (1, 2, and 3), entry of 1,2,3 would indicate that"
+ ;;"all three conditons must be met for an entry to be selected.  However, entry"
+ ;;"as separate responses of 1, then 2, then 3 would result in an entry meeting"
+ ;;"any one of the conditions being selected (they are ORed together)."
+ ;;" "
+ ;;"Entry of 1,2 for one response followed by 1,3 for a second response would"
+ ;;"indicate that conditions for set one AND two must be met OR conditions"
+ ;;"one AND three must be met for an entry to be selected for output."
+ ;;" "
+ ;;
+EOR ;
+
+KBBPYREF^INT^1^63967,59197^0
+KBBPYREF ;ISC-SF.SEA/JLI - CHECK ON STATUS OF OVERALL XREF, START BUILD IF NECESSARY ;02/19/16  16:26
+ ;;0.0;KBBPTOOLS;;
+ ;A6AXFREF ;ISC-SF.SEA/JLI - CHECK ON STATUS OF OVERALL XREF, START BUILD IF NECESSARY ;3/1/94  13:50
+ ;;
+ I $T(EN^%ut)="" W !,"Can't run Unit Tests" Q
+ D EN^%ut("KBBPUYNM")
+ Q
+ ;
+CHECK ; Check current status of globals needed for analysis
+ N DIR,X,Y
+ L +^XTMP("KBBPY"):1
+ I '$T W !,"Can't get the lock on ^XTMP(""KBBPY"") - Quitting." Q
+ I '$D(^XTMP("KBBPY","FNM")) D  L -^XTMP("KBBPY") Q
+ . D WRITEIT("The cross-reference file does NOT exist.  Will have to build it.")
+ . D QUE1
+ . Q
+ S X=^XTMP("KBBPY","FNM")
+ S X=$E(X,4,5)_"/"_$E(X,6,7)_"/"_$E(X,2,3)_"  "_$E(X_"00000",9,10)_":"_$E(X_"00000",11,12)
+ D WRITEIT("^KBBPY last completed re-building "_X)
+ D REQUE
+ L -^XTMP("KBBPY")
+ Q
+ ;
+REQUE ;
+ N Y,DIR
+ S Y=1
+ S DIR(0)="Y",DIR("A")="Do you REALLY want to re-build the x-ref",DIR("B")="NO"
+ I '$$ISUTEST D ^DIR
+ I Y D QUE1
+ Q
+ ;
+QUE ; Originally set to setup queued process, but it is very quick, so don't worry about using a queued task
+ N XLOCK
+ L +^XTMP("KBBPY"):1 I '$T W !,"Can't get the lock on ^XTMP(""KBBPY"" at the moment - quitting." Q
+ S XLOCK=1
+QUE1 ; come in with lock on ^XTMP("KBBPY") - from unit test routine
+ N ZTQUEUED
+ K ^XTMP("KBBPY","FNM")
+ K ^XTMP("KBBPY","XR1")
+ S ^XTMP("KBBPY","FNM")="",^XTMP("KBBPY",0)=$$HTFM^XLFDT($$HADD^XLFDT($H,7),1)_U_$$HTFM^XLFDT($H,1)_U_"KBBPY METADATA DICTIONARY OF FileMan Files"
+ S ZTQUEUED=1 ; turn off verbose text of periods
+ D BUILD^KBBPYNM
+ I $G(XLOCK) L -^XTMP("KBBPY")
+ Q
+ ;
+WRITEIT(TEXT,NOLINFED) ;
+ S NOLINFED=+$G(NOLINFED)
+ I 'NOLINFED S LINESOUT=$G(LINESOUT)+1
+ I TEXT="@IOF" S LINESOUT=0
+ D WRITEOUT^KBBPYROU(TEXT,$G(NOLINFED))
+ Q
+ ;
+ ;
+ISUTEST() ;
+ I $T(^%ut)="" Q 0
+ Q $$ISUTEST^%ut()
+ ;
+EOR ; Marks end of routine
+
+KBBPYREL^INT^1^63984,52682^0
+KBBPYREL ;ISC-SF/JLI - LIST ALL FILES RELATED TO SPECIFIED MAIN FILE ;03/07/16  14:38;
+ ;;0.0;KBBPTOOLS;;May 15, 1992
+ ;
+ ; This routine attempts to present the relationships between a file in MUMPS and all
+ ; of the files and fields that are related to it, either as subfiles of the file or
+ ; via pointer relationships to the file, as table relatioships in a relational world
+ ; It is basically informational only.
+ ;
+ ;A6AXFREL ;ISC-SF/JLI - LIST ALL FILES RELATED TO SPECIFIED MAIN FILE ;5/15/92  13:25 ;
+ ;;2.0; ;;May 15, 1992
+ I $T(EN^%ut)="" W !,"Can't run Unit Tests" G EN
+ N X R !,"Press Enter NOW to run the application or wait 5 seconds to run the Unit Tests: ",X:5 I $T G EN
+ W !,"Running Unit Tests",!
+ D EN^%ut("KBBPUYNM")
+ W !!,"To run the KBBPYREL routine itself use the command DO EN^KBBPYREL"
+ Q
+ ;
+EN ; ENTRY FOR STAND ALONE
+ N KBBP1,KBBPASK,KBBPI,KBBPY,KBBPFIL,KBBPFN
+ I '$D(^XTMP("KBBPY","FNM"))!'$D(^XTMP("KBBPY","XR1")) D
+ . D WRITEIT(""),WRITEIT($C(7)_"First I have to rebuild the field cross-reference file")
+ . D WRITEIT("          THIS MAY TAKE A WHILE"),WRITEIT(""),WRITEIT("")
+ . D QUE^KBBPYREF
+ . Q
+ ;
+ S KBBPFIL="NEW" ;"ALERT" ; default for unit tests
+ I '$$ISUTEST() R !,"Select File Name: ",KBBPFIL:DTIME Q:'$T!(KBBPFIL="")!(KBBPFIL[U)
+ I KBBPFIL=+KBBPFIL S KBBPFIL=$G(^DIC(KBBPFIL,0),U) I KBBPFIL="" Q  ; if file number entered convert to name
+ ; get number of files beginning with same characters - found entries are stored in list
+ ;      in format  ^TMP("KBBPYREL",$J,"SHO",matchnumber)=fileNumber^fileName
+ S KBBPI=$$GETLIST(KBBPFIL)
+ S KBBPASK="ASK"
+ I KBBPI=0 G EN
+ I KBBPI=1 S KBBP1=$P(^TMP("KBBPYREL",$J,"SHO",1),U,2),KBBPFN=+^(1) D WRITEIT($E(KBBP1,$L(KBBPFIL)+1,$L(KBBP1))_"    ("_KBBPFN_")",1),WRITEIT(""),WRITEIT("") S KBBPFN=1 ; naked global reference
+ I KBBPI'=1 S KBBPFN=1 D
+ . D WRITEIT("     Select From:")
+ . F KBBPY=1:1:KBBPI D  Q:KBBPFN>0!(KBBPFN=U)
+ . . D WRITEIT("       "_$J(KBBPY,3)_".  "_$P(^TMP("KBBPYREL",$J,"SHO",KBBPY),U,2)_"  ("_+^(KBBPY)_")")
+ . . I '(KBBPY#10)!(KBBPY=KBBPI) S KBBPFN=$$SELCT(KBBPI,KBBPY) ; naked global reference
+ . . Q
+ . Q
+ I KBBPFN'>0 Q:$$ISUTEST()  G EN
+ S KBBPFIL=$P(^TMP("KBBPYREL",$J,"SHO",KBBPFN),U,2),KBBPFN=+^(KBBPFN) ; naked global reference
+ D SHOW1(KBBPFIL,KBBPFN)
+ I KBBPASK G EN
+ Q
+ ;
+ ; entry at SHOW1 also from KBBPYSH1
+SHOW1(KBBPFIL,KBBPFN) ;
+ ; KBBPFIL - input - Primary File Name
+ ; KBBPFN  - input - Primary File Number
+ N KBBPL,KBBPB,KBBPFILX,LINNUM
+ S KBBPFILX="TABLES RELATED TO "_KBBPFIL_" FILE ("_KBBPFN_")"
+ K ^TMP("KBBPYREL",$J,"SHO")
+ ; KBBPB array with values of file numbers
+ S KBBPL=1,KBBPB(KBBPL)=KBBPFN,^TMP("KBBPYREL",$J,"SHO",KBBPFN)=""
+ S LINNUM=0
+ D LOOP(KBBPFIL,KBBPFILX,.KBBPB,.KBBPL,1,.LINNUM)
+ Q
+ ;
+LOOP(KBBPFIL,KBBPFILX,KBBPB,KBBPL,SETNUM,LINNUM) ;
+ ; KBBPFIL  - input               - primary file name
+ ; KBBPFILX - input               - Header line to be used with file name and number
+ ; KBBPB    - passed by reference -
+ ; KBBPL    - passed by reference -
+ ; SETNUM   - input               - set number 1 for subfiles of main file, 2 for other references
+ ; LINNUM   - passed by reference - accumulated number of lines - updated
+ N KBBPI,KBBPXV,KBBPC,LINNUM1
+ S KBBPXV="",KBBPB=0,KBBPC=""
+ ; KBBPB(KBBPL) is file number check for subfiles from it, if entry doesn't already exist under "SHO", add it
+ F  S KBBPB=$O(^DD(KBBPB(KBBPL),"SB",KBBPB)) Q:KBBPB'>0  D
+ . I '$D(^TMP("KBBPYREL",$J,"SHO",KBBPB)) S ^(KBBPB)="" D LIST(KBBPB,KBBPC,.KBBPXV,SETNUM,.LINNUM) Q:KBBPXV[U  D  ; naked global reference
+ . . S KBBPB(KBBPL,KBBPB)=KBBPB,KBBPL=KBBPL+1,KBBPB(KBBPL)=KBBPB D LOOP(KBBPFIL,KBBPFILX,.KBBPB,.KBBPL,SETNUM,.LINNUM) S KBBPL=KBBPL-1,KBBPB=$O(KBBPB(KBBPL,0)) K KBBPB(KBBPL,KBBPB)
+ . . Q
+ . Q
+ Q:KBBPL>1
+ S SETNUM=2,LINNUM1=LINNUM,LINNUM=0
+ ; check for pointers to the current file [KBBPB(KBBPL)] if entry doesn't already exist under "SHO" add it
+ S KBBPB=0
+ F KBBPI=0:0 S KBBPB=$O(^DD(KBBPB(KBBPL),0,"PT",KBBPB)) Q:KBBPB'>0  I '$D(^TMP("KBBPYREL",$J,"SHO",KBBPB)) D  Q:KBBPXV[U
+ . ; get field number of pointer in KBBPC and zero node for field in X
+ . N X,KBBPC S KBBPC=$O(^DD(KBBPB(KBBPL),0,"PT",KBBPB,0)) S X=$G(^DD(KBBPB,KBBPC,0))
+ . ; make sure there is a direct pointer indicated - this omits variable pointers
+ . S X=$P(X,U,2) I X'[("P"_KBBPB(KBBPL)) S X=""
+ . I X="" Q
+ . ; add pointing file/subfile under "SHO"
+ . S ^TMP("KBBPYREL",$J,"SHO",KBBPB)="" D LIST(KBBPB,KBBPC,.KBBPXV,SETNUM,.LINNUM)
+ . Q
+ K ^TMP("KBBPYREL",$J,"SHO")
+ D LISTDATA(KBBPFIL,KBBPFILX,1,LINNUM1)
+ ;W!,"LOOP"
+ S LINNUM1=$$CHEK(1)
+ ;W!,"LOOP BACK"
+ D LISTDATA(KBBPFIL,KBBPFILX,2,LINNUM)
+ Q
+ ;
+NUMTHERE(KBBPFIL,NONETEXT,KBBPCNT) ;
+ ; KBBPOUT - input - global location for text storage
+ ; KBBPFIL  - input - name of the active file
+ ; NONETEXT - input - description of output values
+ ; KBBPCNT   - input - number of entries for output values
+ ;
+ D WRITEIT("     <There are "_KBBPCNT_" "_NONETEXT_" for the '"_KBBPFIL_"' file>")
+ D WRITEIT("")
+ Q
+ ;
+GETLIST(KBBPFIL) ; .EF
+ ; returns number of possible matches found for input name in KBBPFIL
+ ; possible matches stored under ^TMP("KBBPYREL",$J,"SHO",matchnumber)=FileNumber^FileName
+ ;
+ ; KBBPFIL - input - name to be searched for matches
+ ;
+ N KBBP1,KBBPI,KBBPY
+ S KBBP1=$E(KBBPFIL,1,$L(KBBPFIL)-1)_$C($A($E(KBBPFIL,$L(KBBPFIL)))-1)_"z"
+ K ^TMP("KBBPYREL",$J,"SHO")
+ F KBBPI=0:0 S KBBP1=$O(^DIC("B",KBBP1)) Q:$E(KBBP1,1,$L(KBBPFIL))'=KBBPFIL  D
+ . F KBBPY=0:0 S KBBPY=$O(^DIC("B",KBBP1,KBBPY)) Q:KBBPY'>0  D
+ . . S KBBPI=KBBPI+1,^TMP("KBBPYREL",$J,"SHO",KBBPI)=KBBPY_U_KBBP1
+ . . Q
+ . Q
+ I KBBPI=0 D WRITEIT($C(7)_"  ??",1) QUIT 0
+ QUIT KBBPI
+ ;
+LIST(KBBPFILN,KBBPC,KBBPXV,SETNUM,LINNUM) ;
+ ; KBBPFILN - input               - file number
+ ; KBBPC    - input               - field number or null if subfile under the main file
+ ; KBBPXV   - passed by reference - contains input from prompts to stop or continue, updated during output
+ ; SETNUM   - input               - set number = 1 for subfiles of main file, 2 for other related files
+ ; LINNUM   - passed by reference - current line number of data accumulated for set updated for each entry
+ ;
+ ; ZEXCEPT: IOSL - Kernel variable for page length
+ N KBBPLBL,KBBPLBN,XLINE
+ ; if file number has a .01 field with zero node
+ I '($D(^DD(KBBPFILN,.01,0))#2) Q
+ ; and isn't a word processing field
+ I $P(^DD(KBBPFILN,.01,0),U,2)["W" Q
+ ; generate descending list of up file/subfile numbers for the selected file/subfile number,
+ ; with the initial file at the end of the list
+ S KBBPLBL="",KBBPLBN=KBBPFILN
+ F  S KBBPLBL=$O(^DD(KBBPLBN,0,"NM",""))_$S(KBBPLBL'="":" - ",1:"")_KBBPLBL Q:'$D(^DD(KBBPLBN,0,"UP"))  S KBBPLBN=^("UP") ; naked global reference
+ ; add file number of pointing file/subfile at end of list
+ S XLINE="     "_KBBPLBL_"    ("_KBBPFILN_")"
+ ; if the pointing field is .01 mark with *, if DINUMed add X marker
+ I ($G(KBBPC)=".01") S XLINE=XLINE_"*"_$S(^DD(KBBPFILN,.01,0)["DINUM=":"X",1:"")
+ S LINNUM=LINNUM+1
+ S ^TMP("KBBPYREL",$J,SETNUM,LINNUM)=XLINE
+ Q
+ ;
+HEDR(KBBPFILX) ;
+ ; ZEXCEPT: IOF - Kernel page feed variable
+ ; KBBPFILX - input - file name for display
+ N KBBPI,KBBPTEXT
+ ; output previous page, then generate a new header
+ D WRITEIT("@IOF")
+ F KBBPI=1:1:2 D WRITEIT("")
+ S $P(KBBPTEXT," ",(80-$L(KBBPFILX)\2))=" "
+ D WRITEIT(KBBPTEXT_KBBPFILX)
+ D WRITEIT("")
+ Q
+ ;
+CHEK(TYPE) ;.EF
+ ; TYPE - input - set to 1 if user should not be asked to stop
+ ; ZEXCEPT: UTESTXV - if present is a value newed and set in unit tests
+ N KBBPXV
+ S KBBPXV=$S($D(UTESTXV):UTESTXV,1:1),TYPE=+$G(TYPE)
+ D WRITEIT("               Enter "_$S(TYPE=0:"'^' to STOP or ",1:"")_"<ret> to continue...")
+ I '$$ISUTEST() R KBBPXV:DTIME S:'$T!(KBBPXV[U) KBBPXV=U
+ Q KBBPXV
+ ;
+SELCT(KBBPI,KBBPY) ;.EF
+ ;  returns KBBPFN as the number selected by the user
+ ; KBBPI - input - maximum number for selection
+ ; KBBPY - input - current number of items shown for selection
+ N KBBPFN
+ S KBBPFN=1
+ D WRITEIT("")
+ D:KBBPY<KBBPI WRITEIT("               Enter '^' to STOP or")
+ D WRITEIT("              Select 1 to "_KBBPY_" (out of "_KBBPI_"): ")
+ I '$$ISUTEST() R KBBPFN:DTIME S:'$T!(KBBPFN[U) KBBPFN=U S:(KBBPFN>KBBPY)!(KBBPFN<0) KBBPFN=0
+ Q KBBPFN
+ ;
+LISTDATA(KBBPFIL,KBBPFILX,SETNUM,LINES) ;
+ N KBBPXV,LINNUM
+ D HEDR(KBBPFILX)
+ S KBBPXV=""
+ I SETNUM=1 D  Q:KBBPXV[U
+ . I LINES>0 D
+ . . D WRITEIT("In the M world, these tables are subfiles to the "_KBBPFIL_" file.")
+ . . D WRITEIT("")
+ . . Q
+ . D NUMTHERE(KBBPFIL,"subfile tables",LINES)
+ . F LINNUM=1:1:LINES D LISTOUT(KBBPFILX,.KBBPXV,SETNUM,LINNUM) Q:KBBPXV[U
+ . Q
+ I SETNUM=2 D
+ . D WRITEIT("In the M world, the following tables are files and subfiles that contain links")
+ . D WRITEIT("to the "_KBBPFIL_" file")
+ . D WRITEIT("  (an * indicates that the link is the primary identifier (.01) for the file,")
+ . D WRITEIT("   an *X indicates that the link is also DINUMed to the "_KBBPFIL_" file")
+ . D WRITEIT("")
+ . D NUMTHERE(KBBPFIL,"related tables",LINES)
+ . F LINNUM=1:1:LINES D LISTOUT(KBBPFILX,.KBBPXV,SETNUM,LINNUM) Q:KBBPXV[U
+ . Q
+ Q
+ ;
+LISTOUT(KBBPFILX,KBBPXV,SETNUM,LINNUM) ;
+ ; ZEXCEPT: IOSL - Kernel line width variable
+ D WRITEIT(^TMP("KBBPYREL",$J,SETNUM,LINNUM))
+ S KBBPXV=""
+ I ('$$ISUTEST()&((IOSL-4)<$Y))!($$ISUTEST()&((IOSL-4)<LINESOUT)) S KBBPXV=$$CHEK() I KBBPXV'[U D HEDR(KBBPFILX)
+ Q
+ ;
+ISUTEST() ;
+ I $T(ISUTEST^%ut)="" Q 0
+ Q $$ISUTEST^%ut()
+ ;
+WRITEIT(TEXT,NOLINFED) ;
+ S NOLINFED=+$G(NOLINFED)
+ I 'NOLINFED S LINESOUT=$G(LINESOUT)+1
+ I TEXT="@IOF" S LINESOUT=0
+ D WRITEOUT^KBBPYROU(TEXT,$G(NOLINFED))
+ Q
+EOR ; END OF ROUTINE
+
+KBBPYROU^INT^1^64404,61494^0
+KBBPYROU ;ISC-SF.SEA/JLI - TEMPLATE ROUTINE FOR QUERY INTERFACE ;05/01/17  17:04
+ ;;0.0;KBBPTOOLS;;
+ ;A6AXFROU ;ISC-SF.SEA/JLI - TEMPLATE ROUTINE FOR QUERY INTERFACE ;9/22/99  12:50
+ ;
+ ; Note - after saving from KBBPYQRY, routine name would be different from KBBPYROU
+ ;
+ I $T(EN^%ut)="" W !,"Can't run Unit Tests",! G EN
+ N X
+ R !,"Press Enter NOW to run the application or wait 5 seconds to run the Unit Tests: ",X:5 I $T G EN
+ W !,"Running Unit Tests",!
+ D EN^%ut("KBBPUYRO")
+ N ROUNAME S ROUNAME=$P($T(+1)," ")
+ W !!!,"*** To run the routine ^"_ROUNAME_", use DO EN^"_ROUNAME_". ***"
+ Q
+ ;
+EN ; Entry from queued job or from user running top of routine
+ ; ZEXCEPT: ION - Kernel IO variable
+ ; ZEXCEPT: ZTQUEUED - if defined set by TaskManager to indicate currently in a task
+ ;    ZTQUEUED set if run from KBBPYQRY and user is not printing to terminal
+ ; ZEXCEPT: ZTRTN - if being queued, this indicates the name of the routine to be run
+ ; ZEXCEPT: KBBPYMIN,KBBPYLIM,KBBPYMAX - if defined, they are set in tags TESTRANG, TESTMAX or TESTLIM and are KILLed before exiting EN1
+ N %ZIS,ZTDESC,ZTIO,ZTSAVE
+ S KBBPYMIN=2801,KBBPYMAX=2803 ; DEBUG
+ I '$D(ZTQUEUED),'$$ISUTEST() S %ZIS="QN" D ^%ZIS Q:POP  I IO'=IO(0) S ZTIO=ION,ZTRTN="EN1^"_$P($T(+1)," "),ZTDESC="KBBPY QUERY - "_ZTRTN D  D ^%ZTLOAD,HOME^%ZIS Q
+ . S:$D(KBBPYMIN) ZTSAVE("KBBPYMIN")=KBBPYMIN S:$D(KBBPYLIM) ZTSAVE("KBBPYLIM")=KBBPYLIM S:$D(KBBPYMAX) ZTSAVE("KBBPYMAX")=KBBPYMAX
+ S ROOT=$NA(^TMP($J))
+ D EN1
+ Q
+ ;
+EN1 ; entry from KBBPYQRY when initially printing to terminal or called from EN above
+ ; ZEXCEPT: KBBPYMIN,KBBPYLIM,KBBPYMAX - if defined, they are set in tags TESTRANG, TESTMAX or TESTLIM and are KILLed before exiting EN1
+ I '$D(KBBPYMIN) S KBBPYMIN=0
+ I '$D(KBBPYLIM) S KBBPYLIM=0
+ I '$D(KBBPYMAX) S KBBPYMAX=0
+ I $$ISUTEST() S KBBPYMIN=DUZ,KBBPYMAX=DUZ
+ ;
+ I '$D(^XTMP("KBBPY")) D QUE^KBBPYREF
+ D DOWORK
+ K KBBPYMIN,KBBPYLIM,KBBPYMAX ; just in case
+ Q
+ ;
+DOWORK ;
+ ; ZEXCEPT - IOF
+ N COND,DABASE,DATA,I,J,K,KBBPYLCN,KBBPPACK,KBBPSETS,KEY,L,L1,LL,NODE
+ N PATH,PRMRYFIL,RESULT,TOTSETS,VAR,X,XN,XN1,XN2,XNMAX,XWID,XWIDT
+ K ^TMP($J)
+ ; get data specifications from tags at bottom of file
+ S PRMRYFIL=$P($T(FILE),";",3) ; primary file number
+ S NODE=$G(^DIC(PRMRYFIL,0,"GL"))
+ S NODE=$E(NODE,1,$L(NODE)-1) ; remove comma at end
+ S:NODE["(" NODE=NODE_")" ; if opening paren, then close base for file
+ ;
+ ; get info path(s) from under PATH tag
+ D GETPATHS(.PATH)
+ ; type of output from PRINT tag - added cvs packed file as 2nd choice
+ S KBBPPACK=$$GETPACK()
+ ; get specifications for fields and conditions for sets under SETS tags
+ D GETSETS(.KBBPSETS)
+ ;  get specifications for output data fields and possible conditions under TOTSETS tag
+ D GETTOT(.TOTSETS)
+ ;
+ D SETBASE(.VAR,.COND,.DATA)
+ ;
+ F I=1:1 S:'$D(DATA(I)) I="TOT" D GETCODE^KBBPYPRO(DATA(I),PRMRYFIL,VAR(I),"PATH") Q:I="TOT"
+ ;
+ D SETORDR(.DATA,.XN1,.XN2,PRMRYFIL)
+ D SETWID(.DATA,.XWID,.XWIDT)
+ D SETLINK(.XN1,.XN2,PRMRYFIL)
+ S XNMAX=@DATA("TOT")@("XT") ; 160110
+ ; output selection criteria
+ I '$D(TOTSETS) S TOTSETS=1 S TOTSETS(1)="" S I=0 F  S I=$O(@DATA("TOT")@("XT",I)) Q:I'>0  S TOTSETS(1)=TOTSETS(1)_I_","
+ ;
+ D SELCTOUT(.KBBPSETS,.DATA)
+ ; list values displayed
+ D LISTVALS(.DATA,.COND)
+ ;
+ ; and finally find and output the actual data
+ D DATAOUT(.DATA,.COND,.PATH,.KBBPSETS,.XWID,.XWIDT,KBBPPACK,.TOTSETS,NODE,XNMAX,PRMRYFIL)
+ K ^TMP($J)
+ Q
+ ;
+GETPATHS(PATH) ; get info path(s) from under PATH tag
+ ; PATH - passed by reference - returns with data for paths in array PATH
+ N I,K,X
+ K PATH
+ F I=1:1 S K="S X=$P($T(PATH+"_I_"),"";"",3,99)" X K Q:X=""  S PATH(I)=X
+ Q
+ ;
+GETPACK() ;.EF - type of output from PRINT tag - added cvs packed file as 2nd choice
+ N KBBPPACK
+ S KBBPPACK=$E($P($T(PRINT),";;",2)),KBBPPACK=$S(KBBPPACK="^":1,KBBPPACK="PACK":1,KBBPPACK=",":2,1:0)
+ Q KBBPPACK
+ ;
+GETSETS(KBBPSETS) ;
+ ; KBBPSETS - passed by reference - returns with data on sets of variables and condtions
+ N I,K,X
+ K KBBPSETS S KBBPSETS=+$P($T(SETS),";",3)
+ F I=1:1 S K="S X=$P($T(SETS+"_I_"),"";"",3,99)" X K Q:X=""  S:X["DUZ" X=$P(X,"DUZ")_"DABASE"_$P(X,"DUZ",2,99) S KBBPSETS(I)=X
+ Q
+ ;
+GETTOT(TOTSETS) ; get specifications for output data fields and possible conditions under TOTSETS tag
+ ; TOTSETS - passed by reference - returns with data on fields and condtions for output
+ N I,K,X
+ K TOTSETS S TOTSETS=+$P($T(TOTSETS),";",3)
+ F I=1:1:TOTSETS S K="S X=$P($T(TOTSETS+"_I_"),"";"",3)" X K S:X["DUZ" X=$P(X,"DUZ")_"DABASE"_$P(X,"DUZ",2,99) S TOTSETS(I)=$TR(X,",",";")
+ I TOTSETS'>0 K TOTSETS
+ Q
+ ;
+SETBASE(VAR,COND,DATA) ;
+ ; VAR  - passed by reference
+ ; COND - passed by reference
+ ; DATA - passed by reference
+ N I,J,K,L,TOTCODE,X
+ K VAR,COND,DATA
+ ; set base for upto 10 sets of search variables and conditions and for output ("TOT")
+ F I=1:1:10,"TOT" S J="VAR"_I K @J S J=$NA(^TMP($J,"DATA"_I)) K @J S J="COND"_I K @J,VAR(I),COND(I),DATA(I)
+ ; work from set 1 up, if no set at the number use "TOT" to finish
+ F I=1:1 S K="S:$T("_I_")="""" I=""TOT""" X K S DATA(I)=$NA(^TMP($J,"DATA"_I)),VAR(I)="VAR"_I,COND(I)="COND"_I K @DATA(I),@VAR(I),@COND(I) D  Q:I="TOT"
+ . F J=1:1 S K="S X=$T("_I_"+"_J_")" X K Q:$P(X,";",3)=""  S @VAR(I)@(J)=$TR($P(X,";",3),"*",";") I $P(X,";",4)'="" S @COND(I)@(J)="I "_$P(X,";",4)
+ . Q
+ Q
+ ;
+SETORDR(DATA,XN1,XN2,PRMRYFIL) ;
+ N I,I1,J,J1,K,L,M,XN,XN1,XN2
+ F I=0:0 S I=$O(@DATA("TOT")@("XTN",I)) Q:I'>0  S J=^(I) D  ; naked global
+ . S K=$P(J,";",$L(J,";")) I K="" S K=$P(J,";",$L(J,";")-1)
+ . S L="",M=J F  S L=$P(M,";")_";"_L,M=$P(M,";",2,90) Q:M=""
+ . S XN(K,L,I)=I
+ . Q
+ K XN1,XN2 F I=0:0 S I=$O(XN(I)) Q:I'>0  D
+ . S J="" F  S J=$O(XN(I,J)) Q:J=""  D
+ . . F K=0:0 S K=$O(XN(I,J,K)) Q:K'>0  S J1=J D
+ . . . I $P(J1,";",2)="" S:I=PRMRYFIL XN1(I,1,K)="" S:I'=PRMRYFIL XN1(PRMRYFIL,"D",I)="",XN2(I,1,K)="" Q
+ . . . F  Q:J1=""  D
+ . . . . S I1=$P(J1,";"),L=$P(J1,";",2)
+ . . . . I L="" S XN2(I1,1,K)="",J1="" Q
+ . . . . S XN1(I1,"D",L)=""
+ . . . . S J1=$P(J1,";",2,99)
+ . . . . Q
+ . . . Q
+ . . Q
+ . Q
+ Q
+ ;
+SETWID(DATA,XWID,XWIDT) ;
+ N B100,I,FIL,FLD,TYP,X,X1,XL
+ S $P(B100," ",100)=""
+ F I=0:0 S I=$O(@DATA("TOT")@("XM",I)) Q:I'>0  D
+ . S FLD=@DATA("TOT")@("XM",I) I FLD=.001 S XWID(I)=10 Q
+ . S FIL=$P(@DATA("TOT")@("XTN",I),";")
+ . S X=^DD(FIL,FLD,0),TYP=$P(X,U,2)
+ . D SETTYP(.XWID,.XWIDT,FIL,FLD,TYP,I,X)
+ . Q
+ Q
+ ;
+SETTYP(XWID,XWIDT,FIL,FLD,TYP,I,X) ;
+ ; XWID,XWIDT,FIL,FLD - passed by reference
+ ; ZEXCEPT: IOM - Kernel value for margin for printing
+ N XL,J,X1
+ I TYP["F" S X=+$P(X,"$L(X)>",2) S XWID(I)=$S(X>0:X,1:30),XWIDT(I)="F" Q  ; free text
+ I TYP["D" D  S XWIDT(I)="D" Q  ; date
+ . N Y S Y=""
+ . S XWID(I)=12
+ . I X["%DT=" S Y=$P(X,"%DT=",2),Y=$P(Y,"""",2)
+ . I Y["T" S XWID(I)=18 I Y["S" S XWID(I)=21
+ . Q
+ I TYP["S" D  Q  ; set
+ . S X=$P(X,U,3),XL=0
+ . F J=2:1 S X1=$P(X,":",J),X1=$P(X1,";") Q:X1=""  I $L(X1)>XL S XL=$L(X1)
+ . S XWID(I)=XL,XWIDT(I)="S;"_X
+ . Q
+ I TYP["N" D  S XWIDT(I)="N" Q  ; number
+ . I TYP["J" S XWID(I)=+$P(TYP,"J",2)_","_+$P(TYP,",",2) Q
+ . S XWID(I)=10
+ . Q
+ I TYP["C" D  S XWIDT(I)="C" Q  ; computed
+ . I TYP["B" S XWID(I)=1 Q  ; BINARY 1 or 0
+ . I TYP["J" S XWID(I)=+$P(TYP,"J",2) Q
+ . S XWID(I)=10
+ I TYP["P" D  D SETTYP(.XWID,.XWIDT,FIL,FLD,TYP,I,X) Q  ; pointer
+ . S TYP=+$P(TYP,"P",2),X=$G(^DD(TYP,.01,0)),FIL=TYP,FLD=.01,TYP=$P(X,U,2)
+ I TYP["V" S XWIDT(I)="V",XWID(I)=30 Q  ; variable pointer
+ I TYP["K" S XWIDT(I)="K",XWID(I)=245 Q  ; mumps
+ I TYP["W" S XWIDT(I)="W",XWID(I)=IOM Q  ; word processing
+ D WRITEOUT("Unknown data type file="_FIL_"  field="_FLD) S XWID(I)=30,XWIDT(I)="U"
+ Q
+ ;
+SETLINK(XN1,XN2,PRMRYFIL) ;
+ ; XN1 - passed by reference
+ ; XN2 - passed by reference
+ ; PRMRYFIL - input - primary file number
+ N I,J,I1,NCNT,XC,XLINK
+ S I1=PRMRYFIL,XC=0,NCNT=1,XLINK(1)=""
+LINK1 ;
+ F I=0:0 S I=$O(XN1(I1,"D",I)) Q:I'>0  F J=0:0 S J=$O(XN2(I,1,J)) Q:J'>0  S XLINK(NCNT)=XLINK(NCNT)_J_";" I $D(XN1(+I,"D")) N I1 S I1=I N I D LINK1 S NCNT=NCNT+1,XLINK(NCNT)=""
+ I NCNT>1 K XLINK(NCNT)
+ Q
+ ;
+SELCTOUT(KBBPSETS,DATA) ;
+ ; KBBPSETS - passed by reference -
+ ; DATA     - passed by reference -
+ N I,J,K,L,L1
+ I KBBPSETS>0 D WRITEOUT("@IOF") D WRITEOUT("") D WRITEOUT("Selection based on ") D
+ . F I=1:1:KBBPSETS D
+ . . S L1=0 F J=1:1 S K=$P(KBBPSETS(I),",",J) Q:K=""  D
+ . . . F L=0:0 S L=$O(@DATA(K)@("XTNM",L)) Q:L'>0  D
+ . . . . S L1=L1+1
+ . . . . D WRITEOUT($S(L1=1:"     ",1:"  and")_"  "_@DATA(K)@("XTNM",L)_" (file #"_@DATA(K)@("XTN",L)_")   *** "_@COND(K)@(L))
+ . . . . Q
+ . . . Q
+ . . I I<KBBPSETS D WRITEOUT(""),WRITEOUT("OR"),WRITEOUT("")
+ . . Q
+ . Q
+ Q
+ ;
+LISTVALS(DATA,COND) ;
+ ; DATA - passed by reference
+ N I,L1,TEXT
+ D WRITEOUT(""),WRITEOUT("DATA VALUES DISPLAYED ARE: ")
+ S L1=0 F I=0:0 S I=$O(@DATA("TOT")@("XTNM",I)) Q:I'>0  D
+ . S TEXT="    "_@DATA("TOT")@("XTNM",I)
+ . I $G(@COND("TOT")@(I))'="" S TEXT=TEXT_"   *** condition: "_@COND("TOT")@(I)
+ . D WRITEOUT(TEXT)
+ . Q
+ D WRITEOUT("")
+ Q
+ ;
+DATAOUT(DATA,COND,PATH,KBBPSETS,XWID,XWIDT,KBBPPACK,TOTSETS,NODE,XNMAX,PRMRYFIL) ;
+ ; ZEXCEPT: KBBPYMIN - if present newed and defined in TESTRANG for testing
+ N DABASE,FILETYP,I,J,K,KBBPYLCN,KEY,L,LL,MAX,RESULT,VAR,X,XN,XTN,XVAL
+ S NFLDS=$O(DATA(" "),-1)
+ F DABASE=$S(KBBPYMIN>0:KBBPYMIN-1,1:0):0 S DABASE=$O(@NODE@(DABASE)) Q:DABASE'>0  Q:(KBBPYMAX>0)&(DABASE>KBBPYMAX)  Q:(KBBPYLIM>0)&(DABASE'<KBBPYLIM)  D
+ . S KEY=1 K RESULT,XTN
+ . F I=1:1 Q:'KEY  Q:'$D(DATA(I))  D
+ . . K @DATA(I)@("XVAL") D GET1^KBBPYDO1(DATA(I))
+ . . F J=0:0 S J=$O(@DATA(I)@("XTN",J)) Q:J'>0  S XTN(J)=@DATA(I)@("XTN",J)
+ . . D FILETYPS(.FILETYP,.PATH,.XTN,PRMRYFIL)
+ . . S XVAL=$NA(@DATA(I)@("XVAL"))
+ . . I $D(@XVAL) D CHKIT^KBBPYDO1(DATA(I),COND(I)) D
+ . . . F J=0:0 S J=$O(@COND(I)@(J)) Q:J'>0  D
+ . . . . I '$D(@XVAL@(J)) K @DATA(I)@("XVAL")
+ . . . . Q
+ . . . Q
+ . . S RESULT(I)=$S('$D(@DATA(I)@("XVAL")):0,1:1)
+ . . Q
+ . S X=0 I KBBPSETS>0 S X=1 F I=1:1:NFLDS D  ;S KEY=KEY+X
+ . . F J=1:1 Q:'$D(KBBPSETS(I))  Q:$P(KBBPSETS(I),",",J)=""  I 'RESULT($P(KBBPSETS(I),",",J)) S X=0 Q
+ . . Q
+ . S KEY=X
+ . I KEY D
+ . . K @DATA("TOT")@("XVAL") D GET1^KBBPYDO1(DATA("TOT"))
+ . . K XTN
+ . . F J=0:0 S J=$O(@DATA("TOT")@("XTN",J)) Q:J'>0  S XTN(J)=@DATA("TOT")@("XTN",J)
+ . . D FILETYPS(.FILETYP,.PATH,.XTN,PRMRYFIL)
+ . . D CHKIT^KBBPYDO1(DATA("TOT"),COND("TOT"))
+ . . S XVAL=$NA(@DATA("TOT")@("XVAL")),MAX=@DATA("TOT")@("XT")
+ . . S ZZMAX=$$NUMSETS($NA(@DATA("TOT")@("XVAL")),MAX)
+ . . F N=1:1:ZZMAX D
+ . . . S FOUND=0
+ . . . F J=1:1:TOTSETS D  Q:FOUND=1
+ . . . . S NY=0
+ . . . . F Y=1:1 S Y1=$P(TOTSETS(J),";",Y) Q:Y1=""   I $D(@DATA("TOT")@("XVAL",Y1,N))  D
+ . . . . . S NY=NY+1
+ . . . . I NY=(Y-1) S FOUND=1
+ . . . . Q
+ . . . I 'FOUND F J=1:1:MAX K @DATA("TOT")@("XVAL",J,N)
+ . . . Q
+ . . I TOTSETS>0 S KEY=0 F I=1:1:NFLDS D  S KEY=KEY+X
+ . . . S X=1 F J=1:1 Q:'$D(KBBPSETS(I))  Q:$P(KBBPSETS(I),",",J)=""  I 'RESULT($P(KBBPSETS(I),",",J)) S X=0 Q  ; WRITES DEBUG
+ . . . Q
+ . . I $D(@DATA("TOT")@("XVAL")) D
+ . . . D PRNT(.DATA,.XWID,.XWIDT,.FILETYP,XNMAX,KBBPPACK)
+ . . . Q
+ . . Q
+ . Q
+ F I=1:1:10,"TOT" S J="VAR"_I K @J S J=$NA(^TMP($J,"DATA"_I)) K @J S J="COND"_I K @J,VAR(I),COND(I),DATA(I)
+ Q
+ ;
+FILETYPS(FILETYP,PATH,XTN,PRMRYFIL) ; determine and whether fields are single or multiple relative to primary file
+ ; FILETYP  - passed by reference - contains indicators of single or multiple for files on return
+ ; PATH     - passed by reference - contains array of PATHS connecting files
+ ; XTN      - passed by reference - array containing file info for field
+ ; PRMRYFIL - input               - primary file number for searches
+ N FILE,I,J,K,THISPATH,VAL
+ K FILETYP
+ F I=1:1 S FILE(I)=+$G(XTN(I)) Q:FILE(I)'>0  D
+ . I FILE(I)=PRMRYFIL S FILETYP(I)="SINGLE" Q
+ . I '$D(^DIC(FILE(I),0)) S FILETYP(I)="MULTIPLE" Q
+ . S FILETYP(I)=""
+ . F J=1:1 S THISPATH=$G(PATH(J)) Q:THISPATH=""  D  I FILETYP(I)'="" Q
+ . . N FROM,TO,TYPE
+ . . S TYPE=$S(THISPATH_U["T"_FILE(I)_U:"T",THISPATH_U["R"_FILE(I)_U:"R",1:"") I TYPE="" Q
+ . . F K=1:1:$L(THISPATH,U) D  I FILETYP(I)'="" Q
+ . . . S VAL=$P($P(THISPATH,U,K),";",2)
+ . . . S FROM(K)=+VAL,TO(K)=$S(VAL["T":$P(VAL,"T",2),1:$P(VAL,"R",2))
+ . . . I '$D(^DIC(FROM(K),0))!'$D(^DIC(TO(K),0)) S FILETYP(I)="MULTIPLE" Q
+ . . . I TO(K)=FILE(I) S FILETYP(I)="SINGLE"
+ . . . Q
+ . . Q
+ . I FILETYP(I)="" S FILETYP(I)="SINGLE"
+ . Q
+ Q
+ ;
+NUMSETS(DATA,MAX) ;.EF - returns number of data sets present
+ N ZZMAX,ZZ,ZZK
+ S ZZMAX=0
+ F ZZ=1:1:MAX S ZZK=$O(@DATA@(ZZ,""),-1) I ZZK>ZZMAX S ZZMAX=ZZK
+ Q ZZMAX
+ ;
+PRNT(DATA,XWID,XWIDT,FILETYP,XNMAX,KBBPPACK) ;
+ N BASEFILE,I,J,FILE,FILES,FILESV,K,KEY,MAXCOLS,MAXNUM,NFILES,NI,NUM,ROOTD,ROOTX,V,VAL,VALS,XLXN
+ S ROOTX=$NA(@DATA("TOT")@("XTN")),ROOTD=$NA(@DATA("TOT")@("XVAL"))
+ S BASEFILE=@ROOTX@(1)
+ S BASEFILE=@ROOTX@(1)
+ S NFILES=0,FILE=BASEFILE
+ S NUMSETS=$$NUMSETS(ROOTD,XNMAX)
+ F I=1:1 Q:'$D(@ROOTX@(I))  D
+ . S FILES(I)=+@ROOTX@(I),MAXCOLS=I
+ . I FILES(I)'=BASEFILE D
+ . . S KEY=0
+ . . F J=1:1 Q:'$D(FILESV(J))  I FILESV(J)=FILES(I) S KEY=1 Q
+ . . I 'KEY S FILESV(J)=FILES(I),NFILES=NFILES+1
+ . . Q
+ . Q
+ S MAXNUM=1
+ S XT=@DATA("TOT")@("XT")
+ N XLN
+ S XLN="XLN",XLN(0)=0
+ F I=1:1:NUMSETS D
+ . K VALS
+ . S ZCNT=0
+ . S SEEN=0 D  I 'SEEN K:I>1 VALS(I) Q
+ . . S MAXARG=1
+ . . F VAR=1:1:XT D
+ . . . I FILETYP(VAR)="SINGLE" S VALS(VAR)=$G(@ROOTD@(VAR,1)) Q
+ . . . I '$D(@ROOTD@(VAR,I)) S VALS(VAR)="" Q
+ . . . I $D(@ROOTD@(VAR,I))=1 S VALS(VAR)=@ROOTD@(VAR,I),SEEN=1 Q
+ . . . F Z=0:0 S Z=$O(@ROOTD@(VAR,I,Z)) Q:Z'>0  S ZCNT=ZCNT+1,VALS(VAR,ZCNT)=@ROOTD@(VAR,I,Z),SEEN=1,MAXARG=ZCNT
+ . . . Q
+ . . I 'SEEN Q
+ . . F Z=1:1:MAXARG D
+ . . . S XLXN=XLN(0)+1,XLN(0)=XLXN,XLN(XLXN)=""
+ . . . F K=1:1:XT D
+ . . . . I $D(VALS(K))=1 D  S XLN(XLXN)=XLN(XLXN)_VALS(K)_U Q
+ . . . . . I $P(XWIDT(K),";")="S" F NI=2:1 S VAL=$P(XWIDT(K),";",NI) Q:VAL=""  I $P(VAL,":")=VALS(K) S VALS(K)=$P(VAL,":",2) Q
+ . . . . . I XWIDT(K)="D" S VALS(K)=$$FMTE^XLFDT($G(VALS(K)))
+ . . . . . Q
+ . . . . ;
+ . . . . D  S XLN(XLXN)=XLN(XLXN)_$G(VALS(K,Z))_U
+ . . . . . I $P(XWIDT(K),";")="S" F NI=2:1 S VAL=$P(XWIDT(K),";",NI) Q:VAL=""  I $P(VAL,":")=VALS(K,Z) S VALS(K,Z)=$P(VAL,":",2) Q
+ . . . . . I XWIDT(K)="D" S VALS(K,Z)=$$FMTE^XLFDT($G(VALS(K,Z)))
+ . . . Q
+ . . Q
+ . Q
+ D OUTPUT(.XLN,.XWID,.XWIDT,KBBPPACK,XNMAX)
+ Q
+ ;
+ ;
+OUTPUT(XLN,XWID,XWIDT,KBBPPACK,XNMAX) ;
+ N I,LINE,NOLINFED,XVALUE,XLV
+ S NOLINFED=""
+ F I=0:0 S I=$O(@XLN@(I)) Q:I=""  D
+ . I $D(@XLN@(I))'=1 S XLV=XLN N XLN S XLN=$NA(@XLV@(I)) D OUTPUT(.XLN,.XWID,.XWIDT,KBBPPACK,XNMAX) Q
+ . S XVALUE=@XLN@(I) S LINE=$$SETOUT(.XWID,.XWIDT,XVALUE,KBBPPACK,XNMAX) D WRITEOUT(LINE)
+ Q
+ ;
+SETOUT(XWID,XWIDT,XVALUE,KBBPPACK,XNMAX) ; convert input ^-separated data into output form and write out
+ N B100,J,NOLINFED,RESULT,ULEN,V,VAL,X,XNL1
+ ; ^-separated text
+ I KBBPPACK=1 Q XVALUE
+ ; csv for excel
+ I KBBPPACK>1 D  Q XNL1
+ . S XNL1="" S ULEN=$L(XVALUE,U) F J=1:1:ULEN S VAL=$P(XVALUE,U,J) S XNL1=XNL1_$S(VAL=+VAL:VAL,VAL="":"",1:""""_VAL_"""")_","
+ S RESULT="",$P(B100," ",100)=" "
+ F J=1:1:XNMAX S V=$P(XVALUE,U,J) D  S RESULT=RESULT_V
+ . S V=$E(V_B100,1,$S($L(V)>XWID(J):$L(V),1:XWID(J)))_" "
+ . Q
+ Q RESULT
+ ;
+WRITEOUT(TEXT,NOLINFED) ; if is in a unit test save to global, otherwise write to device
+ ; ZEXCEPT: IOF - Kernel value for form feed
+ ; ZEXCEPT: UTSTGLOB - if present, defined and killed in unit tests
+ N LINE
+ I $$ISUTEST() D  Q
+ . I '$D(UTSTGLOB) S UTSTGLOB=$NA(^TMP("KBBPYROU-OUTPUT",$J))
+ . S LINE=+$G(@UTSTGLOB@(0))
+ . I (+$G(NOLINFED)=0)!(LINE=0) S LINE=$G(@UTSTGLOB@(0))+1,^(0)=LINE ; ;naked global
+ . S @UTSTGLOB@(LINE)=$G(@UTSTGLOB@(LINE))_TEXT
+ . Q
+ I TEXT="@IOF" W @IOF Q
+ I +$G(NOLINFED)=0 W !
+ W TEXT
+ Q
+ ;
+TESTRANG ; SETS UP A TEST RUN WITH DABASE FROM KBBPYMIN TO KBBPYMAX
+ N KBBPYMIN,KBBPYMAX,KBBPYLIM,DIR,Y K DIR,Y S DIR("A")="STARTING INTERNAL ENTRY NUMBER",DIR(0)="N^1" D ^DIR S KBBPYMIN=+Y Q:KBBPYMIN'>0  K DIR S DIR("A")="MAXIMUM INTERNAL ENTRY NUMBER",DIR(0)="N^1" D ^DIR S KBBPYMAX=+Y Q:KBBPYMAX<KBBPYMIN  G EN
+ ;
+TESTMAX ; SETS UP A TEST RUN WITH DABASE FROM 0 TO KBBPYMAX
+ N KBBPYMIN,KBBPYMAX,KBBPYLIM,DIRUT,DIR,Y S KBBPYMIN=0,DIR("A")="MAXIMUM INTERNAL ENTRY NUMBER",DIR(0)="N^"_KBBPYMIN D ^DIR Q:$D(DIRUT)  S KBBPYMAX=+Y Q:KBBPYMAX<KBBPYMIN  K DIR,Y G EN
+ ;
+TESTLIM ; SETS UP A TEST RUN TO PRODUCE A MAXIMUM OF KBBPYLIM ENTRIES SELECTED FOR OUTPUT
+ N KBBPYMIN,KBBPYMAX,KBBPYLIM,DIR,Y S DIR("A")="MAXIMUM NUMBER OF ENTRIES TO SELECT",DIR(0)="N^1" D ^DIR K DIR S KBBPYLIM=+Y Q:KBBPYLIM<0  G EN
+ ;
+ISUTEST() ; .EF
+ I $T(ISUTEST^%ut)="" Q 0
+ Q $$ISUTEST^%ut()
+ ;
+FILE ;;200
+ ;;
+PRINT ;;NORMAL
+ ;;
+PATH ;;
+ ;;
+SETS ;;1
+ ;;1,2,3,
+ ;;
+1 ;
+ ;;.01*200;X[$P(^VA(200,DUZ,0),U)
+ ;;
+2 ;
+ ;;4*200;X=$P(^VA(200,DUZ,1),U,2)
+ ;;
+3 ;
+ ;;.01*200.051;X="XUPROGMODE"
+ ;;
+TOTSETS ;;1
+ ;;1,2,3
+ ;;
+TOT ;
+ ;;.01*200;
+ ;;4*200;
+ ;;.01*200.051;X["XU"
+ ;;
+
+KBBPYSE1^INT^1^64401,68214^0
+KBBPYSE1 ;ISC-SF/JLI - SELECT AND SET UP FIELDS RELATED TO PRIMARY FILE ;04/28/17  18:56;
+ ;;2.0;KBBP;;May 15, 1992
+ I $T(EN^%ut)="" W !,"Can't run Unit Tests" Q
+ D EN^%ut("KBBPUYNM")
+ Q
+ ;
+SELCT(YSEL,KBBPI,KBBPFIL,KBBPQRY,OUTPUT) ;
+ ; ZEXCEPT: UTSTCOND - Newed and set by unit tests if present
+ N C,I,IC,J,K,KBBPPTA,M,N,X,Z,ROOT
+ N CFILENUM,COUNT,CURFILEN,CURNUM,DATA,FLDNAME,LSTFILEN
+ S ROOT=$NA(^TMP("KBBPY",$J))
+ K @ROOT@("A")
+ S FLDNAME="",I=0
+ F K=0:0 S FLDNAME=$O(@ROOT@("Z",FLDNAME)) Q:FLDNAME=""  D
+ . F CFILENUM=0:0 S CFILENUM=$O(@ROOT@("Z",FLDNAME,CFILENUM)) Q:CFILENUM'>0  D
+ . . F N=0:0 S N=$O(@ROOT@("Z",FLDNAME,CFILENUM,N)) Q:N'>0  D
+ . . . S Z=@ROOT@("Z",FLDNAME,CFILENUM,N) K ^(N) ; naked global
+ . . . I $P($P(Z,U),";",2)'=0 S I=I+1,@ROOT@("A",I,KBBPFIL)=FLDNAME_U_CFILENUM_U_N_U_Z
+ . . . Q
+ . . Q
+ . Q
+ F J=0:0 S J=$O(@ROOT@("F",J)) Q:J'>0  D
+ . S FLDNAME=""
+ . F K=0:0 S FLDNAME=$O(@ROOT@("F",J,FLDNAME)) Q:FLDNAME=""  D
+ . . F CFILENUM=0:0 S CFILENUM=$O(@ROOT@("F",J,FLDNAME,CFILENUM)) Q:CFILENUM'>0  D SELCT1(.I,J,CFILENUM,FLDNAME)
+ . . Q
+ . Q
+ S COUNT=0,LSTFILEN=KBBPFIL,YSEL=0
+ F CURRNUM=1:1 Q:'$D(@ROOT@("A",CURRNUM))  D  Q:YSEL'=0
+ . S CURFILEN=$O(@ROOT@("A",CURRNUM,0)) Q:CURFILEN'>0  S DATA=@ROOT@("A",CURRNUM,CURFILEN) D LIST(.COUNT,.LSTFILEN,.YSEL,CURRNUM,CURFILEN,DATA)
+ . Q
+ I YSEL=0 D ASKU(.YSEL,COUNT,I)
+ I YSEL>0 D
+ . S J=$O(@ROOT@("A",YSEL,0)) I J'=KBBPFIL,'$D(@ROOT@("C",J)) D CONECT Q:(YSEL[U)!(YSEL'>0)
+ . S KBBPI=KBBPI+1,@ROOT@("X",KBBPI,J)=@ROOT@("A",YSEL,J) F  D  Q:X'=-1
+ . . S X=""
+ . . I $$ISUTEST() S X=$G(UTSTCOND(KBBPI))
+ . . I $D(KBBPQRY) D
+ . . . D WRITEIT("Code for condition on X: ")
+ . . . I '$$ISUTEST() R X:DTIME I '$T S X=-1 Q
+ . . . I X'="",X'["X" D WRITEIT(""),WRITEIT("A condition must be on the variable X"),WRITEIT("") S X=-1
+ . . . I X["""",'($L(X,"""")#2) D WRITEIT(""),WRITEIT("The condition appears to contain unmatched quote marks!") S X=-1
+ . . . I X="",'OUTPUT D WRITEIT("A condition should be specified on the search variables") S X=-1
+ . . . I X'=-1,X'="" S $P(@ROOT@("X",KBBPI,J),U,10)=X
+ . . . Q
+ . . Q
+ . Q
+ K KBBPPTA,@ROOT@("A")
+ Q
+ ;
+CONECT ;
+ ; ZEXCEPT: IOSL - Kernel value for number of lines on screen or page
+ ; ZEXCEPT: YSEL,ROOT,J -
+ N C,I1,K,LINES,M,NLINES,X,XM,XN,YSEL1
+ S K=0 F M=0:0 S M=$O(@ROOT@("PNT",J,M)) Q:M'>0  S K=M
+ I K=1 S @ROOT@("C",J)=@ROOT@("PNT",J,1),C=1 D XPAND Q
+ D WRITEIT("Select Method of Connection Between Files ("_K_" choices) from:")
+ S YSEL1=YSEL,YSEL=0,XN=0,XM=0,NLINES=0
+ F M=1:1:K Q:(YSEL[U)!YSEL  D
+ . S XM=XM+1 D WRITEIT("") S X=@ROOT@("PNT",J,M) D PLIST D  Q:(YSEL[U)!YSEL
+ . I (NLINES+XM)>(IOSL-2) S M=M-1 D ASKC Q:(YSEL[U)!YSEL  S M=M+1,XM=0
+ . F I1=1:1:NLINES D WRITEIT(LINES(I1)) S XM=XM+1
+ . S NLINES=0
+ . Q
+ I YSEL[U Q
+ I 'YSEL D ASKC
+ Q
+ ;
+ASKC ;
+ ; ZEXCEPT M,K,YSEL,YSEL1
+ N XN,C
+ S XN=0
+ D WRITEIT("          Select Method of Connection (1 to "_M_$S(M'=K:" out of "_K,1:"")_"): ")
+ I $$ISUTEST() S C=1
+ I '$$ISUTEST R C:DTIME I '$T!(C[U) S YSEL=U Q
+ I +C'=C!(C>K)!(C<0) S C=0 I M=K D WRITEIT("  ??",1) G ASKC
+ I C>0 S YSEL=YSEL1,@ROOT@("C",J)=@ROOT@("PNT",J,C) D XPAND
+ S:C=0 YSEL=0
+ Q
+ ;
+XPAND ;
+ ; ZEXCEPT: C,J
+ N X,M,X1,X0
+ Q:C'>0
+ S X=@ROOT@("PNT",J,C)
+ F M=1:1 S X1=$P(X,U,M) Q:X1=""  S X0=+$P(X1,"T",2),X0=$S(X0>0:X0,1:+$P(X1,"R",2)) I X0>0,'$D(@ROOT@("C",X0)) S ^(X0)=$P(X,U,1,M)
+ Q
+ ;
+PLIST ;
+ ; ZEXCEPT: YSEL
+ N M1,X1,X0,X2,X3
+ F M1=1:1 Q:YSEL  S X1=$P(X,U,M1) Q:X1=""  S X0=+$P(X1,";",2),X2=$P(X1,";"),X3=$P(X1,"T",2),X3=$S(X3'="":+X3,(X1["P"):+$P(X1,"P",2),1:+$P(X1,"R",2)) D PLIST1(X1,X0,X2,X3)
+ Q
+ ;
+PLIST1(X1,X0,X2,X3) ;
+ ; ZEXCEPT: IOM - Kernel variable for print margin
+ ; ZEXCEPT: LINES
+ N JI,M12,MSPAC,REVERSE,X4,X5
+ S REVERSE=$P(X1,"R",2)>0
+ S MSPAC=$$INDENT^KBBPYSET(IOM+1)
+ S X4=X0
+ F M12=0:0 Q:'$D(^DD(X4,0,"UP"))  S X4=^DD(X4,0,"UP"),X5=$O(^DD(X4,0,"NM",""))
+ S XP=$S(M1>1:$E(MSPAC,1,$S(M1=2:7,1:M1-2*3+7)),1:$J(M,2)_"  ")_$C(96+M1)_". "_$P(^DD(X0,X2,0),U)_" field of the " S:X0'=X4 XP=XP_X5_" sub-file (#"_X0_") of the "
+ S XP=XP_$P(^DIC(X4,0),U)_" file "_$S(REVERSE:"is POINTED TO by ",1:"POINTS to ")_"the "_$P(^DIC(X3,0),U)_" file ("_X3_")"
+PLX ; falls through and loops from below
+ I $L(XP)<IOM S NLINES=NLINES+1,LINES(NLINES)=XP Q
+ F JI=IOM:-1 I $E(XP,JI)=" " S NLINES=NLINES+1,LINES(NLINES)=$E(XP,1,JI-1),XP=$E(MSPAC,1,M1+1*5)_$E(XP,JI+1,$L(XP)) Q
+ G PLX
+ Q
+ ;
+LIST(LINCOUNT,LSTFILEN,YSEL,CURRNUM,CURFILEN,DATA) ;
+ ; COUNT - passed by reference - count of lines
+ ; LSTFILEN - passed by reference - last file number - updated when file numbers change and line space is added
+ ; YSEL     - passed by reference - contains the selected item number or zero on return
+ ; CURRNUM   -
+ ; ZEXCEPT: IOM,IOSL - Kernel variables for margin and page length
+ N FLDNAME,FILNUM,FILNUMS,I,SUBFILN,X1,X2,XCNT,XLIN,Y,N
+ I LSTFILEN'=CURFILEN D WRITEIT("") S LINCOUNT=LINCOUNT+1,LSTFILEN=CURFILEN
+ S FLDNAME=$P(DATA,U),SUBFILN=$P(DATA,U,2),N=$P(DATA,U,3),FILNUMS=$P(DATA,U,6),Y=$P(DATA,U,4,99)
+ I '$D(^DIC(CURFILEN,0))#2 Q  ; only use fields from real files
+ S XCNT=0,X1=$J(CURRNUM,3)_"  "_FLDNAME_"   in  "
+ F FILNUM=1:1:$L(FILNUMS,";")-1,0 D
+ . I FILNUM=0 S X2="'"_$P(^DIC(CURFILEN,0),U)_"'  file"
+ . I FILNUM>0 S X2="'"_$O(^DD($P(FILNUMS,";",FILNUM),0,"NM",""))_"'  sub-file of  "
+ . I $L(X1_X2)>IOM S XCNT=XCNT+1,XLIN(XCNT)=X1,X1="          "
+ . S X1=X1_X2
+ . I FILNUM=0 S XCNT=XCNT+1,XLIN(XCNT)=X1
+ . Q
+ I (LINCOUNT+XCNT)'<(IOSL-1) D ASKU(.YSEL,.LINCOUNT,CURRNUM-1) Q:YSEL'=0
+ F I=1:1:XCNT D WRITEIT(XLIN(I)) S LINCOUNT=LINCOUNT+1
+ Q
+ ;
+ASKU(YSEL,LINCOUNT,CURRNUM) ; Ask user to select an entry from list
+ ; YSEL     - passed by reference - contains selection or -1 if no valid selection
+ ; LINCOUNT - passed by reference - current number of lines on current screen - set to zero for new page
+ ; CURRNUM  - input - entry number for last entry shown to user
+ N TOTALNUM,TEXT
+ S LINCOUNT=0
+ I CURRNUM=1 S YSEL=1 Q
+ I CURRNUM'>0 D WRITEIT("     No matching entries found") S YSEL=-1 Q
+ S TOTALNUM=$O(@ROOT@("A",""),-1)
+ D WRITEIT("")
+ S TEXT=""
+ I CURRNUM<TOTALNUM S TEXT=TEXT_"RETURN to continue OR  "
+ D WRITEIT($$INDENT^KBBPYSET(10)_TEXT_"Enter '^' to exit OR")
+ D WRITEIT($$INDENT^KBBPYSET(10)_"Select (1 to "_CURRNUM_" [out of "_TOTALNUM_" entries]) : ")
+ I '$$ISUTEST R YSEL:DTIME I '$T!(YSEL[U) S YSEL=-1 Q
+ I $$ISUTEST() S YSEL=1 D WRITEIT(1)
+ S YSEL=+YSEL I YSEL<0!(YSEL'<CURRNUM) D WRITEIT($C(7)_"  ??") D ASKU(.YSEL,.LINCOUNT,CURRNUM)
+ Q
+ ;
+SELCT1(I,J,M,X) ;
+ ; I - passed by reference - is a counter
+ N N,Z
+ F N=0:0 S N=$O(@ROOT@("F",J,X,M,N)) Q:N'>0  S Z=@ROOT@("F",J,X,M,N) K @ROOT@("F",J,X,M,N) S I=I+1,@ROOT@("A",I,J)=X_U_M_U_N_U_Z
+ Q
+ ;
+WRITEIT(TEXT,NOLINFED) ;
+ ; ZEXCEPT: LINESOUT - newed and/or killed  in unit test routines
+ S NOLINFED=+$G(NOLINFED)
+ I 'NOLINFED S LINESOUT=$G(LINESOUT)+1
+ I TEXT="@IOF" S LINESOUT=0
+ D WRITEOUT^KBBPYROU(TEXT,$G(NOLINFED))
+ Q
+ ;
+ISUTEST() ;
+ I $T(ISUTEST^%ut)="" Q 0
+ Q $$ISUTEST^%ut()
+
+KBBPYSE2^INT^1^63987,61860^0
+KBBPYSE2 ;ISC-SF/JLI - SELECT AND SET UP FIELDS RELATED TO PRIMARY FILE ;03/10/16  17:11;
+ ;;0.0;KBBP;;May 15, 1992
+ ;
+ I $T(EN^%ut)="" W !,"Can't run Unit Tests" Q
+ D EN^%ut("KBBPUYNM")
+ Q
+ ;
+EXIT ; called from KBBPYPRO
+ I $D(KBBPQRY) Q
+ S:'$D(ROOT) ROOT="^TMP($J)" K @ROOT
+ I '$D(KBBPXQ) D WRITEIT^KBBPYSET(""),WRITEIT^KBBPYSET("     DABASE is used to indicate the internal entry point for the desired"),WRITEIT^KBBPYSET("entry in the "_KBBPFILN_" file.")
+ D PNTRS
+ I '$D(KBBPXQ),XN>0 D WRITEIT^KBBPYSET(""),WRITEIT^KBBPYSET("The following commands establish the connections between files:"),WRITEIT^KBBPYSET("") F I=1:1:XN D WRITEIT^KBBPYSET("     "_XN(I))
+ K XT,XTN,^TMP($J,"XT")
+ F I=1:1 Q:'$D(^TMP("KBBPY",$J,"X",I))  D
+ . S J=$O(^TMP("KBBPY",$J,"X",I,0)),(X,X9)=^(J) S XT=I,XTN(I)=J
+ . I '$D(KBBPXQ) D WRITEIT^KBBPYSET(""),WRITEIT^KBBPYSET($P(X,U)_" field (#"_$P(X,U,3)_") ")
+ . D LISTF
+ . S M=$P(X,U,7)
+ . I '$D(KBBPXQ) S $P(BLANK," ",50)=" " D:M'="" WRITEIT^KBBPYSET(BLANK_"X-REF: "_M)
+ . D  D X2
+ . . S XNM(I)="",X("KBBP")=$P(X,U,6) F I("KBBP")=$L(X("KBBP"),";")-1:-1:1 I I("KBBP")'=1!($P(X,U,3)'=.01) S XNM(I)=XNM(I)_$O(^DD($P(X("KBBP"),";",I("KBBP")),0,"NM",""))_" "
+ . . K X("KBBP"),I("KBBP")
+ . . S M=$P(X,U,4),N=$P(X,U,5),XM(I)=$P(X,U,3),XNM(I)=$P(^DIC(+XTN(I),0),U)_" "_XNM(I)_$P(X,U)
+ . . Q
+ M @ROOT@("XTDA")=XN,@ROOT@("XTNM")=XNM,@ROOT@("XTS")=XS,@ROOT@("XTN")=XJLI,@ROOT@("XM")=XM K XN,XM,XNM,XS,XJLI
+ I ROOT'="^TMP($J)" M @ROOT@("XT")=^TMP($J,"XT") K ^TMP($J,"XT")
+ Q
+LISTF ;
+ N BLANK
+ S Y=$P(X,U,6)
+ F M=1:1 Q:Y=""  S Y(0)=$P(Y,";"),Y=$P(Y,";",2,99) I '$D(KBBPXQ) D
+ . S $P(BLANK," ",5*M+20)=""
+ . D WRITEIT^KBBPYSET(BLANK_" of "_$S(Y'="":$O(^DD(Y(0),0,"NM","")),1:$P(^DIC(Y(0),0),U))_" ")
+ . D:Y'="" WRITEIT^KBBPYSET("sub-",1)
+ . D WRITEIT^KBBPYSET("file",1) D:Y'="" WRITEIT^KBBPYSET("")
+ . Q
+ Q
+ ;
+X2 ;
+ S XJLI(XT)=$P(X,U,6)
+ I XM(I)=.001,$L(XJLI(XT),";")=1 S XT(XT)="I $D(DA(""P"_J_""")) S @ROOT@(""XVAL"","_XT_",NVAL)=DA(""P"_J_""")" S ^TMP($J,"XT")=XT,^("XT",XT)=XT(XT) Q
+ S KM=$S(N="":0,1:$L(N,";")),XT(XT)="I $D(DA(""P"_J_""")) S DA"_$S(KM>0:"("_KM_")",1:"")_"=DA(""P"_J_""")"
+ I $P(M,";",2)=" " S XT(XT)=XT(XT)_",D0=DA X $P(^DD("_$P(X,U,2)_","_$P(X,U,3)_",0),U,5,99) S @ROOT@(""XVAL"","_XT_",NVAL)=X" D:'$D(KBBPXQ) WRITEIT^KBBPYSET(""),WRITEIT^KBBPYSET("     "_XT(XT)) S ^TMP($J,"XT")=XT,^("XT",XT)=XT(XT) K XT(XT) Q
+ S $P(X,U,2)=Y(0),M1=$S($E($P(M,";",2),1)="E":1,1:0)
+ S XTXT="=$S($D("_^DIC($P(X,U,2),0,"GL")
+ F K=KM:-1 S XTXT=XTXT_"DA"_$S(K>0:"("_K_")",1:"")_"," Q:N=""  S N(0)=$P(N,";"),N=$P(N,";",2,99) S XTXT=XTXT_$S(+N(0)'=N(0):"""",1:"")_$P(N(0),";")_$S(+N(0)'=N(0):"""",1:"")_","
+ S N(0)=$P(M,";"),M=$P(M,";",2)
+ S XTXT=XTXT_$S(+N(0)'=N(0):"""",1:"")_N(0)_$S(+N(0)'=N(0):"""",1:"")_")):"_$S(M1:"$E(",1:"$P(")_"^("_$S(N(0)'=+N(0):"""",1:"")_N(0)_$S(+N(0)'=N(0):"""",1:"")_"),"_$S(M1:$E(M,2,$L(M)),1:"""^"","_(+M))_"),1:"""")"
+ S X8="",X5=$P(X9,U,2),X6=$P(X9,U,3) I $D(^DD(X5,X6,0)),$P(^DD(X5,X6,0),U,2)["P" S DIC=U_$P(^(0),U,3),PNT=+$P($P(^(0),U,2),"P",2) D SETPNT(DIC,PNT)
+ S:KM=0 XT(XT)=XT(XT)_",XTVDATA"_XTXT_X8_" S:XTVDATA'="""" @ROOT@(""XVAL"","_XT_",NVAL)=XTVDATA"
+ S:KM>0 XT(XT)=XT(XT)_" X @ROOT@(""XT"","_XT_","_KM_")"
+ S:KM>0 XT(XT,0)=" S:XTVDATA'="""" @ROOT@(""XVAL"","_XT_",NVAL" F K=KM:-1 Q:K'>0  S XT(XT,0)=XT(XT,0)_",NVAL"_K
+ S XLX=$P(^TMP("KBBPY",$J,"X",I,J),U,3)
+ I KM>0 D  F K=KM:-1 Q:K'>0  D LOOPA S XT(XT,K)=XTXT
+ . I XLX'=.001 S XT(XT,0)="S XTVDATA"_XTXT_X8_XT(XT,0)_")=XTVDATA"
+ . E  S XT(XT,0)="S XTVDATA=DA "_XT(XT,0)_")=XTVDATA"
+ I $D(XT(XT))>9 F II=-1:0 S II=$O(XT(XT,II)) Q:II=""  D:'$D(KBBPXQ) WRITEIT^KBBPYSET("         "_XT(XT,II))
+ S ^TMP($J,"XT")=XT,^("XT",XT)=XT(XT) F II=-1:0 S II=$O(XT(XT,II)) Q:II=""  S ^TMP($J,"XT",XT,II)=XT(XT,II)
+ K XT(XT)
+ Q
+LOOPA ;
+ S M=$P(^TMP("KBBPY",$J,"X",I,J),U,4),N=$P(^(J),U,5)
+ S DAX="DA"_$S(K>1:"("_(K-1)_")",1:""),XTXT="S "_DAX_"=0 F NVAL"_K_"=1:1 S "_DAX_"=$O("_^DIC(J,0,"GL")
+ F L=KM:-1 Q:L<K  S XTXT=XTXT_"DA"_$S(L>0:"("_L_")",1:"")_"," Q:N=""  S N(0)=$P(N,";"),N=$P(N,";",2,99) S XTXT=XTXT_$S(+N(0)'=N(0):"""",1:"")_$P(N(0),";")_$S(+N(0)'=N(0):"""",1:"")_","
+ S XTXT=XTXT_DAX_")) Q:"_DAX_"'>0  X @ROOT@(""XT"","_XT_","_(K-1)_")" ;S N(0)=$P(M,";"),M=$P(M,";",2)
+ Q
+ ;
+PNTRS ;
+ K XN,XL,XS S XN=1,XL(KBBPFIL)=XN,XN(XN)="S DA(""P"_KBBPFIL_""")=DABASE",XS(XN)="",XP(KBBPFIL)=""
+ F I=0:0 S I=$O(^TMP("KBBPY",$J,"C",I)) Q:I'>0  D
+ . S X=^(I)
+ . F M=1:1 S X1=$P(X,U,M) Q:X1=""  D
+ . . S X2=+$P(X1,"T",2),X2=$S(X2>0:X2,1:+$P(X1,"R",2))
+ . . I X2>0,'$D(XL(X2)) S XN=XN+1,XL(X2)=XN D SETIT
+ . . Q
+ . Q
+ Q
+ ;
+SETIT ;
+ I $P(X1,"R",2)>0 S X2=+$P(X1,"R",2),XN(XN)="S DA(""P"_X2_""")=DABASE",XS(XN)="",XP(X2)="" Q
+ S XFLD=+X1,X0=+$P(X1,";",2) I '$D(^DIC(X0,0)) D SETSUB Q
+ S DAVAL=$S(X0=KBBPFIL:"DABASE",1:"DA(""P"_X0_""")"),XNOD=$P(^DD(X0,XFLD,0),U,4),XPC=$P(XNOD,";",2),XNOD=$P(XNOD,";"),XNOD=$S(+XNOD=XNOD:XNOD,1:""""_XNOD_"""")
+ S XN(XN)="S DA(""P"_X2_""")=$S($D("_^DIC(X0,0,"GL")_DAVAL_","_XNOD_")):+$P(^("_XNOD_"),U,"_XPC_"),1:0)" S XS(XN)=$S(XP(X0)>0:XP(X0),1:""),XP(X2)=XS(XN)
+ Q
+ ;
+SETSUB ;
+ S X5=^DD(X0,0,"UP"),X4=$O(^DD(X5,"SB",X0,0)) S XNOD=$P($P(^DD(X5,X4,0),U,4),";")
+ I +XNOD'=XNOD S XNOD=""""_XNOD_""""
+ S XBASE=^DIC(X5,0,"GL")_"DABASE,"_XNOD_",DALOOP"_XN
+ S XN(XN,1)="S DALOOP"_XN_"=$O("_XBASE_"))"
+ S XS(XN)=XN,XP(X2)=XN
+ S XNOD=$P(^DD(X0,XFLD,0),U,4),XPC=$P(XNOD,";",2),XNOD=$P(XNOD,";"),XNOD=$S(+XNOD=XNOD:XNOD,1:""""_XNOD_"""")
+ S XN(XN)="S DA(""P"_X2_""")=$S($D("_XBASE_","_XNOD_")):+$P(^("_XNOD_"),U,"_XPC_"),1:0)"
+ Q
+ ;
+SETPNT(DIC,PNT) ;
+ S X8=X8_",XTVDATA=$S($D("_DIC_"+XTVDATA,0)):$P(^(0),U),1:"""")"
+ I $P(^DD(PNT,.01,0),U,2)["P" S PNT=+$P($P(^(0),U,2),"P",2),DIC=U_$P(^(0),U,3) G SETPNT
+ Q
+ ;
+
+KBBPYSET^INT^1^64401,72201^0
+KBBPYSET ;ISC-SF/JLI - SELECT AND SET UP FIELDS RELATED TO PRIMARY FILE ;04/28/17  20:03;
+ ;;0.0;KBBPTOOLS;;
+ ;A6AXFSET ;ISC-SF/JLI - SELECT AND SET UP FIELDS RELATED TO PRIMARY FILE ;2/25/94  12:05 ;
+ ;;2.0; ;;May 15, 1992
+ I $T(EN^%ut)="" W !,"Can't run Unit Tests" Q
+ D EN^%ut("KBBPUYNM")
+ Q
+ ;
+GETFILE(KBBPFIL,KBBPFILN,KBBPI) ; called from EN^KBBPYQRY
+ ; KBBPFIL  - passed by reference - contains file number on return (or zero)
+ ; KBBPFILN - passed by reference - contains file name on return
+ ; KBBPI    - passed by reference -
+ N KBBPPT,KBBPPTA,KBBPPTB,DIC,DIR,X1H,X2H,Y,ISUTEST,X
+ S ISUTEST=$$ISUTEST()
+ K KBBPPT,KBBPPTA,KBBPPTB,^TMP("KBBPY",$J,"B"),^("C"),^("F"),^("Z"),^("X") ; naked globals
+ S KBBPI=0
+ I ISUTEST S X=200
+ S DIC=1,DIC(0)=$S(ISUTEST:"EQ",1:"AEQM"),DIC("A")="Select Primary File: ",DIC("S")="I +Y'<2"
+ D ^DIC
+ K DIC
+ I Y'>0 Q 0
+ S KBBPFIL=+Y,KBBPFILN=$P(Y,U,2)
+ S DIR(0)="Y",DIR("A")=$$INDENT(5)_"Is this the correct file",DIR("B")="YES" D:'$$ISUTEST() ^DIR D WRITEIT("")
+ I 'Y D GETFILE(.KBBPFIL,.KBBPFILN,.KBBPI) Q
+ K KBBPPT
+ D SETGLOBS(KBBPFIL)
+ Q
+ ;
+GETFLDS(KBBPI,KBBPEXIT,KBBPFIL,KBBPQRY,OUTPUT) ;.EF - also called from EN^KBBPYQRY
+ ; ZEXCEPT: UTSTX - if present, set in newed and set in unit test routines
+ ;GETSET(KBBPQRY) ; .EF - RETURNS null for no further input or ^ for exit
+ ; X - passed by reference -
+ ; KBBPI - passed by reference
+ ; KBBPEXIT - passed by reference
+ ; KBBPFIL - primary file number
+ ; KBBPQRY - indicates if called from KBBPYQRY
+ N ISUTEST,KBBPA,KBBPB,DIC,X1,XA,F,Y,XF,UTSTCNT,KBBPCOND,YSEL
+NXT ;
+FLDLOOP ;
+ S OUTPUT=+$G(OUTPUT)
+ S ISUTEST=$$ISUTEST()
+ I ISUTEST S X=$G(UTSTX) S:'$D(UTSTCNT) UTSTCNT=0 I KBBPFIL=0 S X="@",^TMP("KBBPY",$J,"X",1)="@" Q 1 ;
+ I ISUTEST,OUTPUT K KBBPCOND S UTSTCNT=UTSTCNT+1,X=$G(UTSTX(UTSTCNT)) S:$D(UTSTCOND(UTSTCNT)) KBBPCOND=UTSTCOND(UTSTCNT)
+ I 'ISUTEST R !!!,"Field name: ",X:DTIME I '$T S KBBPEXIT=1 Q ""
+ I X[U S KBBPEXIT=1 Q U
+ I X="" Q X
+ I X["?" D HUHFIELD G FLDLOOP
+ I X="$" D SHOFILS G FLDLOOP
+ ; data present to identify
+ S X=$$UP^XLFSTR(X) ; convert all to upper case
+ K ^TMP("KBBPY",$J,"F"),^("Z")
+ S XF=""
+ ; if file included, get file number
+ I X["@" D GETFILID(.X,.XF) I XF'>0 G NXT
+ S FLDNAME=X,PFILENUM=XF
+ D LOOK(KBBPFIL,FLDNAME,PFILENUM,0,0)
+ D LOOK(KBBPFIL,FLDNAME,PFILENUM,1,0)
+ D SELCT^KBBPYSE1(.YSEL,.KBBPI,KBBPFIL,KBBPQRY,OUTPUT)
+ I ISUTEST,'OUTPUT Q 1
+ I ISUTEST,UTSTCNT=4 Q 1
+ G NXT
+ Q
+ ;
+GETFILID(X,XF) ; get and return file number, if included as part of filename input
+ ; X  - passed by reference - on input contains fieldname@fileid
+ ;        fileid may be full file number or file name or at least part of it
+ ;                          - on return contains fieldname (or at least part of it)
+ ; XF - passed by reference - on return contains file number for field specified
+ N XA,DIC,Y
+ S XA=X,X=$P(X,"@",2),DIC(0)="EQ",DIC=1
+ ; if file name not entered look it up or have user choose it from options
+ I X'=+X W:'$$ISUTEST() !,"Selecting File to be searched  " D ^DIC ; get name of file
+ I X'=+X S X=+Y
+ S XF=+X,X=$P(XA,"@")
+ Q
+ ;
+HUHFIELD ;
+HUH ; responses for user asking for information
+ N ISUTEST,DIR,DIRUT
+ D WRITEIT("")
+ F I=1:1 S TEXT=$P($T(@("HUHTEXT+"_I)),";",3,99) Q:TEXT=""  D WRITEIT(TEXT)
+ Q
+ ;
+LOOK(KBBPFIL,FLDNAME,PFILENUM,KBBPA,KBBPB) ;
+ N L,I,FLDNAME1
+ S FLDNAME1=FLDNAME,L=$L(FLDNAME1) I FLDNAME'="",$D(^XTMP("KBBPY","XR1",FLDNAME)) D JLOOP(KBBPFIL,FLDNAME,XF,KBBPA,KBBPB)
+ F I=0:0 S FLDNAME=$O(^XTMP("KBBPY","XR1",FLDNAME)) Q:FLDNAME=""!($E(FLDNAME,1,L)'=FLDNAME1)  D JLOOP(KBBPFIL,FLDNAME,XF,KBBPA,KBBPB)
+ ;Q FLDNAME1
+ Q
+ ;
+JLOOP(KBBPFIL,FLDNAME,PFILENUM,KBBPA,KBBPB) ;
+ N CFILENUM ; current file number
+ F CFILENUM=0:0 S CFILENUM=$O(^XTMP("KBBPY","XR1",FLDNAME,CFILENUM)) Q:CFILENUM'>0  D
+ . I (PFILENUM=""!(CFILENUM=PFILENUM)),$S((CFILENUM=KBBPFIL&'KBBPA):1,(CFILENUM'=KBBPFIL&KBBPA):1,1:0) D JLOOP1(KBBPFIL,CFILENUM,FLDNAME,KBBPA,.KBBPB)
+ Q
+ ;
+JLOOP1(KBBPFIL,CFILENUM,FLDNAME,KBBPA,KBBPB) ;
+ N VAL,M,CFLDNUM,CSUBFIL,N,FLDNAME2,XM,Z
+ S Z=0
+ S CONNECTED=(CFILENUM=KBBPFIL!$D(^TMP("KBBPY",$J,"PNT",CFILENUM)))
+ I CONNECTED D
+ . F CSUBFIL=0:0 S CSUBFIL=$O(^XTMP("KBBPY","XR1",FLDNAME,CFILENUM,CSUBFIL)) Q:CSUBFIL'>0  D
+ . . S N=$O(^XTMP("KBBPY","XR1",FLDNAME,CFILENUM,CSUBFIL,0)),XM=^(N) ; naked global
+ . . S:'KBBPA ^TMP("KBBPY",$J,"Z",FLDNAME,CSUBFIL,N)=XM I KBBPA S FLDNAME2=FLDNAME I $P($P(XM,U),";",2)'=0 S ^TMP("KBBPY",$J,"F",CFILENUM,FLDNAME2,CSUBFIL,N)=XM,Z=1
+ . . Q
+ . Q
+ S:Z KBBPB=1
+ Q
+ ;
+SUBFIL ;
+ S Y=+$P(^DD(M,N,0),U,2),Y1=$P(^DD(Y,.01,0),U) S ^TMP("KBBPY",$J,"F",J,Y1,Y,.01)=^XTMP("KBBPY","XR1",Y1,J,Y,.01),X2=X_" subfile"
+ Q
+ ;
+SHOFILS(KBBPFIL) ;
+ ; ZEXCEPT: UTSTFILE,UTSTFIRST,UTSTLAST,UTSTSUBS - variables if present newed and set in unit test routines
+ N DIR,I,ISUTEST,KBBPFRST,KBBPLAST,KBBPSUBS,X,Y,STATUS
+ S ISUTEST=$$ISUTEST
+ I ISUTEST S X=$S($D(UTSTFIRST):UTSTFIRST,1:200),KBBPFIL=$S($D(UTSTFILE):UTSTFILE,1:200) D SETGLOBS(KBBPFIL)
+ I 'ISUTEST R !!,"Show Related Files Starting with Number: FIRST// ",X:DTIME Q:'$T!(X[U)
+ S:X="" X=0 I +X'=X D WRITEIT($C(7)_"Enter a NUMBER to start the file range") G SHOFILS
+ S:X>0 X=X-.0000001 S KBBPFRST=X
+LAST ; fall through
+ I 'ISUTEST D WRITEIT(""),WRITEIT($$INDENT(5)_"And Ending with: LAST// ") R X:DTIME Q:'$T!(X[U)
+ I ISUTEST S X=$S($D(UTSTLAST):UTSTLAST,1:KBBPFRST+1)
+ S:X="" X=0 I +X'=X D WRITEIT($C(7)_"Enter a NUMBER to end the file range") G LAST
+ S KBBPLAST=X
+ S DIR(0)="Y",DIR("A")="List ONLY FILES (not sub-files) ?",DIR("B")="YES"
+ I 'ISUTEST D ^DIR
+ K DIR
+ S KBBPSUBS=$S(ISUTEST:$S($D(UTSTSUBS):UTSTSUBS,1:0),1:'Y)
+ S I=$S($D(^TMP("KBBPY",$J,"FIL")):^("FIL"),1:KBBPFRST)
+ D WRITEIT("@IOF")
+ I I>KBBPFRST,$S(KBBPLAST=0:1,1:I'>KBBPLAST) D WRITEIT(""),WRITEIT("Primary File:") Q:$$BLDSTK(KBBPSUBS,I)
+ S I=KBBPFRST
+ F  S I=$O(^TMP("KBBPY",$J,"PNT",I)) Q:$S(I'>0:1,KBBPLAST=0:0,1:I>KBBPLAST)  I $D(^DIC(I,0)) S STATUS=$$BLDSTK(KBBPSUBS,I) Q:STATUS
+ Q
+ ;
+BLDSTK(KBBPSUBS,I) ; .EF
+ N J,K,LEV
+ K ^TMP("KBBPY",$J,"SHOF")
+ S ^TMP("KBBPY",$J,"SHOF",I)=1
+ I KBBPSUBS F J=0:0 S J=$O(^TMP("KBBPY",$J,"SHOF",J)) Q:J'>0  D
+ . S LEV=^TMP("KBBPY",$J,"SHOF",J)
+ . F K=0:0 S K=$O(^DD(J,"SB",K)) Q:K'>0  D
+ . . I $D(^TMP("KBBPY",$J,"VW",I))>1 N X1 D  Q:'X1
+ . . . S X1=1 I '$D(^TMP("KBBPY",$J,"VW",K)) S X1=0
+ . . I $S('$D(^DD(K,.01,0)):1,$P(^(0),U,2)="W":0,1:1) S ^TMP("KBBPY",$J,"SHOF",J,K)=LEV+1,^TMP("KBBPY",$J,"SHOF",K)=LEV+1
+ S LEV=0,J=$O(^TMP("KBBPY",$J,"SHOF",0)) D:KBBPSUBS WRITEIT("") Q:$$SHOWEM(LEV,J) 1
+ Q 0
+ ;
+SHOWEM(LEV,J) ;.EF
+ ; ZEXCEPT: IOSL - Kernel IO variable
+ ; ZEXCEPT: LINESOUT - unit test variable newed in unit tests
+ N LEVBLNK,K,Y,STATUS
+ S LEVBLNK=$$INDENT(3*LEV)
+ D WRITEIT(LEVBLNK_"#"_J_"  "_$S($D(^DIC(J,0)):$P(^(0),U),1:$O(^DD(J,0,"NM","")))_" "_$S('LEV:"FILE",1:"SUB-FILE")_" .01 field is "_$S('$D(^DD(J,.01,0)):" *** UNDEFINED ***",1:"'"_$P(^DD(J,.01,0),U)_"'")) ; naked global
+ I LINESOUT>(IOSL-6) D  I Y[U Q 1
+ . S Y=U
+ . D WRITEIT("") D WRITEIT($$INDENT(10)_"RETURN to continue OR  Enter '^' to stop listing: ")
+ . I '$$ISUTEST R Y:DTIME I '$T!(Y[U) S Y=U Q
+ . D WRITEIT("@IOF")
+ S STATUS=0
+ F K=0:0 S K=$O(^TMP("KBBPY",$J,"SHOF",J,K)) Q:K'>0  S LEV=LEV+1,J(LEV)=J,J=K S STATUS=$$SHOWEM(LEV,J) Q:STATUS  S K=J,J=J(LEV),LEV=LEV-1 K J(LEV+1)
+ I STATUS Q 1
+ K ^TMP("KBBPY",$J,"SHOF",J)
+ Q 0
+ ;
+SETGLOBS(KBBPFIL) ;
+ N X1H,X2H
+ I '$D(^XTMP("KBBPY","XR1"))!'$D(^XTMP("KBBPY","FNM")) D
+ . D WRITEIT(""),WRITEIT($C(7)_"First I have to rebuild the field cross-reference file")
+ . D WRITEIT($$INDENT(10)_"This may take a little bit..."),WRITEIT(""),WRITEIT("")
+ . D QUE^KBBPYREF
+ . Q
+ I $G(KBBPFIL)'="",$S('$D(^TMP("KBBPY",$J,"FIL")):1,^("FIL")'=KBBPFIL:1,'$D(^TMP("KBBPY",$J,"PNT")):1,1:0) D  ; naked global
+ . ; build a table of relationships between files related to the primary file and show time in seconds
+ . S X1H=$H
+ . D XRPNT^KBBPYNM(KBBPFIL)
+ . S X2H=$H
+ . S X2H=$P(X2H,",",2)-$P(X1H,",",2)
+ . D WRITEIT(X2H_" second"_$S(X2H=1:"",1:"s"))
+ Q
+ ;
+INDENT(NUMBER) ;.EF
+ N VALUE
+ S VALUE=""
+ S $P(VALUE," ",NUMBER)=" "
+ Q VALUE
+ ;
+ISUTEST() ;
+ I $T(^%ut)="" Q 0
+ Q $$ISUTEST^%ut()
+ ;
+WRITEIT(TEXT,NOLINFED) ;
+ ; ZEXCEPT: LINESOUT - newed and/or killed  in unit test routines
+ S NOLINFED=+$G(NOLINFED)
+ I 'NOLINFED S LINESOUT=$G(LINESOUT)+1
+ I TEXT="@IOF" S LINESOUT=0
+ D WRITEOUT^KBBPYROU(TEXT,$G(NOLINFED))
+ Q
+ ;
+HUHTEXT ;
+ ;;Enter all or a part of a FIELD NAME.
+ ;;This will generate a list of all fields beginning with the specified
+ ;;characters that can be reached from the primary file.  If desired The
+ ;;characters may be followed by the '@' character and a FILE NAME (or
+ ;;FILE NUMBER) to limit the field selection to the indicated file.
+ ;;For example, if the PATIENT file (#2) is first selected as the primary
+ ;;file, entry of  DATE@PRES  will first ask the user to select from the
+ ;;related files which begin with PRES, and once one of these is selected,
+ ;;it will then list those fields beginning with DATE in the selected file
+ ;;so that one can be selected.
+ ;;.
+ ;;Enter $ to get a listing of related files which are available.
+ ;;You will be asked to select a file number range to be listed, these
+ ;;can be the first to the last.  You may then select to include a listing
+ ;;of sub-files as well.  If subfiles are included, they will be listed
+ ;;under the main file indented for each level of sub-file.
+ ;
+EOR ;
+
+KBBPYSH1^INT^1^63974,55279^0
+KBBPYSH1 ;ISC-SF/JLI - SHOW KEY STRUCTURE AND VARIABLES FOR FILE ;02/26/16  15:21;
+ ;;0.0;KBBPTOOLS;;May 15, 1992
+ ;A6AXFSH1 ;ISC-SF/JLI - SHOW KEY STRUCTURE AND VARIABLES FOR FILE ;5/15/92  13:26 ;
+ ;;2.0; ;;May 15, 1992
+ I $T(EN^%ut)="" W !,"Can't run unit tests" Q
+ D EN^%ut("KBBPUYNM")
+ Q
+ ;
+SHOW(KBBPFN) ; called from KBBPYSHO
+ S ISUTEST=$$ISUTEST()
+ S KBBPFIL=$P(^TMP("KBBPY",$J,"SHO",KBBPFN),U,2)
+ S KBBPFILY=KBBPFIL_" FILE"
+ S KBBPFN=+^TMP("KBBPY",$J,"SHO",KBBPFN)
+ S KBBPNUM=$P(^XTMP("KBBPY","FNM",KBBPFIL,KBBPFN),U)
+ S KBBP1="",KBBPNN=-1
+ F KBBPK=1:1 S KBBPX=$P(KBBPNUM,";",KBBPK) Q:KBBPX=""  D
+ . S KBBP1=KBBPX_$S(KBBP1'="":";"_KBBP1,1:"")
+ . S KBBPNN=KBBPNN+1
+ . Q
+ S KBBPNUM=KBBP1
+ S KBBPTOP=$P(KBBPNUM,";",1)
+ S KBBPFLD=.01
+ S KBBPDIC=$S($D(^DIC(KBBPTOP,0,"GL")):^("GL"),1:"")
+ D HEDR
+ S KBBPA="      ",KBBPF=KBBPFN S KBBPN="" F KBBPI=0:0 S KBBPN=$O(^DD(KBBPFN,"B",KBBPN)) Q:KBBPN=""  S KBBPFLD=$O(^(KBBPN,0)) I KBBPFLD'=.01 S KBBPNAM=KBBPN D SHOVAR I (IOSL-4)<$Y S KBBPXV="" S KBBPXV=$$CHEK Q:KBBPXV=U  D HEDR
+ S KBBPX="" F KBBPI=0:0 S KBBPI=$O(^DD(KBBPFN,"SB",KBBPI)) Q:KBBPI'>0  I $P(^DD(KBBPI,.01,0),U,2)'["W" S KBBPX=1 Q
+ I KBBPX="" F KBBPI=0:0 S KBBPI=$O(^DD(KBBPFN,0,"PT",KBBPI)) Q:KBBPI'>0  I KBBPI'=KBBPFN S KBBPX=1 Q
+ I KBBPX="" Q
+ I ISUTEST S KBBPX=""
+ I 'ISUTEST R !!,"Want Related Tables Listed?  Y// ",KBBPX:DTIME S:'$T!(KBBPX[U) KBBPX=U
+ S:KBBPX="" KBBPX="Y"
+ I "Yy"[$E(KBBPX) S KBBPASK="" D SHOW1^KBBPYREL(KBBPFIL,KBBPFN)
+ Q
+ ;
+SHOVAR ;
+ S KBBPTYPE="",KBBPNOD0=^DD(KBBPF,KBBPFLD,0)
+ I $E(KBBPNAM)="*",$D(^DD(KBBPF,"B",$E(KBBPNAM,2,30),KBBPFLD)) Q
+ I $P(KBBPNOD0,U,1)="*"_KBBPNAM S KBBPNAM="*"_KBBPNAM
+ S KBBPLOC=$P($P(KBBPNOD0,U,4),";",2)
+ I KBBPLOC=0 S KBBPX1=+$P(KBBPNOD0,U,2) S:'$D(^DD(KBBPX1,.01,0)) KBBPTYPE="*** WARNING: Sub-file NOT DEFINED ***" I $D(^(0)) S KBBPX1=$P(^DD(KBBPX1,.01,0),U,2) Q:KBBPX1'["W"  S KBBPTYPE="Word-Processing or Long"
+ S KBBPTYPE=$S(KBBPTYPE'="":KBBPTYPE,KBBPLOC=" ":"Computed",$E(KBBPLOC)="E":"Free Text "_($P(KBBPLOC,",",2)-$E($P(KBBPLOC,","),2,99))_" chars",1:"") I KBBPTYPE="" S KBBPTYPE=$$TYPE(KBBPNOD0)
+ I KBBPFLD=.01 S KBBPNAM=$O(^DD(KBBPF,0,"NM",""))_"("_KBBPF_") - "_KBBPNAM S KBBPXREF=$$XREF(KBBPF,KBBPFLD,KBBPDIC) S KBBPA=$E(KBBPXREF_"          ",1,9)_" KEY - "
+ I KBBPFLD'=.01 S KBBPXREF=$$XREF(KBBPF,KBBPFLD,KBBPDIC) S KBBPA=$E(KBBPXREF_"         ",1,9)
+ D WRITEIT(KBBPA_KBBPNAM_" .... ("_KBBPTYPE_")")
+ Q
+ ;
+HEDR ;
+ S KBBPN1=KBBPNN
+ D WRITEIT("@IOF"),WRITEIT("")
+ D WRITEIT($$INDENT^KBBPYSET((IOM-$L(KBBPFILY))\2)_KBBPFILY),WRITEIT("")
+ S KBBPA="KEY - ",KBBPOLD=KBBPFLD,KBBPFLD=.01
+ F KBBPK1=1:1 S KBBPF=$P(KBBPNUM,";",KBBPK1) Q:KBBPF=""  D
+ . S KBBPNAM=$P(^DD(KBBPF,.01,0),U,1)
+ . S KBBPNN=KBBPK1-1
+ . D SHOVAR
+ . Q
+ S KBBPA="      ",KBBPFLD=KBBPOLD,KBBPF=KBBPFN,KBBPNN=KBBPN1 D WRITEIT("")
+ Q
+ ;
+CHEK() ;.EF
+ N VALUE
+ I $$ISUTEST S VALUE=U
+ I '$$ISUTEST() R !?15,"Enter '^' to STOP or <ret> to continue...",VALUE:DTIME S:'$T!(VALUE[U) VALUE=U
+ Q VALUE
+ ;
+TYPE(KBBPNOD0) ;.EF - return description, if possible, for field type
+ ; KBBPNOD0 - input - zero node for field
+ N KBBPTYPE,KBBPVAL
+ S KBBPVAL=""
+ S KBBPTYPE=$P(KBBPNOD0,U,2)
+ I KBBPTYPE["F" S KBBPVAL="Free Text, "_(+$P($P(KBBPNOD0,U,5,99),"<",2))_" to "_(+$P($P(KBBPNOD0,U,5,99),">",2))_" chars"
+ I KBBPVAL="",KBBPTYPE["S" S KBBPVAL="Set of Codes"
+ I KBBPVAL="",KBBPTYPE["D" S KBBPVAL="Date"
+ I KBBPVAL="",KBBPTYPE["N" S KBBPVAL="Numeric, "_(+$P(KBBPTYPE,"J",2))_" digits, "_+$P(KBBPTYPE,",",2)_" decimals places"
+ I KBBPVAL="",KBBPTYPE["P" S KBBPVAL=+$P(KBBPTYPE,"P",2),KBBPVAL="pointer to entry in "_$O(^DD(KBBPVAL,0,"NM",""))_" file"
+ I KBBPVAL="" W:'$$ISUTEST() !,"Unhandled type KBBPTYPE=",KBBPTYPE S KBBPVAL="Unhandled type KBBPTYPE="_KBBPTYPE
+ Q KBBPVAL
+ ;
+XREF(KBBPF,KBBPFLD,KBBPDIC) ;.EF - returns standard cross-ref for field, if any
+ ; KBBPF   - input - file number
+ ; KBBPFLD - input - field number
+ ; KBBPDIC - input - global base for data file (e.g., "^VA(200," for NEW PERSON)
+ N KBBPK,KBBPXK,KBBPXREF
+ S KBBPXREF=""
+ F KBBPK=0:0 S KBBPK=$O(^DD(KBBPF,KBBPFLD,1,KBBPK)) Q:KBBPK'>0  I $D(^(KBBPK,1)) S KBBPXK=^(1) I $E(KBBPXK,1,2)="S " S KBBPXK=$P(KBBPXK,KBBPDIC,2) I KBBPXK'="" D  I KBBPXREF'="" Q
+ . S KBBPXREF=$P(KBBPXK,","),KBBPXK=$P(KBBPXK,",",2,99)
+ . D CHKX(.KBBPXREF,KBBPXK,KBBPNN)
+ . Q
+ I KBBPXREF'="",KBBPXREF["""" S KBBPXREF=$P(KBBPXREF,"""",2)
+ Q KBBPXREF
+ ;
+CHKX(KBBPXREF,KBBPXK,KBBPNN) ; Determine whether cross-reference fits standard pattern for look-up
+ ; KBBPXREF - passed by reference
+ N KBBPM,KBBPXVAL
+ S KBBPXVAL=$P(KBBPXK,",DA"),KBBPXK="DA"_$P(KBBPXK,",DA",2,99) I ($E(KBBPXVAL,1,19)'="$$UP^XLFSTR($E(X,1,")&($E(KBBPXVAL,1,7)'="$E(X,1,"),(KBBPXVAL'="X") S KBBPXREF="" Q
+ I KBBPNN>0 F KBBPM=KBBPNN:-1:1 S KBBPXVAL=$P(KBBPXK,","),KBBPXK=$P(KBBPXK,",",2,99) Q:KBBPXVAL'=("DA("_KBBPM_")")
+ I $P(KBBPXK,"=")'="DA)" S KBBPXREF=""
+ Q
+ ;
+WRITEIT(TEXT,NOLINFED) ; write to output device, or global for unit tests
+ ; TEXT     - input - text to be output
+ ; NOLINFED - input - optional - if set to 1, no line feed is issued before the text is output
+ ; ZEXCEPT: LINESOUT - counter for lines used by unit tests newed in unit tests
+ S NOLINFED=+$G(NOLINFED)
+ I 'NOLINFED S LINESOUT=$G(LINESOUT)+1
+ I TEXT="@IOF" S LINESOUT=0
+ D WRITEOUT^KBBPYROU(TEXT,$G(NOLINFED))
+ Q
+ ;
+ISUTEST() ;
+ I $T(ISUTEST^%ut)="" Q 0
+ Q $$ISUTEST^%ut()
+
+KBBPYSHO^INT^1^63987,58468^0
+KBBPYSHO ;ISC-SF/JLI - SHOW KEY STRUCTURE AND VARIABLES FOR FILE ;03/10/16  16:14;
+ ;;0.0;KBBPTOOLS;;May 15, 1992
+ ;
+ ;A6AXFSHO ;ISC-SF/JLI - SHOW KEY STRUCTURE AND VARIABLES FOR FILE ;2/25/94  12:06 ;
+ ;;0.0; ;;May 15, 1992
+ I $T(EN^%ut)="" W !,"Can't run Unit Tests" G EN
+ N X
+ R !,"Press Enter NOW to run the application or wait 5 seconds to run the Unit Tests: ",X:5 I $T G EN
+ W !,"Running Unit Tests",!
+ D EN^%ut("KBBPUYNM")
+ W !!,"To run the KBBPYQRY routine itself use the command DO EN^KBBPYQRY"
+ Q
+ ;
+EN ;
+ ; ZEXCEPT: UTESTVAL,UTESTFIL,UTESTNUM - newed in unit test set only for unit test
+ N KBBP1,KBBPFIL,KBBPFN,KBBPI,KBBPY,ISUTEST
+ S ISUTEST=$$ISUTEST^%ut()
+ I '$D(^XTMP("KBBPY","FNM"))!'$D(^XTMP("KBBPY","XR1")) D
+ . D WRITEIT(""),WRITEIT($C(7)_"First I have to rebuild the field cross-reference file")
+ . D WRITEIT("          THIS MAY TAKE A WHILE")
+ . D WRITEIT(""),WRITEIT("")
+ . D QUE^KBBPYREF
+ . Q
+ ;
+ S KBBPFIL=$S($D(UTESTFIL):UTESTFIL,1:200)
+ I 'ISUTEST R !,"Select File: ",KBBPFIL:DTIME I '$T!(KBBPFIL="")!(KBBPFIL[U) K ^TMP("KBBPY",$J) Q
+ I KBBPFIL'=+KBBPFIL S KBBP1=$E(KBBPFIL,1,$L(KBBPFIL)-1)_$C($A($E(KBBPFIL,$L(KBBPFIL)))-1)_"z"
+ K ^TMP("KBBPY",$J,"SHO")
+ I KBBPFIL'=+KBBPFIL F KBBPI=0:0 S KBBP1=$O(^XTMP("KBBPY","FNM",KBBP1)) Q:$E(KBBP1,1,$L(KBBPFIL))'=KBBPFIL  F KBBPY=0:0 S KBBPY=$O(^XTMP("KBBPY","FNM",KBBP1,KBBPY)) Q:KBBPY'>0  S KBBPI=KBBPI+1,^TMP("KBBPY",$J,"SHO",KBBPI)=KBBPY_U_KBBP1
+ I KBBPFIL=+KBBPFIL S KBBPY=KBBPFIL-.0000001 F KBBPI=0:0 S KBBPY=$O(^DD(KBBPY)) Q:$E(KBBPY,1,$L(KBBPFIL))'=KBBPFIL  I $D(^DD(KBBPY,0))#2 D SET1(KBBPY,.KBBPI)
+ I KBBPI=0 D WRITEIT($C(7)_"  ??",1) G EN
+ S KBBPFN=0
+ I KBBPI=1 S KBBPFN=1
+ I KBBPI>1 D
+ . D WRITEIT("     "_"Select From:")
+ . F KBBPY=1:1:KBBPI D  Q:KBBPFN>0!(KBBPFN=U)
+ . . D WRITEIT("       "_$J(KBBPY,3)_".  "_$P(^TMP("KBBPY",$J,"SHO",KBBPY),U,2)_"  ("_+^(KBBPY)_")")
+ . . I '(KBBPY#10)!(KBBPY=KBBPI) S KBBPFN=$$SELCT(KBBPY,KBBPI)
+ . . I ISUTEST S KBBPFN=1
+ . . Q
+ . Q
+ I KBBPFN'>0 G EN
+ I ISUTEST S UTESTVAL=KBBPFN,UTESTNUM=$G(^TMP("KBBPY",$J,"SHO",KBBPFN))
+ D SHOW^KBBPYSH1(KBBPFN)
+ D WRITEIT(""),WRITEIT("")
+ I ISUTEST Q
+ G EN
+ ;
+ ;
+SET1(KBBPY,KBBPI) ;
+ N KBBP1
+ S KBBP1=$S($D(^DD(KBBPY,0,"NM")):$O(^("NM","")),1:$P(^DD(KBBPY,0),U))
+ I $D(^XTMP("KBBPY","FNM",KBBP1,KBBPY)) S KBBPI=KBBPI+1,^TMP("KBBPY",$J,"SHO",KBBPI)=KBBPY_U_KBBP1
+ Q
+ ;
+SELCT(KBBPY,KBBPI) ;.EF
+ N KBBPFN,BLNKS,TEXT
+ I KBBPI=1 S KBBPFN=1
+ I KBBPI>1 D
+ . D WRITEIT(""),WRITEIT("")
+ . S $P(BLNKS," ",15)=" "
+ . I KBBPY<KBBPI S TEXT=BLNKS_"Enter '^' to STOP or" D WRITEIT(TEXT)
+ . S TEXT=BLNKS_"Select 1 to "_KBBPY_": " D WRITEIT(TEXT)
+ . I $$ISUTEST() S KBBPFN=1
+ . I '$$ISUTEST() R KBBPFN:DTIME S:'$T!(KBBPFN[U) KBBPFN=U Q
+ . S:KBBPFN>KBBPY!(KBBPFN<0) KBBPFN=0
+ . I (KBBPFN\1)'=KBBPFN D WRITEIT($C(7)_"  ??",1) D SELCT(KBBPY,KBBPI)
+ . Q
+ Q KBBPFN
+ ;
+WRITEIT(TEXT,NOLINFED) ;
+ D WRITEOUT^KBBPYROU(TEXT,$G(NOLINFED))
+ Q
+ ;
+ISUTEST() ;
+ I $T(EN^%ut)="" Q 0
+ Q $$ISUTEST^%ut()
+ ;
+EOR ; End Of Routine
+
+
+

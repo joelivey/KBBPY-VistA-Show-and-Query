@@ -1,0 +1,94 @@
+KBBPUYPR	;JIVEYSOFT.COM/JLI - Unit tests for KBBPYNM ;02/14/16  19:23;
+	;;0.0;KBBP;
+	; includes tests for:
+	;   KBBPYPRO
+	D EN^%ut($T(+0))
+	Q
+	;
+STARTUP	;
+	D STARTUP^KBBPUYNM
+	Q
+	;
+SHUTDOWN	;
+	D SHUTDOWN^KBBPUYNM
+	Q
+	;
+GETCODE1	; @TEST
+	N ROOT,KBBPFILE,KBBPFLDR,KBBPPATH,VAR1,PATH
+	K ^XTMP("KBBPY") D QUE1^KBBPYREF
+	S ROOT=$NA(^TMP("KBBPYNM_GETCODE",$J)) K @ROOT
+	S KBBPFILE=200,KBBPFLDR="VAR1",KBBPPATH="PATH"
+	D XRPNT^KBBPYNM(KBBPFILE)
+	S VAR1(1)=".01;200",VAR1(2)="4;200",VAR1(3)=".01;200.051"
+	S @ROOT@("DATA1","XM",1)=.01
+	S @ROOT@("DATA1","XM",2)=4
+	S @ROOT@("DATA1","XM",3)=.01
+	S @ROOT@("DATA1","XT")=3
+	S @ROOT@("DATA1","XT",1)="I $D(DA(""P200"")) S DA=DA(""P200""),XTVDATA=$S($D(^VA(200,DA,0)):$P(^(0),""^"",1),1:"""") S:XTVDATA'="""" @ROOT@(""XVAL"",1,NVAL)=XTVDATA"
+	S @ROOT@("DATA1","XT",2)="I $D(DA(""P200"")) S DA=DA(""P200""),XTVDATA=$S($D(^VA(200,DA,1)):$P(^(1),""^"",2),1:"""") S:XTVDATA'="""" @ROOT@(""XVAL"",2,NVAL)=XTVDATA"
+	S @ROOT@("DATA1","XT",3)="I $D(DA(""P200"")) S DA(1)=DA(""P200"") X @ROOT@(""XT"",3,1)"
+	S @ROOT@("DATA1","XT",3,0)="S XTVDATA=$S($D(^VA(200,DA(1),51,DA,0)):$P(^(0),""^"",1),1:""""),XTVDATA=$S($D(^DIC(19.1,+XTVDATA,0)):$P(^(0),U),1:"""") S:XTVDATA'="""" @ROOT@(""XVAL"",3,NVAL,NVAL1)=XTVDATA"
+	S @ROOT@("DATA1","XT",3,1)="S DA=0 F NVAL1=1:1 S DA=$O(^VA(200,DA(1),51,DA)) Q:DA'>0  X @ROOT@(""XT"",3,0)"
+	S @ROOT@("DATA1","XTDA")=1
+	S @ROOT@("DATA1","XTDA",1)="S DA(""P200"")=DABASE"
+	S @ROOT@("DATA1","XTN",1)=200
+	S @ROOT@("DATA1","XTN",2)=200
+	S @ROOT@("DATA1","XTN",3)="200.051;200"
+	S @ROOT@("DATA1","XTNM",1)="NEW PERSON NAME"
+	S @ROOT@("DATA1","XTNM",2)="NEW PERSON SEX"
+	S @ROOT@("DATA1","XTNM",3)="NEW PERSON KEY"
+	S @ROOT@("DATA1","XTS",1)=""
+	D GETCODE^KBBPYPRO(ROOT,KBBPFILE,KBBPFLDR,KBBPPATH)
+	D CHKEQ(200,$G(^TMP("KBBPY",$J,"FIL")),"Incorrect value for file number")
+	D CHKTF($D(^TMP("KBBPY",$J,"C"))=0,"Unexpected presence of C node")
+	D CHKEQ("NAME^200^.01^0;1^^200^""B""",$G(^TMP("KBBPY",$J,"X",1,200)),"Incorrect value for NAME field")
+	D CHKEQ("SEX^200^4^1;2^^200^",$G(^TMP("KBBPY",$J,"X",2,200)),"Incorrect value for SEX Date field")
+	D CHKEQ("KEY^200.051^.01^0;1^51^200.051;200^""AB""",$G(^TMP("KBBPY",$J,"X",3,200)),"Incorrect value for KEY field")
+	K @ROOT
+	K ^TMP("KBBPY",$J)
+	Q
+	;
+GETCODE2	; @TEST - set up data for a linked file path
+	N ROOT,KBBPFILE,KBBPFLDR,KBBPPATH,VAR1,PATH
+	K ^XTMP("KBBPY") D QUE1^KBBPYREF
+	S ROOT=$NA(^TMP("KBBPYNM_GETCODE",$J)) K @ROOT
+	S KBBPFILE=2,KBBPFLDR="VAR1",KBBPPATH="PATH"
+	D XRPNT^KBBPYNM(KBBPFILE)
+	S VAR1(1)="6;52",VAR1(2)="22;52"
+	S PATH(1)=".01;2R55^.01;55.03T52"
+	S @ROOT@("DATA1","XM",1)=6
+	S @ROOT@("DATA1","XM",2)=22
+	S @ROOT@("DATA1","XT")=2
+	S @ROOT@("DATA1","XT",1)="I $D(DA(""P52"")) S DA=DA(""P52""),XTVDATA=$S($D(^PSRX(DA,0)):$P(^(0),""^"",6),1:""""),XTVDATA=$S($D(^PSDRUG(+XTVDATA,0)):$P(^(0),U),1:"""") S:XTVDATA'="""" @ROOT@(""XVAL"",1,NVAL)=XTVDATA"
+	S @ROOT@("DATA1","XT",2)="I $D(DA(""P52"")) S DA=DA(""P52""),XTVDATA=$S($D(^PSRX(DA,2)):$P(^(2),""^"",2),1:"""") S:XTVDATA'="""" @ROOT@(""XVAL"",2,NVAL)=XTVDATA"
+	S @ROOT@("DATA1","XTDA")=3
+	S @ROOT@("DATA1","XTDA",1)="S DA(""P2"")=DABASE"
+	S @ROOT@("DATA1","XTDA",2)="S DA(""P55"")=DABASE"
+	S @ROOT@("DATA1","XTDA",3)="S DA(""P52"")=$S($D(^PS(55,DABASE,""P"",DALOOP3,0)):+$P(^(0),U,1),1:0)"
+	S @ROOT@("DATA1","XTDA",3,1)="S DALOOP3=$O(^PS(55,DABASE,""P"",DALOOP3))"
+	S @ROOT@("DATA1","XTN",1)=52
+	S @ROOT@("DATA1","XTN",2)=52
+	S @ROOT@("DATA1","XTNM",1)="PRESCRIPTION DRUG"
+	S @ROOT@("DATA1","XTNM",2)="PRESCRIPTION FILL DATE"
+	S @ROOT@("DATA1","XTS",1)=""
+	S @ROOT@("DATA1","XTS",2)=""
+	S @ROOT@("DATA1","XTS",3)=3
+	D GETCODE^KBBPYPRO(ROOT,KBBPFILE,KBBPFLDR,KBBPPATH)
+	D CHKEQ(2,$G(^TMP("KBBPY",$J,"FIL")),"Incorrect value for file number")
+	D CHKEQ(".01;2R55^.01;55.03T52",$G(^TMP("KBBPY",$J,"C",52)),"Unexpected result for C node for file 52")
+	D CHKEQ(".01;2R55",$G(^TMP("KBBPY",$J,"C",55)),"Unexpected result for C node for file 55")
+	D CHKEQ("DRUG^52^6^0;6^^52^",$G(^TMP("KBBPY",$J,"X",1,52)),"Incorrect value for Drug field")
+	D CHKEQ("FILL DATE^52^22^2;2^^52^",$G(^TMP("KBBPY",$J,"X",2,52)),"Incorrect value for Fill Date field")
+	K @ROOT
+	K ^TMP("KBBPY",$J)
+	Q
+	;
+CHKEQ(EXPECTED,ACTUAL,COMMENT)	;
+	D CHKEQ^%ut(EXPECTED,ACTUAL,COMMENT)
+	Q
+	;
+CHKTF(TEST,COMMENT)	;
+	D CHKTF^%ut(TEST,COMMENT)
+	Q
+	;
+XTROU	;

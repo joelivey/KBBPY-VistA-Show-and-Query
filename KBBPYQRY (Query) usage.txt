@@ -1,0 +1,287 @@
+
+/*
+*    The following shows the query capabilities of the KBBPY code
+*
+*    After the primary file is selected, a table is generated to
+*    assist in the analysis if one hasn't been built recently.
+*    The progress of the analysis is shown by '.' and '|' characters.
+*    The dots indicate the analysis of the current file and its 
+*    relationships to other files.  The vertical bars indicate that
+*    that analysis has moved out to analyze relationships within all 
+*    of the files that were pointed to or pointed back to the file(s)
+*    just analyzed.  Thus, in the following capture, it indicates that
+*    files at least 9 jumps out from the primary file have been included
+*    in the analysis.
+*
+*    The user must press the enter key at the first prompt within
+*    five seconds, or the unit tests will run.
+*/
+
+VISTA>D ^KBBPYQRY
+
+Press Enter NOW to run the application or wait 5 seconds to run the Unit Tests: 
+Select Primary File: 2  PATIENT
+     Is this the correct file? YES// 
+................................................................................
+.............................|..................................................
+......................................|.........................................
+................................................................................
+...........|....................................................................
+...................................................|............................
+..............................................................................|.
+................................................................................
+......................................|.........................................
+..................................................................|.............
+...........................................................................|....
+.......................................|....
+1 second
+
+Set of fields and conditions for Test 1
+
+/*
+*   The user is prompted for fields and associated conditions, since at this 
+*   level, the program is going to be selecting individuals based on the specified
+*   criteria to be included in the output.  There may be multiple sets of fields
+*   and conditions included in the analysis, this is only the first.
+*   The field must be specified by at least part of the field name (field numbers
+*   will not currently work), and optionally the file number for the field (this 
+*   may result in many, many choices - you probably don't want to enter NAME or
+*   DATE without a file number).
+*
+*   Then a prompt for the condition on X - this is required since this is part
+*   of the selection based on criteria. 
+*/
+
+Field name: SEX@2
+  1  SEX   in  'PATIENT'  file
+Code for condition on X: X="M"
+
+/*
+*  Multiple fields with associated conditions may be entered under one set.
+*  If more than one field and condition specification is entered, they will
+*  all be considered as ANDed together, so that all of the specified conditions
+*  must be met for the entry to be selected.  
+*  Since the conditions being specified for this example will be ANDed together
+*  this could have been done, but instead a second set of conditions will be
+*  used.
+*/
+ 
+Field name: 
+
+/*
+*  The following prompts for input for a second set of fields and conditions.
+*  Simply entering return would indicate that another set of fields and 
+*  is not desired.  However, a second set will be entered here.
+*/
+
+Set of fields and conditions for Test 2
+
+Field name: GENERIC
+
+  1  GENERIC NAME   in  'DRUG'  file
+
+  2  GENERIC PROVIDER   in  'PRESCRIPTION'  file
+  3  GENERIC PROVIDER   in  'REFILL'  sub-file of  'PRESCRIPTION'  file
+  4  GENERIC PROVIDER   in  'PARTIAL DATE'  sub-file of  'PRESCRIPTION'  file
+
+  5  GENERIC EQUIVALENT PRODUCT ID   in  'TRANSACTIONS'  sub-file of  
+          'BPS CLAIMS'  file
+  6  GENERIC EQVLNT PRODUCT ID QLFR   in  'TRANSACTIONS'  sub-file of  
+          'BPS CLAIMS'  file
+
+          Enter '^' to exit OR
+          Select (1 to 6 [out of 6 entries]) : 1
+/*
+*   The file and field selected for analysis is related to the primary 
+*   file, but it can be reached in multiple ways, so the user is asked 
+*   to choose the connection pathway from those available.
+*   All 24 choices are not shown here, since the third choice was the 
+*   desired pathway, but a user could view all of them before making a 
+*   choice.
+*   Once a choice of paths between two files is selected, any other 
+*   fields in files that might be on this pathway would be included 
+*   without asking for paths, since this one is already selected.
+*/
+Select Method of Connection Between Files (24 choices) from:
+
+ 1  a. NAME field of the PATIENT file is POINTED TO by the PHARMACY PATIENT
+          file (55)
+       b. DISPENSE DRUG field of the PHARMACY PATIENT sub-file (#55.05) of the
+               PHARMACY PATIENT file POINTS to the DRUG file (50)
+
+ 2  a. NAME field of the PATIENT file is POINTED TO by the PHARMACY PATIENT
+          file (55)
+       b. *SOLUTION field of the PHARMACY PATIENT sub-file (#55.06) of the
+               PHARMACY PATIENT file POINTS to the DRUG file (50)
+
+ 3  a. NAME field of the PATIENT file is POINTED TO by the PHARMACY PATIENT
+          file (55)
+       b. PRESCRIPTION PROFILE field of the PHARMACY PATIENT sub-file (#55.03)
+               of the PHARMACY PATIENT file POINTS to the PRESCRIPTION file
+               (52)
+          c. DRUG field of the PRESCRIPTION file POINTS to the DRUG file (50)
+
+          Select Method of Connection (1 to 3 out of 24): 3
+Code for condition on X: X["ASPRIN"
+
+/*
+*   Again, no response for another field and file in this set of conditions
+*/
+Field name: 
+
+Set of fields and conditions for Test 3
+
+/*
+*   And no response here, since only two conditions were to be specified
+*/
+Field name:
+
+/*
+*   Since there were multiple sets of conditions specified, it is necessary
+*   for the user to indicate which of these sets should be ANDed to each
+*   other.  It is possible to enter sets of conditions to be ANDed together,
+*   while another set might be ANDed together.  The resulting sets that are
+*   not included in an AND set would be ORed together with the other sets.
+*
+*   In the following sets 1 and 2 are ANDed together. 
+*/
+
+The response(s) must be a comma-separated series of digits ranging from 1 to 2.
+  Used values from one response may be used in a subsequent response as necessary
+Enter numbers for TESTS to be 'AND'ed together (enter ?? for help): :  (1-2): 1,2// 
+/*
+*   The user is then requested to specify what fields should be output for the 
+*   entries that meet the criteria specified.  As it indicates, for the output 
+*   of data from the selected criteria, conditions are optional, but may be very
+*   desirable (e.g., if conditions are not specified for the Generic Name in the 
+*   Drug file, then all Generic Names that the selected user has been prescribed
+*   via the selected pathway would be included in the output).
+*
+*   The fields selected here are the Patient's Name, the sex, and Generic Name
+*   for the Drug prescribed.  Since SEX is a single entry field, it really
+*   doesn't require a condition at this point for the selected patients.
+*   If multiple fields are specified with conditions, they may be ANDed or 
+*   ORed.
+*/
+Data to **Report** for Matches (Conditions are optional)
+
+
+Field name: NAME@2
+  1  NAME   in  'PATIENT'  file
+  2  NAME   in  'ELIGIBILITY/BENEFIT'  sub-file of  
+          'INSURANCE TYPE'  sub-file of  'PATIENT'  file
+  3  NAME   in  'CONTACT INFORMATION'  sub-file of  
+          'ELIGIBILITY/BENEFIT'  sub-file of  'INSURANCE TYPE'  sub-file of  
+          'PATIENT'  file
+  4  NAME COMPONENTS   in  'PATIENT'  file
+  5  NAME OF INSURED   in  'INSURANCE TYPE'  sub-file of  'PATIENT'  file
+
+          Enter '^' to exit OR
+          Select (1 to 5 [out of 5 entries]) : 1
+Code for condition on X: 
+
+
+Field name: SEX@2
+  1  SEX   in  'PATIENT'  file
+Code for condition on X: 
+
+
+Field name: GENERIC
+
+  1  GENERIC NAME   in  'DRUG'  file
+
+  2  GENERIC PROVIDER   in  'PRESCRIPTION'  file
+  3  GENERIC PROVIDER   in  'REFILL'  sub-file of  'PRESCRIPTION'  file
+  4  GENERIC PROVIDER   in  'PARTIAL DATE'  sub-file of  'PRESCRIPTION'  file
+
+  5  GENERIC EQUIVALENT PRODUCT ID   in  'TRANSACTIONS'  sub-file of  
+          'BPS CLAIMS'  file
+  6  GENERIC EQVLNT PRODUCT ID QLFR   in  'TRANSACTIONS'  sub-file of  
+          'BPS CLAIMS'  file
+
+          Enter '^' to exit OR
+          Select (1 to 6 [out of 6 entries]) : 1
+Code for condition on X: X["ASPRIN"
+
+
+Field name: 
+
+
+   PATIENT NAME is not a multiple and will be included on each line of output
+   PATIENT SEX is not a multiple and will be included on each line of output
+
+Select which of the following should be 'AND'ed together, entry of only one
+number will 'OR' that value with the others.  Entry of 1,2 would have 1 and 2
+ANDed together, while 1,3 would also have 1 and 3 ANDed together.
+
+/*
+*   Really this shouldn't be necessary for a single condition
+*/
+1  DRUG GENERIC NAME    *** X["ASPRIN"
+Response(s) must be a comma-separated series of digits ranging from 1 to 1.
+Used values from one response may be used in a subsequent response as necessary
+Enter numbers for TESTS to be 'AND'ed together (enter ?? for help): :  (1-1): 1/
+/
+
+/*
+*   The user is given multiple possible output formats, Unpacked (basically 
+*   a regular text output) or Packed with separators between the fields
+*   (either '^'-delimited, or ','-delimited for Excel).  The results for 
+*   this searc will be shown in both of these packed formats as well.
+*/
+The output may be PACKED with only a separator between data fields,
+or the output may be in a more readable format
+Output Packed? NO
+
+/*
+*   The specification for the analysis are added to the end of a template
+*   routine (KBBPYROU) which contains all of the code for performing the
+*   searches and analyses.  The specifications added to the end provide
+*   all of the necessary information to perform the search and output 
+*   and may be used in the future to perform the analysis again.  Another
+*   option would be to place the specifications into a file so that it 
+*   could be performed again as desired.
+*   The template routine is saved to the active routine using the KBBPZ
+*   namespace followed by 3 digits, beginning with 001 up to 998 (KBBPZ999 
+*   is reserved for running unit tests).  Before asking the user for input, 
+*   the program checks to see if the high value has already been used, and
+*   if so the user is informed that the routine can't be generated and the 
+*   analysis can't be performed until some routines are deleted.
+*/
+The routine to perform the specified analysis has been saved as
+
+                    KBBPZ024
+
+You may use this routine name in the future to repeat the analysis
+
+
+DEVICE: HOME//   Console (Cache' on Windows)
+
+Selection based on 
+       PATIENT SEX (file #2)   *** I X="M"
+  and  DRUG GENERIC NAME (file #50)   *** I X["ASPRIN"
+
+DATA VALUES DISPLAYED ARE: 
+    PATIENT NAME
+    PATIENT SEX
+    DRUG GENERIC NAME   *** condition: I X["ASPRIN"
+
+TEST,PATIENTAAA                MALE   ASPRIN                         
+TEST,PATIENTAAA                MALE   ASPRIN_80                      
+
+/*
+*   The following shows the output from a similar analysis in which
+*   the ','-delimited format (for use with Excel) was specified
+*/
+
+"TEST,PATIENTAAA","MALE","ASPRIN",,
+"TEST,PATIENTAAA","MALE","ASPRIN_80",,
+
+/*
+*   The following shows the output from a similar analysis in which
+*   the '^'-delimited format was specified
+*/
+
+TEST,PATIENTAAA^MALE^ASPRIN^
+TEST,PATIENTAAA^MALE^ASPRIN_80^
+

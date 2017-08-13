@@ -1,0 +1,644 @@
+
+
+/*               Used to indicate added comments
+*   The following shows the unit tests and coverage analysis for the KBBPY
+*   routines.
+*/
+
+VISTA>D ^KBBPUYNM
+................................................................................
+........................................................................  NEW PE
+RSON......  .............  .....................................................
+.
+
+Ran 7 Routines, 57 Entry Tags
+Checked 225 tests, with 0 failures and encountered 0 errors.
+
+/*
+*  Running coverage the easy way using COV^%ut (but it misses lines that 
+*  start unit tests at the top of routines
+*/
+VISTA>D COV^%ut("KBBPY*","D EN^%ut(""KBBPUYNM"",3)",2)
+
+Loading routines to test coverage...
+
+ ---------------------------------- KBBPUYNM ----------------------------------
+BUILD1 - - run build process........--------------------------  [OK]  647.539ms
+CHECK1 - - run build process via global not present KBBPYREF........
+ -------------------------------------------------------------  [OK]  630.909ms
+CHECK2 - - run build via code that would ask about rebuilding KBBPYREF........
+ -------------------------------------------------------------  [OK]  631.110ms
+QUE - - run build directly by forcing it KBBPYREF........-----  [OK]  628.779ms
+KBBPFIL - - build file structure KBBPYNM..--------------------  [OK]    1.985ms
+KBBPFIL1 - - check single level subfile processing KBBPYNM...-  [OK]    0.036ms
+KBBPFIL2 - - check two level subfile processing in KBBPFIL1 KBBPYNM......
+ -------------------------------------------------------------  [OK]    0.052ms
+KBBPFLD - - in KBBPYNM..--------------------------------------  [OK]    0.066ms
+XREF - - Get standard x-ref if any KBBPYNM..------------------  [OK]    0.032ms
+XREF1 - - get xref name, and rest of set code KBBPYNM..-------  [OK]    0.016ms
+CHKX - - check xref structure KBBPYNM...----------------------  [OK]    0.033ms
+XRPNT - - build file relationships data for file 200...-------  [OK]  358.859ms
+LISTOUT - - output data from global if printing....-----------  [OK]    0.532ms
+LISTDATA - - output data to text (or for tests global nodes)......
+ -------------------------------------------------------------  [OK]    0.655ms
+SELCTREL - - selection of item number.------------------------  [OK]    0.037ms
+CHEK - - check if should stop or continue (if user interaction).[OK]    0.020ms
+HEDR - - check output for header text.....--------------------  [OK]    0.084ms
+GETLIST - - return number of names beginning with specified characters.......
+ -------------------------------------------------------------  [OK]    0.343ms
+NUMTHERE - - output of header for related files with number found.
+ -------------------------------------------------------------  [OK]    0.080ms
+ENREL......---------------------------------------------------  [OK]  644.441ms
+
+ ---------------------------------- KBBPUYSH ----------------------------------
+EN.-----------------------------------------------------------  [OK]  658.356ms
+SET1 - - set one value in list of possible matches...---------  [OK]    0.043ms
+SELCTSHO - - return value to be selected..--------------------  [OK]    0.229ms
+ENSHO - - get selected value.---------------------------------  [OK]    0.175ms
+TYPESH1 - - returns description, if possible, for field type... [OK]    0.034ms
+XREFSH1 - - returns standard cross-ref for field, if any....--  [OK]    0.062ms
+CHKXSH1 - - Determine whether cross-reference fits standard pattern for look-up.
+......--------------------------------------------------------  [OK]    0.064ms
+
+ ---------------------------------- KBBPUYRO ----------------------------------
+EN - - run the whole process.....-----------------------------  [OK]  636.387ms
+DOWORK - - DOWORK.....----------------------------------------  [OK]    0.984ms
+SETTYP..................--------------------------------------  [OK]    0.133ms
+PRNT...-------------------------------------------------------  [OK]    0.177ms
+OUTPUT......--------------------------------------------------  [OK]    0.116ms
+SETOUT - - setup format and write output...-------------------  [OK]    0.065ms
+FILETYPS - - determine and whether fields are single or multiple relative to pri
+mary file......-----------------------------------------------  [OK]    0.103ms
+
+ ---------------------------------- KBBPUYSE ----------------------------------
+GETFILE - - file name and number  NEW PERSON...---------------  [OK]  992.768ms
+GETFLDS1 - - get criteria for one search set.-----------------  [OK]  619.563ms
+GETFLDS2 - - get criteria for one search set.-----------------  [OK]  618.359ms
+GETFLDS3 - - get criteria for one search set.-----------------  [OK]  615.854ms
+GETFLDS4 - - get criteria for one search set  .---------------  [OK]  618.197ms
+GETFLDS5 - - get criteria for one search set...---------------  [OK] 1582.378ms
+HUHFIELD - - check output for ? input to request for fields...  [OK]    0.165ms
+SHOFILS1..----------------------------------------------------  [OK]  360.311ms
+SHOFILS2..----------------------------------------------------  [OK]    0.518ms
+GETFILID - - get file id if part of field input as field@file..  ..
+ -------------------------------------------------------------  [OK]    0.414ms
+
+ ---------------------------------- KBBPUYDO ----------------------------------
+GET1ONE - - run GET1^KBBPYDO1 for one set of conditions.....--  [OK]    0.401ms
+GET1TOT - - run GET1^KBBPYDO1 for values for output....-------  [OK]    0.239ms
+GET1TOT2 - - run GET1^KBBPYDO1 for values for output..--------  [OK]    0.332ms
+CHKIT - - check if current data meets conditions and remove other values....
+ -------------------------------------------------------------  [OK]    0.263ms
+
+ ---------------------------------- KBBPUYPR ----------------------------------
+GETCODE1.....-------------------------------------------------  [OK]  981.669ms
+GETCODE2 - - set up data for a linked file path.....----------  [OK] 1094.231ms
+
+ ---------------------------------- KBBPUYQR ----------------------------------
+EN..----------------------------------------------------------  [OK]    3.524ms
+GETSETS - - get set(s) of data for search criteria...---------  [OK]  987.611ms
+ANDOR1 - - selection of AND/OR data sets for search...--------  [OK]    0.080ms
+ANDOR2 - -...-------------------------------------------------  [OK]    0.066ms
+OUTDATA - - selection of fields for output.....---------------  [OK] 1929.505ms
+ADD.....------------------------------------------------------  [OK]    0.060ms
+ADDSET - - add sets of data to routine model......------------  [OK]    0.063ms
+
+Ran 7 Routines, 57 Entry Tags
+Checked 225 tests, with 0 failures and encountered 0 errors.
+
+
+ORIG: 1339
+LEFT: 76
+COVERAGE PERCENTAGE: 94.32
+
+
+BY ROUTINE:
+  KBBPYDO1        92.11%  35 out of 38
+    CHKIT            100.00%  13 out of 13
+    GET1             100.00%  2 out of 2
+    GETONE           100.00%  20 out of 20
+    KBBPYDO1           0.00%  0 out of 3
+  KBBPYNM         97.20%  104 out of 107
+    BUILD            100.00%  6 out of 6
+    CHKX             100.00%  5 out of 5
+    KBBPFIL          100.00%  9 out of 9
+    KBBPFIL1         100.00%  5 out of 5
+    KBBPFLD          100.00%  11 out of 11
+    KBBPYNM            0.00%  0 out of 3
+    XREF             100.00%  5 out of 5
+    XREF1            100.00%  2 out of 2
+    XRP0             100.00%  2 out of 2
+    XRP1             100.00%  4 out of 4
+    XRPNT            100.00%  31 out of 31
+    XRPNT0           100.00%  12 out of 12
+    XRPNT1           100.00%  12 out of 12
+  KBBPYPRO        92.31%  36 out of 39
+    GETCODE          100.00%  36 out of 36
+    KBBPYPRO           0.00%  0 out of 3
+  KBBPYQRY        97.14%  204 out of 210
+    ADD              100.00%  6 out of 6
+    ADDSET           100.00%  10 out of 10
+    ANDOR            100.00%  20 out of 20
+    EN               100.00%  33 out of 33
+    GETFLDS          100.00%  15 out of 15
+    GETSETS          100.00%  7 out of 7
+    ISUTEST          100.00%  2 out of 2
+    KBBPYQRY           0.00%  0 out of 6
+    LAUNCH           100.00%  5 out of 5
+    OUTANDOR         100.00%  45 out of 45
+    OUTDATA          100.00%  22 out of 22
+    OUTTYPE          100.00%  9 out of 9
+    ROU              100.00%  19 out of 19
+    SAVE             100.00%  9 out of 9
+    WRITEIT          100.00%  2 out of 2
+  KBBPYREF        92.50%  37 out of 40
+    CHECK            100.00%  13 out of 13
+    ISUTEST          100.00%  2 out of 2
+    KBBPYREF           0.00%  0 out of 3
+    QUE              100.00%  3 out of 3
+    QUE1             100.00%  8 out of 8
+    REQUE            100.00%  6 out of 6
+    WRITEIT          100.00%  5 out of 5
+  KBBPYREL        95.49%  127 out of 133
+    CHEK             100.00%  5 out of 5
+    EN               100.00%  25 out of 25
+    GETLIST          100.00%  10 out of 10
+    HEDR             100.00%  7 out of 7
+    ISUTEST          100.00%  2 out of 2
+    KBBPYREL           0.00%  0 out of 6
+    LIST             100.00%  10 out of 10
+    LISTDATA         100.00%  21 out of 21
+    LISTOUT          100.00%  4 out of 4
+    LOOP             100.00%  21 out of 21
+    NUMTHERE         100.00%  3 out of 3
+    SELCT            100.00%  7 out of 7
+    SHOW1            100.00%  7 out of 7
+    WRITEIT          100.00%  5 out of 5
+  KBBPYROU        93.47%  272 out of 291
+    DATAOUT          100.00%  41 out of 41
+    DOWORK           100.00%  23 out of 23
+    EN                80.00%  4 out of 5
+    EN1              100.00%  8 out of 8
+    FILETYPS         100.00%  19 out of 19
+    GETPACK          100.00%  3 out of 3
+    GETPATHS         100.00%  4 out of 4
+    GETSETS          100.00%  4 out of 4
+    GETTOT           100.00%  5 out of 5
+    ISUTEST          100.00%  2 out of 2
+    KBBPYROU           0.00%  0 out of 8
+    LINK1            100.00%  3 out of 3
+    LISTVALS         100.00%  9 out of 9
+    NUMSETS          100.00%  4 out of 4
+    OUTPUT           100.00%  6 out of 6
+    PRNT             100.00%  45 out of 45
+    SELCTOUT         100.00%  13 out of 13
+    SETBASE          100.00%  7 out of 7
+    SETLINK          100.00%  2 out of 2
+    SETORDR          100.00%  20 out of 20
+    SETOUT           100.00%  9 out of 9
+    SETTYP            89.29%  25 out of 28
+    SETWID           100.00%  9 out of 9
+    TESTLIM            0.00%  0 out of 1
+    TESTMAX            0.00%  0 out of 1
+    TESTRANG           0.00%  0 out of 1
+    WRITEOUT          63.64%  7 out of 11
+  KBBPYSE1        96.61%  114 out of 118
+    ASKC             100.00%  8 out of 8
+    ASKU             100.00%  14 out of 14
+    CONECT           100.00%  13 out of 13
+    ISUTEST          100.00%  2 out of 2
+    KBBPYSE1           0.00%  0 out of 3
+    LIST             100.00%  15 out of 15
+    PLIST            100.00%  2 out of 2
+    PLIST1           100.00%  7 out of 7
+    PLX               75.00%  3 out of 4
+    SELCT            100.00%  40 out of 40
+    SELCT1           100.00%  3 out of 3
+    WRITEIT          100.00%  5 out of 5
+    XPAND            100.00%  2 out of 2
+  KBBPYSE2        86.75%  72 out of 83
+    EXIT             100.00%  20 out of 20
+    KBBPYSE2           0.00%  0 out of 3
+    LISTF             44.44%  4 out of 9
+    LOOPA            100.00%  5 out of 5
+    PNTRS            100.00%  9 out of 9
+    SETIT             40.00%  2 out of 5
+    SETPNT           100.00%  3 out of 3
+    SETSUB           100.00%  8 out of 8
+    X2               100.00%  21 out of 21
+  KBBPYSET        94.96%  132 out of 139
+    BLDSTK            90.91%  10 out of 11
+    FLDLOOP           95.24%  20 out of 21
+    GETFILE          100.00%  15 out of 15
+    GETFILID         100.00%  6 out of 6
+    GETFLDS          100.00%  1 out of 1
+    HUH              100.00%  4 out of 4
+    INDENT           100.00%  4 out of 4
+    ISUTEST          100.00%  2 out of 2
+    JLOOP            100.00%  4 out of 4
+    JLOOP1           100.00%  11 out of 11
+    KBBPYSET           0.00%  0 out of 3
+    LAST             100.00%  14 out of 14
+    LOOK             100.00%  4 out of 4
+    SETGLOBS         100.00%  13 out of 13
+    SHOFILS          100.00%  6 out of 6
+    SHOWEM           100.00%  13 out of 13
+    SUBFIL             0.00%  0 out of 2
+    WRITEIT          100.00%  5 out of 5
+  KBBPYSH1        96.34%  79 out of 82
+    CHEK             100.00%  4 out of 4
+    CHKX             100.00%  5 out of 5
+    HEDR             100.00%  11 out of 11
+    ISUTEST          100.00%  2 out of 2
+    KBBPYSH1           0.00%  0 out of 3
+    SHOVAR           100.00%  10 out of 10
+    SHOW             100.00%  24 out of 24
+    TYPE             100.00%  10 out of 10
+    WRITEIT          100.00%  5 out of 5
+    XREF             100.00%  8 out of 8
+  KBBPYSHO        86.44%  51 out of 59
+    EN                96.77%  30 out of 31
+    ISUTEST          100.00%  2 out of 2
+    KBBPYSHO           0.00%  0 out of 7
+    SELCT            100.00%  13 out of 13
+    SET1             100.00%  4 out of 4
+    WRITEIT          100.00%  2 out of 2
+VISTA>
+
+/*
+*   Coverage analysis run using COVERAGE^%ut, which provides the capability
+*   to run coverage by invoking multiple different routines, providing the
+*   ability to include coverage of code at the top of routines that also runs
+*   coverage analysis - for the KBBPY routines, each of which contains code at 
+*   the top to run unit tests, coverage goes from 94.32% to 98.13% when these
+*   are included.
+*/
+
+VISTA>
+
+VISTA>S RUNCODE(1)="^KBBPYDO1,^KBBPYNM,^KBBPYPRO,^KBBPYQRY,^KBBPYREF,^KBBPYREL,^KBBPYROU,^KBBPYSE1,^KBBPYSE2,^KBBPYSET,^KBBPYSH1,^KBBPYSHO"
+
+VISTA>S XCLUDE(1)=""
+
+VISTA>M ^TMP("%uttcovr",$J,"XCLUDE")=XCLUDE
+
+VISTA>D COVERAGE^%ut("KBBPY*",.RUNCODE,.XCLUDE,2)
+
+Loading routines to test coverage...
+
+
+------------------- RUNNING ^KBBPYDO1 -------------------
+................................................................................
+........................................................................  NEW PE
+RSON......  .............  .....................................................
+.
+
+Ran 7 Routines, 57 Entry Tags
+Checked 225 tests, with 0 failures and encountered 0 errors.
+
+------------------- RUNNING ^KBBPYNM -------------------
+................................................................................
+........................................................................  NEW PE
+RSON......  .............  .....................................................
+.
+
+Ran 7 Routines, 57 Entry Tags
+Checked 225 tests, with 0 failures and encountered 0 errors.
+
+------------------- RUNNING ^KBBPYPRO -------------------
+................................................................................
+........................................................................  NEW PE
+RSON......  .............  .....................................................
+.
+
+Ran 7 Routines, 57 Entry Tags
+Checked 225 tests, with 0 failures and encountered 0 errors.
+
+------------------- RUNNING ^KBBPYQRY -------------------
+
+Press Enter NOW to run the application or wait 5 seconds to run the Unit Tests: 
+Running Unit Tests
+................................................................................
+........................................................................  NEW PE
+RSON......  .............  .....................................................
+.
+
+Ran 7 Routines, 57 Entry Tags
+Checked 225 tests, with 0 failures and encountered 0 errors.
+
+To run the KBBPYQRY routine itself use the command DO EN^KBBPYQRY
+
+------------------- RUNNING ^KBBPYREF -------------------
+................................................................................
+........................................................................  NEW PE
+RSON......  .............  .....................................................
+.
+
+Ran 7 Routines, 57 Entry Tags
+Checked 225 tests, with 0 failures and encountered 0 errors.
+
+------------------- RUNNING ^KBBPYREL -------------------
+
+Press Enter NOW to run the application or wait 5 seconds to run the Unit Tests: 
+Running Unit Tests
+................................................................................
+........................................................................  NEW PE
+RSON......  .............  .....................................................
+.
+
+Ran 7 Routines, 57 Entry Tags
+Checked 225 tests, with 0 failures and encountered 0 errors.
+
+To run the KBBPYREL routine itself use the command DO EN^KBBPYREL
+
+------------------- RUNNING ^KBBPYROU -------------------
+
+Press Enter NOW to run the application or wait 5 seconds to run the Unit Tests: 
+Running Unit Tests
+..............................................
+
+Ran 1 Routine, 7 Entry Tags
+Checked 46 tests, with 0 failures and encountered 0 errors.
+
+
+*** To run the routine ^KBBPYROU, use DO EN^KBBPYROU. ***
+
+------------------- RUNNING ^KBBPYSE1 -------------------
+................................................................................
+........................................................................  NEW PE
+RSON......  .............  .....................................................
+.
+
+Ran 7 Routines, 57 Entry Tags
+Checked 225 tests, with 0 failures and encountered 0 errors.
+
+------------------- RUNNING ^KBBPYSE2 -------------------
+................................................................................
+........................................................................  NEW PE
+RSON......  .............  .....................................................
+.
+
+Ran 7 Routines, 57 Entry Tags
+Checked 225 tests, with 0 failures and encountered 0 errors.
+
+------------------- RUNNING ^KBBPYSET -------------------
+................................................................................
+........................................................................  NEW PE
+RSON......  .............  .....................................................
+.
+
+Ran 7 Routines, 57 Entry Tags
+Checked 225 tests, with 0 failures and encountered 0 errors.
+
+------------------- RUNNING ^KBBPYSH1 -------------------
+................................................................................
+........................................................................  NEW PE
+RSON......  .............  .....................................................
+.
+
+Ran 7 Routines, 57 Entry Tags
+Checked 225 tests, with 0 failures and encountered 0 errors.
+
+------------------- RUNNING ^KBBPYSHO -------------------
+
+Press Enter NOW to run the application or wait 5 seconds to run the Unit Tests: 
+Running Unit Tests
+................................................................................
+........................................................................  NEW PE
+RSON......  .............  .....................................................
+.
+
+Ran 7 Routines, 57 Entry Tags
+Checked 225 tests, with 0 failures and encountered 0 errors.
+
+To run the KBBPYQRY routine itself use the command DO EN^KBBPYQRY
+
+
+------------ SUMMARY ------------
+Ran 78 Routines, 634 Entry Tags
+Checked 2521 tests, with 0 failures and encountered 0 errors.
+
+
+Routine KBBPYDO1       (100.00%)   38 out of 38 lines covered
+  - Summary
+ Tag CHKIT^KBBPYDO1       (100.00%)   13 out of 13 lines covered
+ Tag EOR^KBBPYDO1           ------    0 out of 0 lines covered
+ Tag GET1^KBBPYDO1        (100.00%)   2 out of 2 lines covered
+ Tag GETONE^KBBPYDO1      (100.00%)   20 out of 20 lines covered
+ Tag KBBPYDO1^KBBPYDO1    (100.00%)   3 out of 3 lines covered
+
+
+Routine KBBPYNM        (100.00%)   107 out of 107 lines covered
+  - Summary
+ Tag BUILD^KBBPYNM        (100.00%)   6 out of 6 lines covered
+ Tag CHKX^KBBPYNM         (100.00%)   5 out of 5 lines covered
+ Tag EOR^KBBPYNM            ------    0 out of 0 lines covered
+ Tag KBBPFIL^KBBPYNM      (100.00%)   9 out of 9 lines covered
+ Tag KBBPFIL1^KBBPYNM     (100.00%)   5 out of 5 lines covered
+ Tag KBBPFLD^KBBPYNM      (100.00%)   11 out of 11 lines covered
+ Tag KBBPYNM^KBBPYNM      (100.00%)   3 out of 3 lines covered
+ Tag XREF^KBBPYNM         (100.00%)   5 out of 5 lines covered
+ Tag XREF1^KBBPYNM        (100.00%)   2 out of 2 lines covered
+ Tag XRP0^KBBPYNM         (100.00%)   2 out of 2 lines covered
+ Tag XRP1^KBBPYNM         (100.00%)   4 out of 4 lines covered
+ Tag XRPNT^KBBPYNM        (100.00%)   31 out of 31 lines covered
+ Tag XRPNT0^KBBPYNM       (100.00%)   12 out of 12 lines covered
+ Tag XRPNT1^KBBPYNM       (100.00%)   12 out of 12 lines covered
+
+
+Routine KBBPYPRO       (100.00%)   39 out of 39 lines covered
+  - Summary
+ Tag ENTRY^KBBPYPRO         ------    0 out of 0 lines covered
+ Tag GETCODE^KBBPYPRO     (100.00%)   36 out of 36 lines covered
+ Tag KBBPYPRO^KBBPYPRO    (100.00%)   3 out of 3 lines covered
+
+
+Routine KBBPYQRY       (100.00%)   210 out of 210 lines covered
+  - Summary
+ Tag ADD^KBBPYQRY         (100.00%)   6 out of 6 lines covered
+ Tag ADDSET^KBBPYQRY      (100.00%)   10 out of 10 lines covered
+ Tag ANDOR^KBBPYQRY       (100.00%)   20 out of 20 lines covered
+ Tag DIRQ^KBBPYQRY          ------    0 out of 0 lines covered
+ Tag EN^KBBPYQRY          (100.00%)   33 out of 33 lines covered
+ Tag EOR^KBBPYQRY           ------    0 out of 0 lines covered
+ Tag GETFLDS^KBBPYQRY     (100.00%)   15 out of 15 lines covered
+ Tag GETSETS^KBBPYQRY     (100.00%)   7 out of 7 lines covered
+ Tag ISUTEST^KBBPYQRY     (100.00%)   2 out of 2 lines covered
+ Tag KBBPYQRY^KBBPYQRY    (100.00%)   6 out of 6 lines covered
+ Tag LAUNCH^KBBPYQRY      (100.00%)   5 out of 5 lines covered
+ Tag OUTANDOR^KBBPYQRY    (100.00%)   45 out of 45 lines covered
+ Tag OUTDATA^KBBPYQRY     (100.00%)   22 out of 22 lines covered
+ Tag OUTTYPE^KBBPYQRY     (100.00%)   9 out of 9 lines covered
+ Tag ROU^KBBPYQRY         (100.00%)   19 out of 19 lines covered
+ Tag SAVE^KBBPYQRY        (100.00%)   9 out of 9 lines covered
+ Tag WRITEIT^KBBPYQRY     (100.00%)   2 out of 2 lines covered
+
+
+Routine KBBPYREF       (100.00%)   40 out of 40 lines covered
+  - Summary
+ Tag CHECK^KBBPYREF       (100.00%)   13 out of 13 lines covered
+ Tag EOR^KBBPYREF           ------    0 out of 0 lines covered
+ Tag ISUTEST^KBBPYREF     (100.00%)   2 out of 2 lines covered
+ Tag KBBPYREF^KBBPYREF    (100.00%)   3 out of 3 lines covered
+ Tag QUE^KBBPYREF         (100.00%)   3 out of 3 lines covered
+ Tag QUE1^KBBPYREF        (100.00%)   8 out of 8 lines covered
+ Tag REQUE^KBBPYREF       (100.00%)   6 out of 6 lines covered
+ Tag WRITEIT^KBBPYREF     (100.00%)   5 out of 5 lines covered
+
+
+Routine KBBPYREL       (100.00%)   133 out of 133 lines covered
+  - Summary
+ Tag CHEK^KBBPYREL        (100.00%)   5 out of 5 lines covered
+ Tag EN^KBBPYREL          (100.00%)   25 out of 25 lines covered
+ Tag EOR^KBBPYREL           ------    0 out of 0 lines covered
+ Tag GETLIST^KBBPYREL     (100.00%)   10 out of 10 lines covered
+ Tag HEDR^KBBPYREL        (100.00%)   7 out of 7 lines covered
+ Tag ISUTEST^KBBPYREL     (100.00%)   2 out of 2 lines covered
+ Tag KBBPYREL^KBBPYREL    (100.00%)   6 out of 6 lines covered
+ Tag LIST^KBBPYREL        (100.00%)   10 out of 10 lines covered
+ Tag LISTDATA^KBBPYREL    (100.00%)   21 out of 21 lines covered
+ Tag LISTOUT^KBBPYREL     (100.00%)   4 out of 4 lines covered
+ Tag LOOP^KBBPYREL        (100.00%)   21 out of 21 lines covered
+ Tag NUMTHERE^KBBPYREL    (100.00%)   3 out of 3 lines covered
+ Tag SELCT^KBBPYREL       (100.00%)   7 out of 7 lines covered
+ Tag SHOW1^KBBPYREL       (100.00%)   7 out of 7 lines covered
+ Tag WRITEIT^KBBPYREL     (100.00%)   5 out of 5 lines covered
+
+
+Routine KBBPYROU        (96.22%)   280 out of 291 lines covered
+  - Summary
+ Tag 1^KBBPYROU             ------    0 out of 0 lines covered
+ Tag 2^KBBPYROU             ------    0 out of 0 lines covered
+ Tag 3^KBBPYROU             ------    0 out of 0 lines covered
+ Tag DATAOUT^KBBPYROU     (100.00%)   41 out of 41 lines covered
+ Tag DOWORK^KBBPYROU      (100.00%)   23 out of 23 lines covered
+ Tag EN^KBBPYROU           (80.00%)   4 out of 5 lines covered
+ Tag EN1^KBBPYROU         (100.00%)   8 out of 8 lines covered
+ Tag FILE^KBBPYROU          ------    0 out of 0 lines covered
+ Tag FILETYPS^KBBPYROU    (100.00%)   19 out of 19 lines covered
+ Tag GETPACK^KBBPYROU     (100.00%)   3 out of 3 lines covered
+ Tag GETPATHS^KBBPYROU    (100.00%)   4 out of 4 lines covered
+ Tag GETSETS^KBBPYROU     (100.00%)   4 out of 4 lines covered
+ Tag GETTOT^KBBPYROU      (100.00%)   5 out of 5 lines covered
+ Tag ISUTEST^KBBPYROU     (100.00%)   2 out of 2 lines covered
+ Tag KBBPYROU^KBBPYROU    (100.00%)   8 out of 8 lines covered
+ Tag LINK1^KBBPYROU       (100.00%)   3 out of 3 lines covered
+ Tag LISTVALS^KBBPYROU    (100.00%)   9 out of 9 lines covered
+ Tag NUMSETS^KBBPYROU     (100.00%)   4 out of 4 lines covered
+ Tag OUTPUT^KBBPYROU      (100.00%)   6 out of 6 lines covered
+ Tag PATH^KBBPYROU          ------    0 out of 0 lines covered
+ Tag PRINT^KBBPYROU         ------    0 out of 0 lines covered
+ Tag PRNT^KBBPYROU        (100.00%)   45 out of 45 lines covered
+ Tag SELCTOUT^KBBPYROU    (100.00%)   13 out of 13 lines covered
+ Tag SETBASE^KBBPYROU     (100.00%)   7 out of 7 lines covered
+ Tag SETLINK^KBBPYROU     (100.00%)   2 out of 2 lines covered
+ Tag SETORDR^KBBPYROU     (100.00%)   20 out of 20 lines covered
+ Tag SETOUT^KBBPYROU      (100.00%)   9 out of 9 lines covered
+ Tag SETS^KBBPYROU          ------    0 out of 0 lines covered
+ Tag SETTYP^KBBPYROU       (89.29%)   25 out of 28 lines covered
+ Tag SETWID^KBBPYROU      (100.00%)   9 out of 9 lines covered
+ Tag TESTLIM^KBBPYROU       (0.00%)   0 out of 1 lines covered
+ Tag TESTMAX^KBBPYROU       (0.00%)   0 out of 1 lines covered
+ Tag TESTRANG^KBBPYROU      (0.00%)   0 out of 1 lines covered
+ Tag TOT^KBBPYROU           ------    0 out of 0 lines covered
+ Tag TOTSETS^KBBPYROU       ------    0 out of 0 lines covered
+ Tag WRITEOUT^KBBPYROU     (63.64%)   7 out of 11 lines covered
+
+
+Routine KBBPYSE1        (99.15%)   117 out of 118 lines covered
+  - Summary
+ Tag ASKC^KBBPYSE1        (100.00%)   8 out of 8 lines covered
+ Tag ASKU^KBBPYSE1        (100.00%)   14 out of 14 lines covered
+ Tag CONECT^KBBPYSE1      (100.00%)   13 out of 13 lines covered
+ Tag ISUTEST^KBBPYSE1     (100.00%)   2 out of 2 lines covered
+ Tag KBBPYSE1^KBBPYSE1    (100.00%)   3 out of 3 lines covered
+ Tag LIST^KBBPYSE1        (100.00%)   15 out of 15 lines covered
+ Tag PLIST^KBBPYSE1       (100.00%)   2 out of 2 lines covered
+ Tag PLIST1^KBBPYSE1      (100.00%)   7 out of 7 lines covered
+ Tag PLX^KBBPYSE1          (75.00%)   3 out of 4 lines covered
+ Tag SELCT^KBBPYSE1       (100.00%)   40 out of 40 lines covered
+ Tag SELCT1^KBBPYSE1      (100.00%)   3 out of 3 lines covered
+ Tag WRITEIT^KBBPYSE1     (100.00%)   5 out of 5 lines covered
+ Tag XPAND^KBBPYSE1       (100.00%)   2 out of 2 lines covered
+
+
+Routine KBBPYSE2        (90.36%)   75 out of 83 lines covered
+  - Summary
+ Tag EXIT^KBBPYSE2        (100.00%)   20 out of 20 lines covered
+ Tag KBBPYSE2^KBBPYSE2    (100.00%)   3 out of 3 lines covered
+ Tag LISTF^KBBPYSE2        (44.44%)   4 out of 9 lines covered
+ Tag LOOPA^KBBPYSE2       (100.00%)   5 out of 5 lines covered
+ Tag PNTRS^KBBPYSE2       (100.00%)   9 out of 9 lines covered
+ Tag SETIT^KBBPYSE2        (40.00%)   2 out of 5 lines covered
+ Tag SETPNT^KBBPYSE2      (100.00%)   3 out of 3 lines covered
+ Tag SETSUB^KBBPYSE2      (100.00%)   8 out of 8 lines covered
+ Tag X2^KBBPYSE2          (100.00%)   21 out of 21 lines covered
+
+
+Routine KBBPYSET        (97.12%)   135 out of 139 lines covered
+  - Summary
+ Tag BLDSTK^KBBPYSET       (90.91%)   10 out of 11 lines covered
+ Tag EOR^KBBPYSET           ------    0 out of 0 lines covered
+ Tag FLDLOOP^KBBPYSET      (95.24%)   20 out of 21 lines covered
+ Tag GETFILE^KBBPYSET     (100.00%)   15 out of 15 lines covered
+ Tag GETFILID^KBBPYSET    (100.00%)   6 out of 6 lines covered
+ Tag GETFLDS^KBBPYSET     (100.00%)   1 out of 1 lines covered
+ Tag HUH^KBBPYSET         (100.00%)   4 out of 4 lines covered
+ Tag HUHFIELD^KBBPYSET      ------    0 out of 0 lines covered
+ Tag HUHTEXT^KBBPYSET       ------    0 out of 0 lines covered
+ Tag INDENT^KBBPYSET      (100.00%)   4 out of 4 lines covered
+ Tag ISUTEST^KBBPYSET     (100.00%)   2 out of 2 lines covered
+ Tag JLOOP^KBBPYSET       (100.00%)   4 out of 4 lines covered
+ Tag JLOOP1^KBBPYSET      (100.00%)   11 out of 11 lines covered
+ Tag KBBPYSET^KBBPYSET    (100.00%)   3 out of 3 lines covered
+ Tag LAST^KBBPYSET        (100.00%)   14 out of 14 lines covered
+ Tag LOOK^KBBPYSET        (100.00%)   4 out of 4 lines covered
+ Tag NXT^KBBPYSET           ------    0 out of 0 lines covered
+ Tag SETGLOBS^KBBPYSET    (100.00%)   13 out of 13 lines covered
+ Tag SHOFILS^KBBPYSET     (100.00%)   6 out of 6 lines covered
+ Tag SHOWEM^KBBPYSET      (100.00%)   13 out of 13 lines covered
+ Tag SUBFIL^KBBPYSET        (0.00%)   0 out of 2 lines covered
+ Tag WRITEIT^KBBPYSET     (100.00%)   5 out of 5 lines covered
+
+
+Routine KBBPYSH1       (100.00%)   82 out of 82 lines covered
+  - Summary
+ Tag CHEK^KBBPYSH1        (100.00%)   4 out of 4 lines covered
+ Tag CHKX^KBBPYSH1        (100.00%)   5 out of 5 lines covered
+ Tag HEDR^KBBPYSH1        (100.00%)   11 out of 11 lines covered
+ Tag ISUTEST^KBBPYSH1     (100.00%)   2 out of 2 lines covered
+ Tag KBBPYSH1^KBBPYSH1    (100.00%)   3 out of 3 lines covered
+ Tag SHOVAR^KBBPYSH1      (100.00%)   10 out of 10 lines covered
+ Tag SHOW^KBBPYSH1        (100.00%)   24 out of 24 lines covered
+ Tag TYPE^KBBPYSH1        (100.00%)   10 out of 10 lines covered
+ Tag WRITEIT^KBBPYSH1     (100.00%)   5 out of 5 lines covered
+ Tag XREF^KBBPYSH1        (100.00%)   8 out of 8 lines covered
+
+
+Routine KBBPYSHO        (98.31%)   58 out of 59 lines covered
+  - Summary
+ Tag EN^KBBPYSHO           (96.77%)   30 out of 31 lines covered
+ Tag EOR^KBBPYSHO           ------    0 out of 0 lines covered
+ Tag ISUTEST^KBBPYSHO     (100.00%)   2 out of 2 lines covered
+ Tag KBBPYSHO^KBBPYSHO    (100.00%)   7 out of 7 lines covered
+ Tag SELCT^KBBPYSHO       (100.00%)   13 out of 13 lines covered
+ Tag SET1^KBBPYSHO        (100.00%)   4 out of 4 lines covered
+ Tag WRITEIT^KBBPYSHO     (100.00%)   2 out of 2 lines covered
+
+
+Routine KBBPYDO1     (100.00%)   38 out of 38 lines covered
+Routine KBBPYNM     (100.00%)   107 out of 107 lines covered
+Routine KBBPYPRO     (100.00%)   39 out of 39 lines covered
+Routine KBBPYQRY     (100.00%)   210 out of 210 lines covered
+Routine KBBPYREF     (100.00%)   40 out of 40 lines covered
+Routine KBBPYREL     (100.00%)   133 out of 133 lines covered
+Routine KBBPYROU      (96.22%)   280 out of 291 lines covered
+Routine KBBPYSE1      (99.15%)   117 out of 118 lines covered
+Routine KBBPYSE2      (90.36%)   75 out of 83 lines covered
+Routine KBBPYSET      (97.12%)   135 out of 139 lines covered
+Routine KBBPYSH1     (100.00%)   82 out of 82 lines covered
+Routine KBBPYSHO      (98.31%)   58 out of 59 lines covered
+
+
+Overall Analysis 1314 out of 1339 lines covered (98% coverage)
+VISTA>
